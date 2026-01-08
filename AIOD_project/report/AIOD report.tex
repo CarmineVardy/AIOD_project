@@ -1,4 +1,5 @@
-\documentclass[journal, a4paper]{IEEEtran}
+\documentclass[journal, a4paper]{article}
+% \documentclass[a4paper,14pt]{article}
 
 % some very useful LaTeX packages include:
 
@@ -127,6 +128,7 @@
 	% There should be no need to do such things with IEEEtran.cls V1.6 and later.
 	
 	%\usepackage{hyperref}
+	\usepackage{float}
 	% To insert hyperlinks in the document
 	
 	% Your document starts here!
@@ -148,6 +150,18 @@
 		\section{Introduction}
 		% \PARstart{}{} creates a tall first letter for this first paragraph
 		\PARstart{T}{his} section introduces the report and leads the reader on to the main part. The introduction should briefly recall the problem you face in your report, the method you propose and the results you have obtained.
+		
+		\begin{figure}[H]
+			% Center the figure.
+			\begin{center}
+				% Include the eps file, scale it such that it's width equals the column width. You can also put width=8cm for example...
+				\includegraphics[width=6cm]{../images/BIPLOT_2024_Metabolomica_Neg.png}
+				% Create a subtitle for the figure.
+				\caption{}
+				% Define the label of the figure. It's good to use 'fig:title', so you know that the label belongs to a figure.
+				\label{fig:plot_test}
+			\end{center}
+		\end{figure}
 		
 		% Main Part
 		\section{Main Part}
