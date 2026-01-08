@@ -1,0 +1,24 @@
+The dataset consists of plasma metabolomics profiles acquired by LC–MS from pregnant women
+whose pregnancy outcome was known at birth. For each woman, one blood sample (plasma) was
+collected and analysed in both positive (ESI+) and negative (ESI–) ionisation modes.
+
+Total samples (pregnancies): 178
+
+Outcome classes:
+    Healthy children: 100
+    Pathological cases with congenital heart disease (CHD): 78
+
+For each ionisation mode, the raw LC–MS data were processed to obtain a feature matrix in which:
+
+    -Columns correspond to individual plasma samples (178 pregnant women).
+
+    -Rows correspond to LC–MS features (referred to as metabolites).
+
+    -Entries are the measured signal intensities (peak areas) for each feature in each sample.
+
+Thus, the dataset is composed of two high-dimensional blocks (ESI+ and ESI–), each providing a complementary
+view of the maternal plasma metabolome, with a binary outcome label (CTRL vs CHD) attached to every sample.
+
+The overarching aim is to identify metabolic alterations in maternal plasma associated with foetal CHD and to
+evaluate whether LC–MS–based metabolomic profiles can discriminate pregnancies leading to healthy vs
+CHD-affected children.
