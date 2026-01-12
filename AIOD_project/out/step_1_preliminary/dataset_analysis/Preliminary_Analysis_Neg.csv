@@ -1,0 +1,19 @@
+Metric,Value
+Dataset Name,ESI- Negative (Raw)
+Total Features (Metabolites),52
+Total Samples,219
+CTRL Total,107
+CHD Total,104
+QC Total,8
+Samples with '_00',28
+Samples with '_01' (Tech Rep),14
+Samples without suffix,177
+Est. Unique Biological Samples,205
+CTRL - Biological,100
+CTRL - Technical Rep.,7
+CHD - Biological,97
+CHD - Technical Rep.,7
+QC - Total,8
+Missing Values (Count),0
+Missing Values (%),0.00%
+Negative Values Present,NO

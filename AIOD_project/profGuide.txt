@@ -1,17 +1,570 @@
-Almeno per i pre i pre-processamenti per il momento, lavorate come se fossero due dataset differenti, lavorate su blocchi, perché ...fin ad adesso abbiamo visto delle cose anche pratiche per il pre-processamento, tipo la PCA quindi magari, non dico questa settimana, ma magari la prossima potremo iniziare a vedere qualche grafico di PCA che esce fuori, quindi score, loadings.. ecc..Quando fate l'analisi dati ponetevi delle domande per esempio voi avete detto: noi le mettiamo ( i dataset) una accanto all'altro però io vi ho suggerito di fare prima il pre-processamento, fatevi sempre la domanda: qual è l'effetto se io lavoro faccio prima la concatenazione e poi normalizzo? oppure faccio prima la normalizzazione e poi concateno le matrici, che effetto ho sui dati se io calcolo la mediana sui dati chiamiamoli fusi, merge cioè semplicemente concatenati o se io calcolo la mediana indipendente? come cambia questa mediana? come cambia i fattori correttivi che sto utilizzando per il mio dataset? fatevi sempre le domande, è la cosa che vi fa capire almeno dov'è che il vostro approccio ha dei punti deboli, se sapete i punti deboli del vostro approccio potete comunque valutarli in maniera critica, non significa che dovete per forza…
+Come bisogna procedere?
+-Innanzitutto scaricare i due dataset e importali.
+Potete vedere che ci sono i pazienti sulle colonne, le variabili sulle righe,
+la prima riga è il nome del campione, la seconda riga è la classe.
+
+Poi abbiamo DUPLICATI TECNICI e QC.
+
+A che servono i quality control? Come sono ottenuti e a cosa servono?
+Sono ottenuti o unendo tutti i campioni, una parte di tutti o decido di fare un subset e unisco
+solo il subset. Quindi quando fate la PCA la caratteristica che devono avere i QC è che devono essere
+tutti vicini tra di loro perché quando voi trovate i QC quello è lo stesso campione, la stessa madre dove
+ci sono tutti i pool di campioni ed è stata analizzato all'interno della corsa in vari tempi quindi
+essendo sempre lo stesso campione analizzato diverse volte deve clusterizzare molto all'interno per esempio
+della PCA.
+Se questo non succede può avvenire per due motivi:
+lo strumento non risponde bene nel tempo all'analisi
+c'è stata la degradazione del QC, cosa che può avvenire. Può avvenire se
+non si prendono delle accortezze nella parte pratica.
+
+E poi c'è il duplicato tecnico (_00 e _01) ovvero lo stesso campione analizzato più volte. Non possiamo
+utilizzarli e mediare poiché non lo abbiamo per tutti i campioni.
+
+Quindi il duplicato tecnico e i QC inizialmente vi conviene tenerli nel dataset
+perché dovete fare prima
+-un'assessment sulla qualità del dato e la qualità dell'analisi.
+Questa cosa come la fate?
+Sia valutando i QC sia valutando il duplicato tecnico. Il duplicato tecnico devono
+essere molto vicini tra di loro perché sostanzialmente sto analizzando lo stesso campione
+due volte.
+Quindi nella prima fase che è nella fase di vedere come ha performato l'analisi, QC e duplicati tecnici li lasciate.
+
+Quindi fate ad esempio la PCA, considerando anche i QC, vedete che i QC sono abbastanza raggruppati, quindi non
+c'è influenza tecnica. Fatta su dati raw vedi anche che senza la normalizzazione se l'analisi è andata abbastanza bene.
+
+Nella seconda fase iniziate a provare tecniche di normalizzazione, tecniche di preprocessamento
+e via dicendo, togliete i QC e togliete i duplicati tecnici, siccome poi il duplicato tecnico non
+ce l'avete per tutti i campioni ma ce l'avete solo per alcuni nom dovete fare la media, quindi vi
+suggerisco di rimuovere il secondo duplicato.
+
+Poi dovete fare la parte di preprocessamento e quindi normalizzazione chimica (e non autoscaling),
+dovete testare diverse normalizzazioni..
+Almeno per i pre i pre-processamenti per il momento, lavorate come se fossero due dataset differenti, lavorate su
+blocchi.
+
+Cioè i QC li dovete mantenere fino alla prima fase in cui fate la valutazione di come è andata l'esperimento.
+Una volta fatta quella valutazione lì? Li togli. Però da quella valutazione cosa possiamo capire? Se i QC servono per
+capire se l'esperimento è stato fatto bene, è andato a buon fine. Se vediamo che i QC clusterizzano bene, allora vuol
+dire che l'esperimento è andato bene. Perché quello è lo stesso campione analizzato diverse volte nel tempo. Quindi tu
+ti aspetti che sia molto vicino tra loro, centrato, eccetera.
+
+Perchè nel positivo non sono così vicini nella PCA i QC?
+Perché purtroppo il positivo è fatto in ILIC. L'ILIC è una tecnica molto sensibile a variazioni perché sostanzialmente
+la colonna..Allora l'ILIC è un approccio abbastanza complesso perché l'interazione chimica non avviene tra la fase stazionaria
+e i nostri analiti. Ma sostanzialmente sulla nostra fase stazionaria abbiamo visto che la cromatografia ha una fase stazionaria
+che ha delle caratteristiche chimiche su quali noi passiamo i campioni e i campioni vengono attaccati sulla fase stazionaria.
+Poi noi passiamo un solvente con determinate caratteristiche che evolve nel tempo. Queste caratteristiche possono essere per
+esempio la polarità. Siccome queste caratteristiche evolvono nel tempo, aumenta l'affinità nel tempo di alcune molecole con
+quelle caratteristiche con il solvente. E quindi farà sì che le molecole ad esse sulla fase stazionaria si staccano in maniera
+selettiva grazie alle proprietà del solvente. Che significa? Allora, immaginiamo di avere una scolaresca. Facciamo questo esempio
+e metto in tavolo come ci stanno tutte le tipologie di caramelle di questo mondo. I bambini saranno attratti da tutte le caramelle
+di questo mondo e si attaccano al tavolo. Poi arriva la maestra e inizia a dire: "io ho i cioccolatini, il tavolo finisce però i
+bambini rimangono vicino al tavolo perché si aspettano altri... arriva la prima maestra e dice: "io ho i cioccolatini, si
+sposteranno solo i bambini che piacciono i cioccolatini e seguono la maestra. Poi arriva l'altra maestra e dice, "io ho le
+caramelle gommose, si staccano i bambini che piacciono solo le caramelle gommose. Alla fine arriva la maestra con gli anacardi
+e se ne andranno con i bambini tristi che non hanno beccato niente fino a quel punto. Questa è la stessa cosa della parte separativa.
+Tutte le molecole con determinate caratteristiche che gli piacciono, tutte le caramelle che stanno sul tavolo, si attaccano
+alla fase. Poi, nella fase stazionaria, mano a mano che io vado con il mio eloente, quindi le mie maestre con caratteristiche
+differenti nel tempo, le molecole che sono più affini a quelle proprietà si staccano e vanno con l'eluente per prendere lo
+spettometro di massa. Questo è l'approccio normale. Nella ILIC io non ho l'interazione diretta tra le molecole e la fase
+stazionaria, ma sulla fase stazionaria sostanzialmente si crea uno strato d'acqua. E quindi poi le molecole si vanno a predisporre
+in questo sistema sandwich. Che significa? Significa che ho una maggiore variabilità, perché l'interazione molecole-fase stazionaria
+dipenderà prima dall'interazione dell'acqua con la fase stazionaria, poi dipenderà da quanto sono stata brava a stabilizzare
+questo approccio. Quindi l'interazione delle molecole con la fase stazionaria sarà più variabile. Per questo avete una maggiore
+variabilità.
+L'ILIC purtroppo è una tecnica estremamente sensibile alle variazioni e vi assicuro che questo è un buon dataset con
+questa tecnica.
+Però poi per continuare l'analisi, togliete i QC. E togliete i replicati perché i replicati non ce li avete di tutti.
+Un altro approccio utile è vedere quanto i replicati siano distanti tra loro. Siccome però i replicati non ce li avete di tutti,
+non è che potete di quelli che ce li avete i replicati, utilizzare la media e degli altri un valore solo. Perché altrimenti
+state confrontando un dato più robusto che quello con la media con un dato solo. E quindi quello che vi
+suggerisco è togliete il secondo replicato. Perché così sono tutti comparabili, tutti analizzati one shot.
+
+Quando fate l'analisi dati ponetevi delle domande per esempio voi avete detto:
+noi le mettiamo ( i dataset) una accanto all'altro però io vi ho suggerito di fare prima il pre-processamento,
+fatevi sempre la domanda:
+qual è l'effetto se io lavoro faccio prima la concatenazione e poi normalizzo?
+oppure faccio prima la normalizzazione e poi concateno le matrici?
+che effetto ho sui dati se io calcolo la mediana sui dati chiamiamoli fusi, merge cioè semplicemente
+concatenati o se io calcolo la mediana indipendente? come cambia questa mediana?
+come cambia i fattori correttivi che sto utilizzando per il mio dataset?
+Fatevi sempre le domande, è la cosa che vi fa capire almeno dov'è che il vostro approccio ha dei punti deboli, se sapete
+i punti deboli del vostro approccio potete comunque valutarli in maniera critica.
+Una explained variance su PC1 intorno al 26% che è molto bassa ci può stare, però significa che tu ti stai spalmando
+la variabilità rispetto a molte componenti principali. Quindi associare a questo un grafico dell'explained variance
+all'aumentare del numero delle componenti può tornare utile per capire se un preprocessamento ti sta aiutando nella
+rimozione del rumore o invece sta facendo sì che tu l'informazione biologica la spalmi su tutte le altre componenti principali.
+
+Quindi l'analisi preliminare sui QC nel nostro caso è fine a se stessa? Nel nostro caso anche il report che facciamo è
+fine a se stesso. No comunque la devi fare perché devi imparare a leggerla. Però sì, fino a se stessa voi mi puoi anche dire
+guarda la valutazione che avete fatto voi io non l'avrei fatta così, avrei detto al wet lab, ti saresti assunto la responsabilità
+che dovevano rifare l'analisi. Ok, quindi questo a voi serve per capire che è una cosa che dovete considerare. Poi il resto,
+cioè tutto il report è fino a se stesso, non è che poi lo potete pubblicare ..Ci dice com'è andata l'analisi. Esatto, per esempio
+se vi rendeste conto, non è il vostro caso perché i campioni sono pochi, vi rendeste conto che c'è un effetto temporale,
+non è il vostro caso, nei QC, cioè per esempio che i QC magari si dispongono tre qua, tre qua, tre qua su PC1, vi
+rendeste conto che questo è un effetto batch, quindi poi intorno ai QC ci stanno dei campioni, a quel punto potreste utilizzare
+i QC per riallineare l'effetto batch, rimuovere l'effetto batch. Dovremmo però anche sapere a livello temporale come si..?
+Innanzitutto te ne rendi conto dalla PCA perché se c'è un effetto batch PC1 il 99% delle volte spiega l'effetto batch e quindi
+lo vedi proprio. Poi quando tu vedi questi trend torni nel laboratorio e dici senti: "che mi mandi la sequenza con cui hai
+analizzato i campioni e lì poi torni tu al computer e ti matchi. Se sei stato bravo, cioè se quello che vedi è un effetto batch
+strumentale ti dovrebbe combaciare la linea temporale con questa cosa che vedi. Per esempio a noi
+c'era successo che vedevamo due cluster di questo tipo, però i QC stavano abbastanza bene e l'effetto batch era un effetto
+biologico, sostanzialmente a quelli che mantenevano i campioni li tenevano in due frigoriferi diversi e si è staccato il
+frigorifero. Quindi alcuni campioni erano andati a male e quelli poi sono irrecuperabili, cioè se la biologia non c'è non lo
+correggi quello con l'analisi dati.
+
+Perchè sui dati raw potreste avrere una explained variance bassa?
+Questi sono dati raw, quindi è normale che voi vi portate dentro, siccome sono dati raw abbiamo detto,
+l'errore tecnico, l'errore biologico, ...non avete ancora fatto nessuna correzione, banalmente il pescaggio
+del campione è un pescaggio automaticamente, basta che la pipetta che pesca il campione abbia una bolla d'aria
+dentro state pescando meno campione, quindi un campione avrà tutta un'intensità più bassa e quindi per quanto
+questi sono sistemi meccanici, però ogni strumento ha un range di tolleranza, quindi è come se fosse l'errore
+di quello strumento, anche gli approcci meccanici, la pipetta che pesa o pipetta manuale che pesca ha delle tolleranze
+di errore, quelle tolleranze di errore che può fare, noi le ignoriamo nel grande sistema delle analisi però come nel
+nostro caso si riflettono sul fatto che magari avete degli scatter e delle fluttuazioni del segnale, quindi quando io
+parlo di errore tecnico non parlo del grande errore che è caduta ..a terra e ho fatto il disastro ma parlo di tutta
+la pipeline di tutto il processo che si compone di situazioni meccaniche dove chiaramente le tolleranze di errore sono
+molto più bassi e più robusti rispetto magari all'operatore o all'operatrice che pipetta in maniera manuale però sono
+delle fluttuazioni che rispettano i dati.
+Quindi poi facendo la normalizzazione tutte queste fluttuazioni dovrebbero diminuire ovvero significa che nell'explained
+variance quando andiamo a fare lo studio dell'explained variance dei dati raw e dei dati normalizzati o dei dati pre-processati
+ulteriormente vedremo che questo appiattimento dell'informazione rispetto alle componenti principali
+dovrebbe diminuire quindi dovreste avere una PC1 ...che inizia a diventare più robusta con un'explained varianza che
+aumenta.
+Nel nostro settore biologico questo cambio potrebbe non essere totalmente radicale perché soprattutto nel nostro caso dove non
+abbiamo lo standard interno le correzioni che facciamo sono delle correzioni matematiche, non chimiche, quindi queste correzioni
+hanno dei limiti e non è detto che noi abbiamo la prima componente principale che nel nostro caso arriva al 26% che schizzi al
+71, nel caso in cui avessimo avuto uno standard interno a correzione dell'analisi chimica probabilmente questo jump dell'explained
+variance sarebbe stato molto più evidente.
+Perché io dico che la normalizzazione che facciamo noi utilizzando media, mediana o qualsiasi altro massimo
+dello spettro non è efficiente tanto quanto lo standard interno?
+perché si basa sempre sui dati che si hanno mentre il standard interno utilizza qualcosa che si potrebbe chiamare
+come ground truth, qualcosa che si può paragonare a un valore reale a cui bisogna avvicinarsi. Questo è un aspetto.
+L'altro aspetto è che noi stiamo analizzando tutte molecole differenti. La capacità di risposta del detector non
+è uguale per tutte le molecole, l'efficienza di ionizzazione non è uguale per tutte le molecole. Quando io utilizzo
+un segnale che ho già raccolto, sto dicendo che tutte le molecole nella mia scansione rispondono esattamente come quel
+valore che ho misurato che è la mediana, quindi è un valore vero rispetto se utilizzo la mediana, ...se la comunque faccio
+un valore grossolano medio, un trend grossolano medio che ..ma se io ho una molecola chiusa, ingombrata, e invece una molecola
+lineare, capite da se, cioè voi immaginate chi gioca alle cose che dovete sparare e uccidere gli avversari,
+arrivare ... di uccidere un avversario, se gli avversari ti mettono tutti a cerchietto è molto più difficile che se dovete
+attaccare si mettono tutti quanti in fila che se sparate così li colpite tutti in un colpo solo, mentre se dovete uccidere tutti i
+nemici ma stanno l gruppo dovete lavorare a livelli. La ionizzazione che noi facciamo dopo la fase separativa, noi abbiamo detto
+la parte cromatografica che ci separa gli analiti, le molecole, e poi c'è la parte di ionizzazione. Nella fase di ionizzazione
+arrivano le molecole, ora se la molecola per esempio ha un ingombro sterico, cioè è una molecola tridimensionale, immaginate una
+proteina, immaginate una molecola grande, o è una molecola lineare come una molecola alifatica, come una catena carboniosa,
+l'efficienza di ionizzazione, quindi la capacità di creare, di rompere legami, la capacità di creare ioni è differente quindi
+significa che già in questa fase ho delle risposte differenti tra molecole, successivamente noi abbiamo la fase dell'ulteriore
+separazione, per esempio il TOF, che fa sì che gli ioni arrivano in tempi diversi al detector, questo, basato, rispetto, in base
+a quale separatore viene analizzato, a quale caratteristica vengono analizzato, farà sì che anche le molecole si muovono in momenti
+diversi Con efficienza diversa, poi, in ultimo, la capacità del detector di trasformare gli ioni che arrivano in corrente è differente
+in base alla tipologia di ioni che noi stiamo analizzando. Quindi, perché dico, nel mondo ottimale, nel mondo ideale, se noi
+avessimo gli standard interni, sicuramente è una correzione superiore rispetto all'utilizzo di tecniche chemiometriche o
+di tecniche statistiche, proprio perché le tecniche statistiche hanno degli assunti che sono, i miei ioni rispondono tutti nella
+stessa maniera all'analisi chimica oppure quello che dicevi tu prima, magari non sto tenendo conto del fatto della grand truth,
+però qual è il limite? Soprattutto quando noi lavoriamo in maniera untargeted, che non sappiamo a priori quali molecole andiamo
+ad analizzare, non possiamo decidere quali standard interni mettere dentro, esistono dei kit che vi aiutano a fare, dei kit
+significa delle miscele di molecole di standard che vi aiutano alla normalizzazione ma queste sono un po' difficili da utilizzare
+soprattutto per la metabolomica, per la lipidomica è un po' più facile perché i lipidi si dividono in classi infatti voi non avete
+data dataset di lipidomica però in questo caso noi avevamo dataset di lipidomica che però non sono informativi, la metabolomica
+dà più informazioni in questo caso, in questo studio noi avevamo anche dataset di lipidomica che sono normalizzati per lo standard
+interno perché nel caso della lipidomica untargeted basta mettere uno standard interno per ogni classe di lipidi e quindi lì è un
+po' più facile la situazione, per la metabolomica è più difficile perché noi dovremmo utilizzare i metaboliti deuterati, significa
+che invece dell'idrogeno c'è l'isotopo, l'isotopo del deuterio, il che significa che il deuterio è più pesante, il che significa
+che noi vediamo quando arriva alla spettrometria di massa un picco differente rispetto alle molecole con presente idrogeno, perché
+cambia la massa deuterio non è come idrogeno, è vero che in natura esistono gli isotopi eccetera ma stanno a concentrazioni talmente
+tanto basse che noi consideriamo che sia l'idrogeno comune all'interno della molecola. Avere standard interno deuterati costa
+tantissimo e soprattutto li dovremmo mettere tutti..quindi quello che si fa è prima in maniera untargeted, faccio uno screening
+tutto e mi arrangio con le normalizzazioni statistiche per la metabolomica, una volta che trovo un pannel di molecole significative
+poi vado a fare la conferma utilizzando magari a quel punto gli standard deuterati se esistono, c'è anche il problema che non è
+detto che esistano per tutti perché comunque le sostituzioni dell'idrogeno deuterio non è una cosa a costo zero. Prima abbiamo
+menzionato una possibile soluzione che è quella di utilizzare gli standard interni per classe di lipidi. Allora quando io parlo di
+classi di lipidi, i lipidi si possono dividere, in realtà si dividono in non so quante classi però queste classi sostanzialmente
+sono definite dal numero di carbonio presenti e dal tipo di ramificazione. Quello che succede è che essendo, stiamo parlando di
+esistenzialmente catene quello che può succedere è che all'interno magari della stessa tipologia di molecola può cambiare la
+posizione di un doppio legame, a quel punto stiamo parlando di una molecola differente Però il comportamento di queste molecole
+possono essere simili quindi io quello che posso fare per quanto riguarda la lipidomica è non avere, non come per la metabolomica
+dove i metaboliti sono tutti differenti tra di loro, nella lipidomica posso dire che io tutti questi lipidi che hanno più o meno
+delle similitudini le considero come una classe e quindi metto uno standard per quella classe, poi a quest'altro gruppo di lipidi
+che ha delle altre similitudini tra di loro  aggiungo quest'altro standard, questo è uno standard per classe di lipidi ,mentre in
+metabolomica questa cosa non esiste, in proteomica è anche peggio perché in proteomica noi spacchettiamo le proteine e i peptidi
+perché noi poi ricostruiamo statisticamente quali erano le proteine a monte vedendo i peptidi finali però in quel caso lo standard
+interno è impossibile da utilizzare quindi la proteomica su questo aspetto c'è proprio un
+contrapalto.
+
+Quindi:
+-normalizzare i dati
+Dobbiamo fare la normalizzazione chimica cioè dobbiamo normalizzare la variabilità dello strumento.
+Si lavora campione per campione in maniera indipendente.
+Ad esempio con la median normalization: prendete il campione 1, calcolate la mediana e utilizzate
+quella per dividere tutti gli elementi del campione 1 rispetto a quella mediana.
+Questa è la normalizzazione chimica ed è il primo step: mediana, valore più intenso, media, media escludendo..
+facendo una percentuale su quantili..minimo, massimo, però sempre tutto questo calcolato campione per campione.
+Potete provare a fare diverse normalizzazioni, vedete come cambia con i vari tipi di normalizzazioni che abbiamo visto,
+potete provare PQN, median, min, massimo minimo, scalo tra 0 e 1, ..quello poi sullo scaling,  e vedete come cambiano queste
+distribuzioni.
+Se i dati non presentano alto rumore o alta variabilità, io non mi aspetto che per esempio al variare tra l'utilizzo
+della media e della mediana ci sia una grande differenza tra le PCA.
+Se la mediana mi fa vedere che un gruppo sta qua e uno sta qua, poi io utilizzo la media e invece mi sovrappongono,
+da lì posso pensare che siccome la media è influenzata dagli outliers ho qualche variabile che mi sta trascinando
+il dataset e quindi lì si fa un ulteriore approfondimento e si dice qual è quella
+variabile che dà l'impatto all'interno del mio dataset perché forse allora la devo rimuovere.
 
 
-Quindi se io vi dicessi per il vostro data set come potreste applicare questi modelli che vi ho fatto vedere di selezione del training e del test set, qual è il workflow che potete utilizzare? Il primo step è normalizzare i dati. Se io ti do il dataset e il dataset è raw, come facciamo? Cosa normalizziamo? Non parliamo di algoritmi. Non lo scaling, quello è nell'ultimo step. In questo caso dobbiamo fare la normalizzazione chimica cioè obbiamo normalizzare la variabilità dello strumento. Quindi lavoriamo sulle righe o sulle colonne, se i campioni sono sulle righe e le variabili sulle colonne?Vi dovete muovere riga per riga, campione per campione e lavorare in maniera indipendente campione per campione, quindi se volete utilizzare la median normalization, prendete il campione 1, calcolate la mediana e utilizzate quella per dividere tutti gli elementi del campione 1 rispetto a quella mediana. Questa è la normalizzazione chimica ed è il primo step: mediana, valore più intenso, media, media escludendo..facendo una percentuale su quantili..minimo, massimo, però sempre tutto questo calcolato campione per campione. Secondo step, noi abbiamo visto che i nostri dati non hanno una distribuzione normale, quindi come possiamo correggere questa distribuzione non normale? Quale preprocessamento o tecnica matematica, trasformazione matematica che abbiamo visto che risolvi questo problema? Trasformazione logaritmica..La trasformazione logaritmica per la trascrittomica avete visto che molto probabilmente viene utilizzata logaritmo 2, in LC-MS viene utilizzato logaritmo 10, la trasformazione logaritmica riporta la distribuzione dei dati a una distribuzione normale, quindi facciamo una trasformazione logaritmica. Adesso arriva il centering, che di base è semplicemente il centraggio rispetto alla media, quindi riportiamo tutti i dati al centraggio, per l'LC-MS facciamo autoscaling, quindi diviso per la standard deviation. Mi raccomando quando fate il vostro progettino leggetevi i pacchetti che utilizzate, probabilmente utilizzato Scikit Learn, dovete valutare che se la PCA di Scikit Learn centra i dati oppure no, e se fa solo il centraggio, siccome voi vi serve l'autoscaling e non il centraggio, dovete flaggare come off il centraggio e farvi a mano l'autoscaling. Bellissimo avete utilizzato questo pacchetto, era già centrato? chiedetevi anche che cosa fa questo? c'entra già? Prendo in considerazione una cosa che noi non abbiamo visto, per esempio il missing value, che ci facciamo con il missing value? Il nostro dataset non ha null. Allora in realtà noi è una cosa che avevamo anche già visto a lezione, nel vostro dataset, perché è stato già pulito, che significa, soprattutto in lipidomica e metabolomica, è difficile che noi rimuoviamo i campioni a posteriori, perché significa che lo strumento  non aver pescato il campione, perché in lipidomica e metabolomica dopo tutti i filtraggi che facciamo, solitamente i campioni non hanno tutti missing value. Quindi noi rimuoviamo i campioni quando è una situazione drastica, cioè quando andiamo a vedere il cromatogramma, il cromatogramma è piatto, fa schifo, ha dei picchi larghi per cui è successo qualcosa, a quel punto leviamo i campioni. I campioni non si levano mai perché è merce rara, ce n'abbiamo già pochi e se iniziamo a elevare i campioni è un problema. E poi soprattutto perché noi, siccome come dicevo tutti questi dataset sono fatti untargeted, la selezione la facciamo sulle variabili, perché noi l'incertezza maggiore, se siamo sicuri che l'esperimento è andato bene, l'incertezza è su come è stata misurata la variabile. Quindi siccome in maniera untargeted, non è che le variabili hanno già nome e cognome, ma è: "io ho misurato questo segnale, questo segnale ogni tot io scansiono, quindi ogni tot arrivano molecole, non è detto che in quella fascia di tempo che sto scansionando stiano arrivando molecole allo strumento, è possibile che quel tempo sia vuoto, quell'm/z sia vuoto, perché non ci sono quelle molecole all'interno della... Quindi se io facessi una selezione sui campioni rispetto alla presenza di NAN, rischio che trovo campioni quando il problema è la variabile, non è il campione. Quindi noi nelle fasi di pre processamento a priori facciamo già una selezione delle variabili che non sono almeno nel 75% dei campioni. Poi però ci sono le tecniche di imputazione, qua noi abbiamo visto alcune di queste tecniche di imputazione, perché se io avessi una distribuzione dei miei campioni che rappresentano la distribuzione della popolazione, posso pensare di fare delle tecniche di imputazione stimando rispetto alla distribuzione degli altri campioni, perché i NAN presenti all'interno del nostro dataset hanno diversa natura. Alcuni sono semplicemente: "questa molecole e questo trattamento non viene espressa". Immaginate ad esempio di lavorare con cellule tumorali e cellule tumorali unturgated. Chiaramente il trattamento sulle cellule tumorali può attivare dei pathway e può far produrre alle cellule delle proteine o dei metaboliti che le cellule tumorali di per sé non hanno. Questo è anche un grande problema per noi, perché chiaramente le cellule tumorali, tutto il blocco della classe delle cellule tumorali non avrà alcune variabili. In questo caso è una situazione molto complessa, però l'imputazione così non la posso fare. Non posso fare una stima sulle cellule tumorali, sulle cellule tumorali trattate per quelle variabilil lì. Un approccio potrebbe essere quello di, soprattutto per l'effetto analisi multivariate, è quello di utilizzare un valore estremamente piccolo, solitamente calcolato come un quinto del valore minimo, misurato per quella variabile, ma costante. Perché il che significa che non avrà una grande variabilità e quindi per esempio nella PCA non viene..perchè lo vediamo con la massima varianza per cui se io lo sostituisco con un valore molto piccolo e costante, quelle variabili non andranno a pesare nella mia analisi multivariata. Un'altra approccio è quello di simulare il rumore, e quindi le sostituisco con il rumore, oppure, se stiamo parlando della quantitativa, con il log. Cioè, so che questo strumento ha un limite di rilevabilità, quindi log detection, e posso sostituire tutti i NUN con quel valore lì. Perché significa che quella molecola non raggiunge quel valore. Poi, se siete interessati a questa parte che è abbastanza tecnica e filosofica, possiamo anche...Quindi, voi siete fortunati, missing value non ce li avete, quindi normalizzazione, logaritmo 10, eventualmente avremmo fatto l'imputazione dei missing value, quindi col quinto valore minimo, poi scaling. Ok, adesso avete i dati scalati, ci avete tutti i dati, come decidiamo chi va nel training e chi va nel test? Perché da qui in poi dobbiamo, per forza, qui si è arrivato il punto in cui dobbiamo dividere i dati. Immaginate che avete già fatto un'ottimizzazione del vostro preprocessamento, avete plottato i vostri dati 700 miliardi di volte per vedere l'effetto di ogni step. Possiamo usare uno dei metodi visti. Voglio utilizzare il metodo randomico, come lo faccio?......E come lo vedo se è rappresentativo della mia variabilità? Perché questo è giusto, io provo un test, posso provare, adesso ho utilizzato quello randomico, posso provare il primo, posso provare il secondo approccio, il terzo approccio. Come valuto se io li ho rappresentato il bene? Se il training è rappresentativo della variabilità dei miei dati, come fareste? Puoi fare l'analisi delle componenti principali, grafichi gli score plot, puoi costruire la PCA solo sul training, applichi i loadings sul test e proietti. Ovviamente questo che significa? Avete il dataset, utilizzate l'approccio, siamo arrivati che era un po' scalato. Anche se nell'approccio randomico non è necessario  scalare i dati, quindi potremmo partire dal livello superiore. Prendiamo il dataset senza l'autoscaling, solo con il logaritmo, facciamo un approccio randomico, dividiamo training e test set, applico l'autoscaling sul training, mi tengo la media, la mediana e la direzione standard da parte, applico media direzione standard del training per scalare il test set, calcolo la PCA sul training, applico i loadings sul test. Mi raccomando, quando fate preprocessamenti che dipendono dal dataset, dovete tornare sempre al momento in cui quella dipendenza viene tolta. Se io faccio come normalizzazione PQM che dipende dal dataset, me la devo ricalcolare quando divido dataset in training e test, utilizzare i coefficienti del training per normalizzare il test. E quindi possiamo fare la PCA. Altri approcci? Come valutiamo se training scelto bene? Il cluster è un metodo, però come valuti se questo metodo è migliore del suo randomico? A parte la PCA. Che comunque va molto bene. Puoi fare un calcolo della variabilità all'interno, potete graficarvi magari nel caso in cui non avete 750.000 variabili, le variabili e vedete se più o meno le intensità delle variabili sono le stesse per training e test set, potete fare un vulcano plot del training, un vulcano plot del test (per un problema a 2 classi) e vedere se le variabili significative siano le stesse. Potreste fare un modello direttamente di classificazione e vedere come cambiano i parametri dei modelli di classificazione al cambiare del training e del test set o al cambiare del metodo di selezione di training e test. Ogni step che fate, siate sicuri che quello step è ottimale, non esiste uno step: "vabbè, ma tanto faccio così". Tanto in letteratura, quello che dicono, in letteratura hanno fatto così, quindi io sono autorizzata a farlo..No, non esiste. Quindi, mi raccomando, questi sono tutti approcci validi, sono approcci validi fino a che voi dimostrate che siano fatti bene, che siamo andati al confine, che non state alterate i vostri dati e che non avete introdotto un bias.
+Poi:
+abbiamo visto che i nostri dati non hanno una distribuzione normale, quindi come possiamo correggere
+questa distribuzione non normale? Quale preprocessamento o tecnica matematica, trasformazione matematica
+che abbiamo visto che risolvi questo problema?
+-Trasformazione logaritmica. Per la trascrittomica viene usata spesso logaritmo 2. In LC-MS (nostro caso)
+viene utilizzato logaritmo 10.
+La trasformazione logaritmica riporta la distribuzione dei dati a una distribuzione normale.
+
+Poi
+-centering, che di base è semplicemente il centraggio rispetto alla media,
+Prima di fare l'analisi multivariata fate la standardizzazione delle variabili quindi centraggio diviso per la direzione
+standard.
+Per l'LC-MS facciamo l'autoscaling, quindi diviso per la standard deviation.
+
+Specificate se lavorate per campioni o per colonne o dite qualcosa tipo: "faccio la normalizzazione dei campioni e la
+standardizzazione delle variabili o la normalizzazione delle variabili o lo scaling delle variabili..", specificate sempre.
+Se utilizzate librerie che trovate online date una piccola overview di che cos'è il dataset che è stato analizzato.
+
+Mi raccomando di leggere i pacchetti che si utilizzano. Se si utilizza Scikit Learn ad esempio,
+bisogna valutare se la PCA di Scikit Learn centra i dati oppure no, e se fa solo il centraggio,
+siccome a noi serve l'autoscaling e non il centraggio, dovete flaggare come off il centraggio e
+farvi a mano l'autoscaling....
+Chiedetevi sempre:
+Quindi avete utilizzato questo pacchetto, ma era già centrato? Cosa fa questo? Centra già?
+
+Poi ci sarebbe
+-imputazione dei MISSING VALUES.
+Sono da tenere in consdierazione i missing values, che ci facciamo con il missing value?
+Il nostro dataset non ha null. Il nostro dataset è stato già pulito. Soprattutto in lipidomica e metabolomica,
+è difficile che vengano rimossi campioni a posteriori, perché significa che lo strumento non ha pescato il campione,
+perché in lipidomica e metabolomica dopo tutti i filtraggi che facciamo, solitamente i campioni non hanno missing value.
+Quindi i campioni si rimuovono quando è una situazione drastica, cioè quando andiamo a vedere il cromatogramma,
+il cromatogramma è piatto, fa schifo, ha dei picchi larghi per cui è successo qualcosa, a quel punto leviamo i campioni.
+I campioni non si levano mai perché è merce rara, ce n'abbiamo già pochi e se iniziamo a elevare i campioni è un
+problema. E poi soprattutto perché noi, siccome come dicevo tutti questi dataset sono fatti untargeted, la selezione
+la facciamo sulle variabili, perché noi l'incertezza maggiore, se siamo sicuri che l'esperimento è andato bene, l'incertezza
+è su come è stata misurata la variabile. Quindi siccome in maniera untargeted, non è che le variabili hanno già nome e cognome,
+ma è: "io ho misurato questo segnale, questo segnale ogni tot io scansiono, quindi ogni tot arrivano molecole, non è detto che
+in quella fascia di tempo che sto scansionando stiano arrivando molecole allo strumento, è possibile che quel tempo sia vuoto,
+quell'm/z sia vuoto, perché non ci sono quelle molecole all'interno della..." Quindi se io facessi una selezione sui campioni
+rispetto alla presenza di NAN, rischio che trovo campioni quando il problema è la variabile, non è il campione. Quindi noi nelle
+fasi di pre processamento a priori facciamo già una selezione delle variabili che non sono almeno nel 75% dei campioni. Poi però
+ci sono le tecniche di imputazione, perché se io avessi una distribuzione dei miei campioni che rappresentano la distribuzione
+della popolazione, posso pensare di fare delle tecniche di imputazione stimando rispetto alla distribuzione degli altri campioni,
+perché i NAN presenti all'interno del nostro dataset hanno diversa natura. Alcuni sono semplicemente: "questa molecole e questo
+trattamento non viene espressa". Immaginate ad esempio di lavorare con cellule tumorali e cellule tumorali unturgated. Chiaramente
+il trattamento sulle cellule tumorali può attivare dei pathway e può far produrre alle cellule delle proteine o dei metaboliti che
+le cellule tumorali di per sé non hanno. Questo è anche un grande problema per noi, perché chiaramente le cellule tumorali, tutto
+il blocco della classe delle cellule tumorali non avrà alcune variabili. In questo caso è una situazione molto complessa, però
+l'imputazione così non la posso fare. Non posso fare una stima sulle cellule tumorali, sulle cellule tumorali trattate per quelle
+variabilil lì. Un approccio potrebbe essere quello di, soprattutto per l'effetto analisi multivariate, è quello di utilizzare un
+valore estremamente piccolo, solitamente calcolato come un quinto del valore minimo, misurato per quella variabile, ma costante.
+Perché il che significa che non avrà una grande variabilità e quindi per esempio nella PCA non viene pesato perchè lo vediamo con
+la massima varianza per cui se io lo sostituisco con un valore molto piccolo e costante, quelle variabili non andranno a pesare
+nella mia analisi multivariata. Un'altra approccio è quello di simulare il rumore, e quindi le sostituisco con il rumore, oppure,
+se stiamo parlando della quantitativa, con il log. Cioè, so che questo strumento ha un limite di rilevabilità, quindi log detection,
+e posso sostituire tutti i NUN con quel valore lì. Perché significa che quella molecola non raggiunge quel valore.
+
+Ma noi siamo fortunati, non abbiamo MISSING VALUES.
+
+Volevo capire se i dati dovessero essere controllati per la mancanza di valori NAN proprio a monte, seppur non ci sono i
+valori NAN, non ci sono problemi di questo tipo, ma giusto per capire se è un controllo che va fatto prima, quindi con
+una possibile imputazione di valori che deve essere fatta prima ancora di passare per tutte le fasi di normalizzazzione.
+Dipende come tu faccia la normalizzazione. Se tu fai per esempio una normalizzazione per mediana, calcolare un quinto del
+valore minimo del dataset che poi dopo vai a dividere per la mediana, o calcolarlo dopo, alla fine non cambia niente.
+Se tu fai un'imputazione di calcolo, a quel punto cambia e ti direi di farlo sul dataset normalizzato, sul data set
+preprocessato, non è che lo puoi fare sul data set raw. Chiaramente l'imputazione dipende a che fase stai,
+perché è qualcosa che dovresti ripetere ogni volta, perché se fai diversi test di diverse normalizzazioni, per ogni test
+dovresti calcolarti la sua imputazione. Se tu: voglio provare pqn, median, voglio provare un picco che vedo dove è costante,
+e poi su questi per valutarli faccio la PCA, allora poi su ogni dataset dopo la normalizzazione devi rifare l'imputazione,
+perché se no la PCA con i missing non la puoi fare. Su questo ci devi ragionare, quando la devi fare l'imputazione, a che fase,
+cosa sto vedendo? Se incide sull'analisi dopo? Se incide sull'analisi dopo. Considerate che se voi utilizzate un quinto del
+valore minimo, o comunque la sostituzione con un valore molto piccolo ma costante, chiaramente quel valore, perché non
+utilizziamo questa tecnica? Perché non influenza la varianza se ci pensate, è un valore costante per tutti i NaN ed è molto
+piccolo, quindi non avrà peso sulla PCA, se ha peso sulla PCA avete un problema, perché allora vuol dire che quella variabile
+forse andrebbe scartata perché vuol dire che sono magari tutti NaN. Poi questa valutazione su quanti NaN avete per ogni variabile,
+fortunatamente non la dovete fare perché il dataset è già filtrato. Si, però era più una curiosità su quando effettivamente applicare
+questo approccio. Dipende da cosa si sta cercando. Esatto, dipende sempre da quello che si sta facendo e come lo sta imputando
+quel NaN, perché chiaramente se utilizzate un quinto del minimo, cambia poco che lo fate prima o dopo, però se invece utilizzate
+un metodo di imputazione che vi dà un valore calcolato, non reale, dovete lavorare sul data set pulito, normalizzato. Voi avete
+fatto l'imputazione? No, abbiamo controllato solo che non ci fossero missing values e non ci sono quindi non ci siamo posti il problema.
+
+Poi, dopo aver fatto questi passaggi:
+-come decidiamo chi va nel training e chi va nel test?
+Perché da qui si è arrivato al punto in cui dobbiamo dividere i dati.
+Immaginiamo di aver già fatto un'ottimizzazione del preprocessamento, plottato i nostri
+dati tante tante volte per vedere l'effetto di ogni step. Possiamo quindi usare uno
+dei metodi visti per lo split
+
+Ad esempio, voglio utilizzare il metodo randomico, come lo faccio? E come lo vedo se è rappresentativo della mia variabilità?
+Perché io provo un test, posso provare, adesso ho utilizzato quello randomico, posso provare il primo, posso provare il secondo
+approccio, il terzo approccio.
+Come valuto se io li ho rappresentato il bene? Se il training è rappresentativo della variabilità dei miei dati, come fareste?
+Puoi fare l'analisi delle componenti principali, grafichi gli score plot, puoi costruire la PCA solo
+sul training, applichi i loadings sul test e proietti.
+Ovviamente questo che significa?
+Avete il dataset, utilizzate l'approccio, siamo arrivati che era scalato. Anche se nell'approccio randomico non
+è necessario scalare i dati, quindi potremmo partire dal livello superiore: prendiamo il dataset senza l'autoscaling, solo
+con il logaritmo, facciamo un approccio randomico, dividiamo training e test set, applico l'autoscaling sul training,
+mi tengo la media, la mediana e la deviazione standard da parte, e applico media, deviazione standard del training per scalare
+il validation set. Calcolo la PCA sul training, applico i loadings sul test.
+Quindi mi raccomando, quando fate preprocessamenti che dipendono dal dataset, dovete tornare sempre al momento in cui
+quella dipendenza viene tolta. Se io faccio come normalizzazione PQN che dipende dal dataset, me la devo ricalcolare
+quando divido dataset in training e test, utilizzare i coefficienti del training per normalizzare il test.
+E quindi possiamo fare la PCA.
+
+Altri approcci? Come valutiamo se training scelto bene?
+Il cluster è un metodo.
+Ma come valuto se un metodo è migliore del randomico? A parte la PCA che comunque va molto bene.
+Si può fare un calcolo della variabilità all'interno, potete graficarvi le variabili e vedete se più o meno
+le intensità delle variabili sono le stesse per training e test set. Oppure potete fare un vulcano plot del training,
+un vulcano plot del test (per un problema a 2 classi) e vedere se le variabili significative siano le stesse.
+Potreste fare un modello direttamente di classificazione e vedere come cambiano i parametri dei modelli di
+classificazione al cambiare del training e del test set o al cambiare del metodo di selezione di training e test.
+
+Ogni step che fate, siate sicuri che quello step è ottimale, non esiste uno step: "vabbè, ma tanto faccio così" oppure
+quello perché lo dicono in letteratura. Questi sono tutti approcci validi, sono approcci validi fino a che voi dimostrate
+che siano fatti bene, che siamo andati al confine, che non state alterate i vostri dati e che non avete introdotto un bias.
+
+
+Andrebbe applicato una fase di anomaly detection per capire quali campioni potrebbero non essere utili o no?
+Allora potresti provare a fare una cosa in genere, però fai attenzione perché rimuovere i campioni è sempre rischioso.
+Quindi noi partiamo dal dataset che non sono ricchi, i dati sono preziosi, quindi prima di rimuovere i dati controlla
+perché se tu hai certezza sulle variabili e hai fatto un saggio quantitativo che sai che è estremamente robusto, che è
+impossibile che ci siano alterazione eccetera, allora a quel punto fai una valutazione sui campioni.
+Ma siccome noi sappiamo che queste analisi sono analisi untargeted e quindi c'è anche una certa variabilità all'interno
+delle variabili, non è una quantitativa, non è utilizzato uno standard interno, è un approccio untargeted, quindi mi posso
+aspettare che se vedo dei campioni che hanno dei trend non consumi rispetto agli altri è possibile che ci sia un problema
+sulle variabili.
+Quindi prima di rimuovere i campioni io farei un controllo sulle variabili, a monte prima farei diverse normalizzazioni,
+però le normalizzazioni vedo se ci sono delle anomalie, se ci sono delle anomalie le vado a studiare prima per quanto riguarda
+le variabili e poi una valutazione su,
+mi tengo tutti i campioni o faccio dei subset?
+Oppure se avessi avuto la demografica in un sistema ideale potevate pensare di fare diversi gruppi in base ad esempio all'età
+delle madri, a fasce d'età...non è il nostro caso.
+
+Suggerisco anche di provare diversi approcci per esempio pure per la cross validation, non è detto Che il 5 k fold sia quello
+giusto perché ti dice: "sì beh mantengo sempre lo stesso rapporto poi in base a come viene scelto, come viene stratificato..
+L'approccio randomico provatelo, lo comparate perché io mi aspetto che un approccio strutturato come il 5 fold se il dataset
+è sufficientemente omogeneo, dovrebbe performare come il randomico.
+Se questa cosa non va, è un campanello d'allarme sui limiti dei vostri modelli.
+
+Per esempio, sia con la selezione che con la divisione randomica, quindi con i SID, che sia con strutturata...questo lo
+potete fare per la cross validazione, ma lo potete fare anche per la selezione del training e del test.
+Quando manca, di base conoscenza sufficiente della problematica, sarebbe opportuno provare diversi approcci,
+come provare modelli di classificazione, un approccio lineare, un approccio supervisionato, un approccio non lineare,
+stessa cosa deve essere fatta con la parte di preprocessamento.
+Anche perché la parte di preprocessamento è quella più critica ed è quella dove voi potreste introdurre del bias nel vostro
+dataset. Se io faccio una normalizzazione indipendente per classe, delle volte, per esempio, potrebbe essere auspicabile.
+Nel caso dello stesso paziente ci avete l'informazione sano o malato, oppure a diversi time points, potreste pensare
+di utilizzare il time point zero, oppure l'informazione della parte sana per normalizzare quella malata, oppure la parte
+biologica. Ma se io questo stesso approccio lo faccio su un dataset dove non c'è correlazione tra il sano e il malato,
+posso, tra la classe 1 e la classe 2, introdurre un bias.
+Quindi non esiste definire la pipeline e applicarla a tutto. Io non posso definire una pipeline per, che ne so, un tumore al
+colon e poi applicarlo per il diabete. Oppure il tumore al colon sul dataset di metabolomica e poi applicare la stessa pipeline
+per il diabete analizzato in lipidomica. Cioè non c'è assolutamente senso.
+È vero che l'analisi LC-MS non è trascrittomica, ma neanche ai dati demografici, secondo me.
+Secondo me l'analisi dati deve essere modellata anche rispetto ai vari dati. Poi quando si arrivano a sufficienti informazioni
+per poter creare un modello stabile e robusto, però quel modello poi funziona solo su quello.
+Nel nostro caso è ancora più particolare perché, come abbiamo detto, non esiste l'integrazione, o comunque non così
+facilmente, dataset presenti in letteratura con i nostri campioni. Proprio perché i nostri
+campioni sono dipendenti dagli esperimenti.
+Avete provato diverse normalizzazioni?
+Avetefatto il preprocessamento?
+Avete provato logaritmo 10, logaritmo 2? Senza logaritmo?
+Cioè che voi scriviate un report che è come il paper che ho pubblicato io non me ne frega assolutamente niente perché valuto
+molto di più la capacità vostra di ragionare anche la capacità di capire soprattutto qual è il limite dell'analisi che avete
+fatto. A me non interesserà sapere che avete dei modelli al 100% di accuratezza ma voglio sapere perché avete scelto quel modello
+ed eventualmente se scartate quel modello col 100% di accuratezza perché lo avete scartato. Sono molto più interessata nel vedere
+come vi approcciate in maniera critica al preprocessamento che ai risultati ottenuti. Mi potete pure presentare un report
+rivoluzionario dove mi discutete solo i risultati col 10% di accuratezza o solo col 50% di accuratezza e quindi potete
+fare una valutazione perché la classificazione randomica potrebbe funzionare in un caso di questo tipo.
+
+
+Come capire il numero di componenti principali da utilizzare?
+Allora alcuni metodi, il metodo Gayser ci suggeriva molte più componenti (rispetto alle 5 scelte).
+Dipende da che cosa voi siete interessati, perché chiaramente se voi prendete 5 componenti state intorno al 50%
+del variance, quindi magari vi state prendendo metà dell'informazione, quindi probabilmente è per questo che vi prende,
+quanto vi ne prenderà?
+A noi dice per arrivare almeno all'80%..
+Esatto, quindi il discorso è quello che ci siamo metti a lezione. Noi possiamo valutare quali, innanzitutto controllare
+che proprocessamenti avete fatto, e se magari anche con altre normalizzazioni avete questi trend sull'explain variance.
+Bisogna vedere, quando scegliete il numero, questo vale per tutti, il numero di componenti principali, non è detto che un
+metodo sia più giusto dell'altro, perché tu dici: io lo faccio sull'explain Variance, poi bisogna vedere perché lo stai facendo,
+per quale motivo, se puoi per fare uno split training test, per vedere i pattern all'interno per poi darlo in passo a k menas,
+bisogna capire per quale motivo lo fate. Però io potrei anche dire, ok benissimo, le prime 20 componenti principali mi spiegano
+l'80%, però io vedo che dalla quinta componente principale non c'ho grande aggiunta di informazioni, quindi è semplicemente
+un accanimento ...fino ad arrivare all'80%.
+Quindi che faccio? Vado al ritroso e mi grafico tutte le combinazioni tra le prime 5 componenti e mi vado a vedere quale sono
+piu significativi nella differenziazione tra le due classi. A quel punto dico: ok, il grafico che mi interessa è tra PC1 e PC5,
+perché abbiamo questa informazione. Vado sui loadings e vado a vedere quali variabili influenzano PC1 e PC5. Tendenzialmente dovrei
+scegliere tra i vari grafici, io notai tra la matrice che mi generò le varie combinazioni, c'erano alcuni, per esempio se non
+sbaglio PC3 e PC1, che separavano maggiormente i campioni. Dovrei scegliere quindi quelle componenti lì? Se lascia l'informazione
+direi di sì. Era buono per fare il clustering, perché li separava più nettamente rispetto a PC1 e PC5...? E a quel
+punto ti puoi prendere PC1, PC3, e magari ci applicate un approccio di clustering che dipenda
+dallo spazio. Poi potete farci SIMCA.
+
+Poi anomaly detection sui campioni, per vedere se ci sono degli outlier.
+Abbiamo fatto più approcci. Prima abbiamo visto l'hotelling, e la cosa strana è che ci usciva che i campioni di
+quality control erano...Perché i quality control sono pochi, questo andrebbe fatto dopo aver rimosso i QC.
+Non li dovete utilizzare. Perché i QC non erano fatti su tutti i campioni. Erano fatti utilizzando solo alcuni campioni.
+Se fossero stati fatti da tutti i campioni, sì. Ma siccome non sono fatti da tutti i campioni, è possibile che non vengono
+spiegati sufficientemente. Magari erano questi campioni messi qua. Quello che ti consiglierei di fare è togliere i QC.
+Per la rimozione dei campioniabbiamo fatto un intreccio tra quelli che ci davano come outlier e poi abbiamo tolto
+quelli che hanno..abbiamo usato tre metodi e poi se in tutti e tre diceva questo è l'outlier allora lo rimuoviamo.
+Abbiamo dato meno peso all'SPM proprio perché data tanti outlier. Oh, altrimenti potreste pensare, anche perché
+poi gli outlier che togliete devono essere gli stessi esi+ e esi-, non è che li togliete da una parte e non dall'altra..
+Un altro approccio è fare questa cosa sulla sum PCA. Perché questo era il totale, il plot che ci diceva le votazioni, quanti
+erano usciti come outlier e in esi+ non avevamo tolto nessuno, solo in esi- avevamo tolto...però dopo si tolgono da entrambi
+altrimenti non è comparabile e poi facciamo di nuovo.
+
+X per la rimozione degli outlier
+Allora, quando la fate poi dovete pensare, quei campioni che per esempio stanno lì sono dei campioni che, se ti dice bene,
+vengono inseriti nel training test. Poi dipende da come selezionate il training e il test set. Però voi non volete che il
+training set, scusate, veda troppo, o che comunque, se per esempio prendi quello estremamente esterno lì, tu hai questo qua,
+questo campione è qua. Tu questa zona qua non è campionata. Quindi quell'informazione lì non ce l'hai, quindi non puoi in
+realtà dire se quel campione è un outlier biologico perché non abbiamo campionato magari una donna, magari una cinese,
+asiatica...e magari non abbiamo campionato sufficienti donne asiatiche. Quindi però quel campione potrebbe deviare il tuo
+modello. Quindi una valutazione su quelli che sono gli outlier va fatta.
+Però con raziocinio. Loro hanno un modello che praticamente vede metà campioni outlier, probabilmente perché non è
+adatto per campioni biologici. Poi l'algoritmo di SQM non si adatta bene con il nostro tipo di dati. E quindi magari
+potreste fare una valutazione sulla PCA, però dovete trovare un modo oggettivo.
+Non basta dire: "5 campioni per me sono troppi. Se il modello ti dice che sono 5 campioni outlier, dovresti farti due
+domande su come è stato fatto un dataset, ora voi non potete tornare indietro con quello. Però non esiste, "sono troppi,
+sono pochi, senza un motivo razionale", io a loro ho detto guarda sono troppi ma perché ho visto la distribuzione rispetto
+agli altri dati, lui semplicemente ha preso dati più esterni e dice: "ok questi sono outlier ma in realtà no perché quello
+potrebbe essere semplicemente la distribuzione" quello lì invece, quei tre lì guardando la distribuzione potrebbero essere
+potenziali outlier. Però qui ci sono ancora i qc. Io parlo di una distribuzione eventuale senza qc, se eventualmente la
+distribuzione diviene uguale senza qc allora quello lì dovrebbe essere considerato forse come outlier, dipende se l'algoritmo
+te lo identificano un outlier.
+Però rimuovendoli e andando a effettuare una valutazione di quella che è l'explained variance se dovesse aumentare o se
+dovesse diminuire drasticamente allora quello può essere un metodo oggettivo. Sì, potrebbe essere anche un metodo razionale.
+Poi io la valutazione sugli outlier la farei classe per classe, non sulle due classi insieme perché voi volete vedere se
+i campioni siano outlier per la loro classe non per la distribuzione complessiva del dataset.
+Voi l'avete fatto con t square e q residual..anche in quel caso, per esempio se utilizzate questo approccio qua
+chiaramente la PCA è influenzata da quali campioni che ci stanno dentro però voi la definizione di outlier la potreste
+vedere rispetto alla propria classe non rispetto a tutte le classi in gioco, è vero che qua c'è le due classi sole però
+potrebbe essere rischioso se fate una valutazione di questo tipo con tutti i campioni insieme. Quindi mi collego a
+quella che aveva detto prima, quindi adesso non l'abbiamo, però converrebbe quindi vederci quali componenti esprimono
+meglio la varianza per andare a fare l'analisi.
+Perché c'erano PC1 e PC2 però appunto perché non abbiamo ancora scelto tra...Allora, se lo fate classe per classe e
+andate a vedere magari le componenti principali che spiegano la maggior parte della varianza a quel punto fate la
+valutazione anche 20 componenti vanno bene e fate la valutazione sulla varianza spiegata tutta quanto insieme.
+Se lo fate sui campioni insieme, cioè su tutto il dataset insieme lì è un po' rischioso. Però potreste vedere sulle
+componenti principali che dividono le due classi. Perché dico è rischioso? Perché state introducendo un bias, non dico
+che c'è un cherry picking ma ci stiamo avvicinando perché io vado a vedere le componenti principali che mi dividono le
+due classi e quindi sto forzando affinché mi viene bene quel grafico lì perché mi sono focalizzata su: "voglio vedere
+questa specifica separazione questo campione mi si mette in mezzo tra i due, lo cancello. cherry picking. Per questo vi
+dico, io farei una valutazione sulla classe, mi vado a vedere la distribuzione della classe e vedo quali campioni
+deviano da quella distribuzione lì e quale distribuzione ho campionato per quella classe lì, non sulle due classi
+insieme perché mi sto a sistemare i dati. Infatti un'intuizione che ho avuto prima della PLSDA non so perché, però stavo
+pensando: ma non sarebbe più conveniente valutare la PCA per ogni classe e vedere come si comporta una sola classe di dati
+che tipo di... Sì, questo lo puoi fare come lo puoi fare per la valutazione degli outliers e anche per lo splitting, la
+divisione  tra training e test set. Anche quando fate la separazione tra training e test set lo dovete fare classe per
+classe.
+
+Se fai un grafico con box plot sui campioni graficali tutti, anche se 5 e 5 e 5, perché qui ad esempio vedo solo
+controlli, devi vedere tutti i campioni.
+
+Comunque fate una valutazione, magari anche con tecniche esplorative..potete fare Volcano Plot vedete se vi vengono
+più o meno le stesse variabili significative, potete fare la PCA, potete fare come avete fatto qua il Box Plot. Avete
+diversi approcci nella vostra cascata che potete utilizzare.
+
+Gli approcci logaritmici sono effettivamente nel nostro caso possono aiutarci a ricavare un'informazione più robusta
+oppure possono essere più forvianti e quindi allontanarci da un risultato perché è nell'articolo credo che stesse facendo
+riferimento più alla diversità dei dati dopo un approccio di logaritmo naturale però suggeriva come questi approcci di
+trasformazione matematica possono introdurre un po' di deviazione da quello che è il significato biologico. Perché voi
+avete fatto logaritmo? Perché dovevamo far sì che tutti i campioni avessero un andamento gaussiano, una distribuzione
+normale, perché possiamo avere dei campioni particolarmente alti ed altri particolarmente bassi. Allora, logaritmo va
+applicato proprio per questo perché in biologia non abbiamo distribuzione normale dei dati, e in spettrometria di masso
+anche, il logaritmo ci aiuta su questo. Chiaramente se andiamo a valutare variabile per variabile l'intensità media di
+quella variabile non è un'interpretazione reale ma questo approccio in realtà ha già anche poco senso rispetto alla nostra
+tecnica perché noi non abbiamo una tecnica quantitativa, noi non abbiamo la concentrazione assoluta dei nostri campioni
+noi abbiamo la concentrazione relativa quindi l'intensità è correlata in qualche modo alla concentrazione ma non è
+quantificata in maniera assoluta quindi se voi poi fate approcci univariati parametrici come per esempio il t-test per
+forza dovete utilizzare logaritmo, quello che potreste fare è vedere a monte se la distribuzione dei vostri dati è una
+distribuzione normale o non è una distribuzione normale, nel momento in cui vedete che la distribuzione non è una
+distribuzione normale e i vostri algoritmi o approcci richiedono una distribuzione normale a quel punto dovete utilizzare
+logaritmo.
+
+Allora immaginate che per il report noi non andremo a valutare il valore assoluto della vostra accuratezza,  andremo a
+valutare il vostro ragionamento quindi voi potete anche dire: allora lo scopo è utilizzare gli strumenti che noi vi
+abbiamo dato quindi quello che vi direi è cercare di utilizzare più o meno non dico tutto però almeno una tecnica per
+ognuna, il variable selection, lo space reduction fate capire che avete capito la differenza tra l'uno e l'altro
+e sapete utilizzare l'uno e l'altro.
+Io vi ho fatto tecniche di analisi esplorativa fate vedere che sapete utilizzare quello, abbiamo fatto modelli di
+classificazione più avanzati ragionate anche su quei modelli lì magari lo potete comparare con un approccio tipo
+PLSDA o tipo SIMCA che sono degli approcci che abbiamo visto, abbiamo visto oggi come fare la fusione magari la
+divisione di training e test set invece di utilizzare la PCA utilizzate la sum PCSA così avrete lo stesso training e test
+set per ESI positivo e ESI negativo quindi da un lato vi dico cercate di utilizzare perché lo scopo del vostro report
+non è avere un bel modello ma dimostrare che gli strumenti che vi sono stati dati li avete compresi e li sapete riutilizzare
+però anche il fatto di studiare questa roba va benissimo mettila nel report "come dal paper ho visto che ci sono queste
+normalizzazioni abbiamo provato queste e poi abbiamo deciso di continuare la pipeline con queste altre" e quindi argomenti
+perché hai usato un approccio e non un altro poi quello che valutiamo è proprio il ragionamento che hai fatto. Quindi
+parlate nel report non mi mettete solo figure possibilmente con dei colori decenti e delle leggende e dei label su tutti
+gli assi delle figure.
+
+INDICAZIONI PER I GRAFICI
+Qualsiasi grafico deve avere:
+    -Etichettatura (Labels): È obbligatorio includere etichette chiare e leggibili per entrambi
+    gli assi (X e Y), specificando non solo la variabile misurata ma anche la relativa unità di misura.
+    -Titoli e Legende: Ogni grafico deve avere un titolo conciso ma esplicativo e, qualora si utilizzino
+    colori o simboli diversi per distinguere gruppi, deve essere sempre presente una legenda.
+    -Accessibilità Cromatica: Si raccomanda l'uso di palette di colori inclusive, adatte a chi soffre
+    di daltonismo.
+E' buona norma combinare i colori con simboli diversi (es. cerchi, quadrati, triangoli) per garantire che
+il grafico resti interpretabile anche se stampato in scala di grigi.
+Ogni grafico deve avere i suoi label sia su x e y. Ogni grafico deve essere
+indipendente e spiegato.
+
+PCA
+Nelle PCA: scoreplot, loadingplot, sugli assi è riportata anche l'explained variance.
+I dati, i grafici devono essere spiegati. Loadingplot, m0 rispetto all'intensità dei loadings, leggenda, titolo
+Non fate PCA dove rappresentate gli score senza loadings, non fate PCA dove non ci stanno l'explained
+variance per ogni asse anche se tanto il vostro pacchetto libreria lo fa in automatico l'explained
+variance, però mi raccomando.
+Nella PCA sarebbe ottimo mettere l'explain variance. Se per esempio provate diversi preprocessamenti un grafico di come
+cambia la varianza all'interno dei vostri dati, in qualche modo trovate il modo più bello che vi piace di più perché
+un aspetto fondamentale del nostro lavoro purtroppo è trovare dei grafici idonei e ve lo dico, spesso non bastano quello
+delle librerie.
 
 
 
+INDICAZIONE PER LE SLIDE PRESENTAZIONE
+-Non devono essere troppo colorate,
+-Devono essere lineari.
+-Devono avere una struttura, devono avere un'agenda.
+-Devono iniziare con l'indice (struttura con introduzione, materiali e metodi, risultati, conclusioni finali).
+-Devono essere sempre leggibili quindi devono avere il numero le slide.
+-Devono essere chiare.
+-Devono essere chiaramente scritte in inglese.
+-Possiamo scegliere noi colore, animazione..
+-Devono esserci degli elementi grafici
+    -Utilizzare il grassetto, il corsivo per le parole chiavi perché aiutano anche noi nella presentazione.
+-Non devono essere troppo scritte, ma neanche senza scritte, una via di mezzo.
+-Per i grafici:
+    -assi
+    -label sugli assi
+    -la leggenda per i colori
+    -tutto deve essere leggibile.
+    -se non è leggibile perché ci sono troppe variabili, troppi nomi..allora evidenziate le variabili
+    più significativi e le scrivete a mano
+    -non presentate assi senza label o senza unità di misura
+    -mi raccomando alle unità di misura.
+-Alternarsi nella presentazione, dobbiamo sapere tutto di tutto il progetto perché non è detto che le domande
+avvengano solo sulla parte che stiamo presentando.
+Quindi:
+Titolo, nome, piccola introduzione (che cos'è congenital hearth disease..)
+-Le slide dei materiali e metodi devono essere esaustive, ci deve essere il pre-processamento che
+avete utilizzato, ci deve essere come è composto il dataset, ci devono essere tutti i parametri
+che avete messo e che avete ottimizzato all'interno dei vostri modelli perché dalla slide dei
+materiali meriti si deve capire se c'è qualche errore anche formale nella parte di analisi e
+deve essere ripetibile.
+-Sopra potete seguire a che punto siamo nella presentazione.
+-Ci devono essere le conclusioni e l'approccio di future work. La sezione future work
+potrebbe essere una critica del vostro sistema e di cose che potreste fare, io apprezzo molto la
+parte del future work perché significa essere concreti.
 
-
-
-...a questo ci avevo pensato, avrei provato anche magari a unirli, provando a utilizzare i campioni di Quality Control anche solo per fare prove. Questo grafico però sinceramente non l'ho capito. Che cosa hai portato sugli assi delle X e delle Y? Che cosa intendi per? Hai provato a fare una… Quello tra cui più mi interessavano erano sia il… B-Plot. Però, di nuovo, anche qui volevo capire se, almeno come prima prova, con quelli che sono le componenti principali e altri aspetti che ho graficato potrebbe, può avere senso? Può avere senso, io qui, per esempio, una cosa che non ti ho chiesto è che normalizzazione hai utilizzato? che processamento hai utilizzato? Questo scoreplot nello specifico ci sta, nel senso più o meno la differenziazione tra controlli e casi non è propriamente netta, come magari abbiamo visto. C'è anche una certa sovrapposizione. Chiaramente solo e osservando gli scoreplot è difficile vedere se c'è un artefatto o un bias. Vedendo così la distribuzione dico: guarda se più o meno ci siano, una cosa che salta abbastanza all'occhio è la quantità di explained variance molto bassa che hai su PC1, perché se non sbaglio è intorno al 26%, che ci può stare, però significa che tu ti stai spalmando la variabilità rispetto a molte componenti principali. Quindi associare a questo un grafico dell'explained variance all'aumentare del numero delle componenti può tornare utile per capire se un preprocessamento ti sta aiutando nella rimozione del rumore o invece sta facendo sì che tu l'informazione biologica la spalmi su tutte le altre componenti principali. Non so se questo è chiaro e se è un approccio che magari voi avevate considerato. Quindi va benissimo vedere i trend all'interno dei campioni come vengono distribuiti. Adesso voi avete fatto la PCA, considerando anche i QC, avete visto che i QC sono abbastanza raggruppati, quindi non c'è influenza tecnica. Questi sono dati raw? Si, quindi a maggior ragione vedi che anche senza la normalizzazione l'analisi è andata abbastanza bene. Poi potete provare a fare diverse normalizzazioni, vedete come cambia con i vari tipi di normalizzazioni che abbiamo visto, potete provare PQN, median, min, massimo minimo, scalo tra 0 e 1, ..quello poi sullo scaling,  e vedete come cambiano queste distribuzioni. Se i dati non presentano alto rumore o alta variabilità, io non mi aspetto che per esempio al variare tra l'utilizzo della media e della mediana ci sia una grande differenza tra le PCA. Se la mediana mi fa vedere che un gruppo sta qua e uno sta qua, poi io utilizzo la media e invece mi sovrappongono, da lì posso pensare che siccome la media è influenzata dagli outliers ho qualche variabile che mi sta trascinando il dataset e quindi lì si fa un ulteriore approfondimento e si dice qual è quella variabile che dà di matto all'interno del mio dataset perché forse allora la devo rimuovere. Andrebbe applicato una fase di anomaly detection per capire quali campioni potrebbero non essere utili o no? Allora potresti provare a fare una cosa in genere, però fai attenzione perché rimuovere i campioni è sempre rischioso. Quindi noi partiamo dal dataset che non sono ricchi, i dati sono preziosi, quindi prima di rimuovere i dati controlla perché se tu hai certezza sulle variabili e hai fatto un saggio quantitativo che sai che è estremamente robusto, che è impossibile che ci siano alterazione eccetera, allora a quel punto fai una valutazione sui campioni. Ma siccome noi sappiamo che queste analisi sono analisi untargeted e quindi c'è anche una certa variabilità all'interno delle variabili, non è una quantitativa, non è utilizzato uno standard interno, è un approccio untargeted, quindi mi posso aspettare che se vedo dei campioni che hanno dei trend non consumi rispetto agli altri è possibile che ci sia un problema sulle variabili. Quindi prima di rimuovere i campioni io farei un controllo sulle variabili, a monte prima farei diverse normalizzazioni, però le normalizzazioni vedo se ci sono delle anomalie, se ci sono delle anomalie le vado a studiare prima per quanto riguarda le variabili e poi una valutazione su, mi tengo tutti i campioni o faccio dei subset? oppure se avessi avuto la demografica in un sistema ideale potevate pensare di fare diversi gruppi in base ad esempio all'età delle madri, a fasce d'età, non è il vostro caso però ..valutazione sui campioni, ..variabili robusti e come cambiano rispetto al preprocessamento quindi i qc vanno bene, proseguite con normalizzazione..Per quanto riguarda quello che stavo dicendo sul merito alla distribuzione su degli aspetti biologici, sul fatto che avendo una explained variance così bassa..? Questi sono dati raw, quindi è normale che voi vi portate dentro, siccome sono dati raw abbiamo detto, l'errore tecnico, l'errore biologico, ...non avete ancora fatto nessuna correzione, banalmente il pescaggio del campione è un pescaggio automaticamente, basta che la pipetta che pesca il campione abbia una bolla d'aria dentro state pescando meno campione, quindi un campione avrà tutta un'intensità più bassa e quindi per quanto questi sono sistemi meccanici, però ogni strumento ha un range di tolleranza, quindi è come se fosse l'errore di quello strumento, anche gli approcci meccanici, la pipetta che pesa o pipetta manuale che pesca ha delle tolleranze di errore, quelle tolleranze di errore che può fare, noi le ignoriamo nel grande sistema delle analisi però come nel nostro caso si riflettono sul fatto che magari avete degli scatter e delle fluttuazioni del segnale, quindi quando io parlo di errore tecnico non parlo del grande errore che è caduta ..a terra e ho fatto il disastro ma parlo di tutta la pipeline di tutto il processo che si compone di situazioni meccaniche dove chiaramente le tolleranze di errore sono molto più bassi e più robusti rispetto magari all'operatore o all'operatrice che pipetta in maniera manuale però sono delle fluttuazioni che rispettano i dati, quindi facendo la normalizzazione tutte queste fluttuazioni dovrebbero diminuire, che significa che nell'explained variance quando andiamo a fare lo studio dell'explained variance dei dati raw e dei dati normalizzati o dei dati pre-processati ulteriormente vedremo che questo appiattimento dell'informazione rispetto alle componenti principali dovrebbe diminuire quindi dovreste avere una PC1 ...che inizia a diventare più robusta con un'explained varianza che aumenta. Nel nostro settore biologico questo cambio potrebbe non essere totalmente radicale perché soprattutto nel nostro caso dove non abbiamo lo standard interno le correzioni che facciamo sono delle correzioni matematiche non chimiche, quindi queste correzioni hanno dei limiti e non è detto che noi abbiamo la prima componente principale che nel nostro caso arriva al 26% che schizzi al 71, nel caso in cui avessimo avuto uno standard interno a correzione dell'analisi chimica probabilmente questo jump dell'explained variance sarebbe stato molto più evidente. Perché io dico che la normalizzazione che facciamo noi utilizzando media, mediana o qualsiasi altro massimo dello spettro non è efficiente tanto quanto lo standard interno? perché si basa sempre sui dati che si hanno mentre il standard interno utilizza qualcosa che si potrebbe chiamare come ground truth, qualcosa che si può paragonare a un valore reale a cui bisogna avvicinarsi. Sì, è vero, questo è un aspetto. L'altro aspetto è che noi stiamo analizzando tutte molecole differenti. La capacità di risposta del detector non è uguale per tutte le molecole, l'efficienza di ionizzazione non è uguale per tutte le molecole. Quando io utilizzo un segnale che ho già raccolto, sto dicendo che tutte le molecole nella mia scansione rispondono esattamente come quel valore che ho misurato che è la mediana, quindi è un valore vero rispetto se utilizzo la mediana, ...se la comunque faccio un valore grossolano medio, un trend grossolano medio che ..ma se io ho una molecola chiusa, ingombrata, e invece una molecola lineare, capite da se, cioè voi immaginate chi gioca alle cose che dovete sparare e uccidere gli avversari, arrivare ... di uccidere un avversario, se gli avversari ti mettono tutti a cerchietto è molto più difficile che se dovete attaccare si mettono tutti quanti in fila che se sparate così li colpite tutti in un colpo solo, mentre se dovete uccidere tutti i nemici ma stanno l gruppo dovete lavorare a livelli. La ionizzazione che noi facciamo dopo la fase separativa, noi abbiamo detto la parte cromatografica che ci separa gli analiti, le molecole, e poi c'è la parte di ionizzazione. Nella fase di ionizzazione arrivano le molecole, ora se la molecola per esempio ha un ingombro sterico, cioè è una molecola tridimensionale, immaginate una proteina, immaginate una molecola grande, o è una molecola lineare come una molecola alifatica, come una catena carboniosa, l'efficienza di ionizzazione, quindi la capacità di creare, di rompere legami, la capacità di creare ioni è differente quindi significa che già in questa fase ho delle risposte differenti tra molecole, successivamente noi abbiamo la fase dell'ulteriore separazione, per esempio il TOF, che fa sì che gli ioni arrivano in tempi diversi al detector, questo, basato, rispetto, in base a quale separatore viene analizzato, a quale caratteristica vengono analizzato, farà sì che anche le molecole si muovono in momenti diversi Con efficienza diversa, poi, in ultimo, la capacità del detector di trasformare gli ioni che arrivano in corrente è differente in base alla tipologia di ioni che noi stiamo analizzando. Quindi, perché dico, nel mondo ottimale, nel mondo ideale, se noi avessimo gli standard interni, sicuramente è una correzione superiore rispetto all'utilizzo di tecniche chemiometriche o di tecniche statistiche, proprio perché le tecniche statistiche hanno degli assunti che sono, i miei ioni rispondono tutti nella stessa maniera all'analisi chimica oppure quello che dicevi tu prima, magari non sto tenendo conto del fatto della grand truth, però qual è il limite? Soprattutto quando noi lavoriamo in maniera untargeted, che non sappiamo a priori quali molecole andiamo ad analizzare, non possiamo decidere quali standard interni mettere dentro, esistono dei kit che vi aiutano a fare, dei kit significa delle miscele di molecole di standard che vi aiutano alla normalizzazione ma queste sono un po' difficili da utilizzare soprattutto per la metabolomica, per la lipidomica è un po' più facile perché i lipidi si dividono in classi infatti voi non avete data dataset di lipidomica però in questo caso noi avevamo dataset di lipidomica che però non sono informativi, la metabolomica dà più informazioni in questo caso, in questo studio noi avevamo anche dataset di lipidomica che sono normalizzati per lo standard interno perché nel caso della lipidomica untargeted basta mettere uno standard interno per ogni classe di lipidi e quindi lì è un po' più facile la situazione, per la metabolomica è più difficile perché noi dovremmo utilizzare i metaboliti deuterati, significa che invece dell'idrogeno c'è l'isotopo, l'isotopo del deuterio, il che significa che il deuterio è più pesante, il che significa che noi vediamo quando arriva alla spettrometria di massa un picco differente rispetto alle molecole con presente idrogeno, perché cambia la massa deuterio non è come idrogeno, è vero che in natura esistono gli isotopi eccetera ma stanno a concentrazioni talmente tanto bassecChe noi consideriamo che sia l'idrogeno comune all'interno della molecola. Avere standard interno deuterati costa tantissimo e soprattutto li dovremmo mettere tutti..quindi quello che si fa è prima in maniera untargeted, faccio uno screening tutto e mi arrangio con le normalizzazioni statistiche per la metabolomica, una volta che trovo un pannel di molecole significative poi vado a fare la conferma utilizzando magari a quel punto gli standard deuterati se esistono, c'è anche il problema che non è detto che esistano per tutti perché comunque le sostituzioni dell'idrogeno deuterio non è una cosa a costo zero. Lei prima ha menzionato una possibile soluzione che è quella di utilizzare gli standard interni per classe di lipidi. Allora quando io parlo di classi di lipidi, i lipidi si possono dividere, in realtà si dividono in non so quante classi però queste classi sostanzialmente sono definite dal numero di carbonio presenti e dal tipo di ramificazione. Quello che succede è che essendo, stiamo parlando di esistenzialmente catene quello che può succedere è che all'interno magari della stessa tipologia di molecola può cambiare la posizione di un doppio legame, a quel punto stiamo parlando di una molecola differente Però il comportamento di queste molecole possono essere simili quindi io quello che posso fare per quanto riguarda la lipidomica è non avere, non come per la metabolomica dove i metaboliti sono tutti differenti tra di loro, nella lipidomica posso dire che io tutti questi lipidi che hanno più o meno delle similitudini le considero come una classe e quindi metto uno standard per quella classe, poi a quest'altro gruppo di lipidi che ha delle altre similitudini tra di loro  aggiungo quest'altro standard, questo è uno standard per classe di lipidi ,mentre in metabolomica questa cosa non esiste, in proteomica è anche peggio perché in proteomica noi spacchettiamo le proteine e i peptidi perché noi poi ricostruiamo statisticamente quali erano le proteine a monte vedendo i peptidi finali però in quel caso lo standard interno è impossibile da utilizzare quindi la proteomica su questo aspetto c'è proprio un contrapalto, Questa è più o meno la fase di normalizzazione. La normalizzazione matematica è questa qui con diverse tecniche e vedere quale è la migliore,e la normalizzazione chimica? La pulizia chimica? In realtà abbiamo detto che noi abbiamo due aspetti differenti: a normalizzazione chimica a questo punto la fai con questi approcci matematici: la mediana, la media per campione, noi avevamo detto che la differenza era tra quello che chiamavate normalizzazione o standardizzazione quello che si fa su colonne, e quello che noi definiamo come normalizzazione, normalizzazione chimica che è appunto la stabilizzazione campione per campione. Quindi prima fate la normalizzazione chimica Che nel vostro caso però è matematica, chimica intendo campione per campioni e poi calcolo matematica e chimica in questo caso con basso E poi all'ultimo prima di fare l'analisi multivariata fate la standardizzazione delle variabili quindi centraggio diviso per la direzione standard. O utilizzate il termine normalizzazione chimica e normalizzazione del dataset. Quindi specificate se lavorate per campioni o per colonne o provate qualcosa tipo: faccio la normalizzazione dei campioni e la standardizzazione delle variabili o la normalizzazione delle variabili o lo scaling delle variabili, specificate sempre. Se utilizzate librerie che trovate online date una piccola overview di che cos'è il dataset che è stato analizzato. Sarebbe bellissimo nella PCA anche che mi metteste l'explain variance, se per esempio provate diversi preprocessamenti un grafico di come vi cambia la varianza all'interno dei vostri dati, in qualche modo trovate il modo più bello che vi piace di più perché un aspetto fondamentale del nostro lavoro purtroppo è trovare dei grafici idonei e ve lo dico, spesso non bastano quelle delle librerie. Magari potresti iniziare mettendoci il nome delle variabili sull'asse delle x.... approcci statistici per questo, per la parte di normalizzazione, quando facciamo queste analisi andiamo alla cieca, io poi ti suggerisco anche di provare Diversi approcci per esempio pure per la cross validation, non è detto Che il 5 k fold Sia quello giusto perché ti dice sì beh mantengo sempre lo stesso rapporto poi in base a come viene scelto, come viene Sstratificato.. L'approccio Randomico provatelo Lo comparate perché io Mi aspetto Che un approccio Strutturato Come 5 fold se il dataset è sufficientemente omogeneo, dovrebbe performare come randomica. Se questa cosa non va, è un campanello d'allarme sui limiti dei vostri modelli. Per esempio, sia con la selezione che con la divisione randomica, quindi con i SID, che sia con ...strutturata. Questo lo potete fare per la cross validazione, ma lo potete fare anche per la selezione del training e del testo. Quando manca, di base.. conoscenza sufficiente della problematica, sarebbe opportuno provare diversi approcci, come provate modelli di classificazione, un approccio lineare, un approccio supervisionato, un approccio non lineare, stessa cosa deve essere fatta con la parte di preprocessamento. Anche perché, se ci pensate, la parte di preprocessamento è quella più critica ed è quella dove voi potreste introdurre del bias nel vostro dataset. Se io faccio una normalizzazione indipendente per classe, delle volte, per esempio, potrebbe essere auspicabile. Nel caso  dello stesso paziente ci avete l'informazione sano o malato, oppure a diversi time points, potreste pensare di utilizzare il time point zero, oppure l'informazione della parte sana per normalizzare quella malata, oppure la parte biologica. Ma se io questo stesso approccio lo faccio su un dataset dove non c'è correlazione tra il sano e il malato, posso, tra la classe 1 e la classe 2, introdurre un bias. Quindi non esiste, per esempio, una cosa che succedeva ieri, molti parlavano di definire la pipeline così si può applicarla a tutto. Io non posso, secondo me, almeno con questi dati, io non posso definire una pipeline per, che ne so, un tumore al colon e poi applicarlo per il diabete. Oppure il tumore al colon sul dataset di metabolomica e poi aprire la stessa pipeline per il diabete analizzato in lipidomica. Cioè non c'è assolutamente senso. È vero che l'analisi LC-MS non è trascrittomica, ma neanche ai dati demografici, secondo me. Secondo me l'analisi dati deve essere modellata anche rispetto ai vari dati. Poi quando si arrivano a sufficienti informazioni per poter creare un modello stabile e robusto, però quel modello poi funziona solo su quello. Nel nostro caso è ancora più particolare perché, come abbiamo detto, non esiste l'integrazione, o comunque non così facilmente, dataset presenti in letteratura con i nostri campioni. Proprio perché i nostri campioni sono dipendenti dagli esperimenti. Avete provato diverse normalizzazioni? Avete fatto il preprocessamento? Avete provato logaritmo 10, logaritmo 2? Senza logaritmo? Cioè che voi scriviate un report che è come il paper che ho pubblicato io non me ne frega assolutamente niente perché valuto molto di più la capacità vostra di ragionare anche la capacità di capire soprattutto qual è il limite dell'analisi che avete fatto. A me non interesserà sapere che avete dei modelli al 100% di accuratezza ma voglio sapere perché avete scelto quel modello ed eventualmente se scartate quel modello col 100% di accuratezza perché lo avete scartato. Sono molto più interessata nel vedere come vi approcciate in maniera critica al preprocessamento che ai risultati ottenuti. Mi potete pure presentare un report rivoluzionario dove mi discutete solo i risultati col 10% di accuratezza o solo col 50% di accuratezza e quindi potete fare una valutazione perché la classificazione randomica potrebbe funzionare in un caso di questo tipo.
-
-
-
-
-
-Allora, prof, abbiamo fatto la normalizzazione chimica e poi abbiamo visto tutti i metodi che abbiamo visto a lezione per fare... Allora, posso iniziare a commentare questi grafici? Dove sono i label dei boxplot? Ogni grafico deve avere i suoi label sia su x e y. Ogni grafico deve essere indipendente e spiegato. Qual è la tua domanda? Qui siamo andati poi avanti, prendendo in considerazione questo tipo di normalizzazione..che non cambiava troppo la mediana...Poi siamo andati avanti e abbiamo ...qui siamo andati a recuperare le label che avevamo tolte all'inizio per fare il box plot. E qui poi abbiamo applicato la trasformazione loo. Abbiamo provato sia quella naturale sia quella in base 2. E la base 10 no? No, io la provai però sostanzialmente dal punto di vista del grafico era uguale, cambiava la scala sostanzialmente. Sì, cambia la scala, noi solitamente usiamo log 10, log 2 viene utilizzato in trascrittomica. Potreste semplicemente calcolarvi, perché ora la questione della PA è molto facile, voi prendete i dataset autoscalati, ne calcolate la varianza. Sulla varianza fate la decomposizione svd, in questo caso svds, e poi vi ottenete i loadings con autovettori e autovalori. L'autovalori solo l'explain variance, gli autovettori i loadings, prendete gli autovettori, li moltiplicate per una matrice centrata e ottenete gli score. Quindi vi siete fatti con la PCA e potete combaciare la vostra PCA con quella della biblioteca. Ad esempio, se vedete che c'è qualcosa che non vi torna. Palette, color blind, friendly. Poi qui vogliamo fare il plot per controllare il numero di componenti per la PCA, e qui abbiamo dei dubbi che probabilmente abbiamo sbagliato. Perché guardando la label plot, infatti quello che ci siamo portati avanti che abbiamo scelto, abbiamo scelto 5 componenti, mentre l'altro, il metodo Gayser ci suggeriva molte più componenti. Dipende da che cosa voi siete interessati, perché chiaramente se voi prendete 5 componenti state intorno al 50% del variance, quindi magari vi state prendendo metà dell'informazione, quindi probabilmente è per questo che vi prende, quanto vi ne prenderà? A noi dice per arrivare almeno all'80%..Esatto, quindi il discorso è quello che ci siamo metti a lezione. Noi possiamo valutare quali, innanzitutto controllare che proprocessamenti avete fatto, e se magari anche con altre normalizzazioni avete questi trend sull'explain variance. Bisogna vedere, quando scegliete il numero, questo vale per tutti, il numero di componenti principali, non è detto che un metodo sia più giusto dell'altro, perché tu dici: io lo faccio sull'explain Variance, poi bisogna vedere perché lo stai facendo, per quale motivo, se puoi per fare uno split training test, per vedere i pattern all'interno per poi darlo in passo a k menas, bisogna capire per quale motivo lo fate. Però io potrei anche dire, ok benissimo, le prime 20 componenti principali mi spiegano l'80%, però io vedo che dalla quinta componente principale non c'ho grande aggiunta di informazioni, quindi è semplicemente un accanimento ...fino ad arrivare all'80%. Quindi che faccio? Vado al ritroso e mi grafico tutte le combinazioni tra le prime 5 componenti ...….da pc1 a pc5..esatto e mi vado a vedere quale sono piu significativi nella differenziazione tra le due classi. A quel punto dico: ok, il grafico che mi interessa è tra PC1 e PC5, perché abbiamo questa informazione. Vado sui loadings e vado a vedere quali variabili influenzano PC1 e PC5. Tendenzialmente dovrei scegliere tra i vari grafici, io notai tra la matrice che mi generò le varie combinazioni, c'erano alcuni, per esempio se non sbaglio PC3 e PC1, che separavano maggiormente i campioni. Dovrei scegliere quindi quelle componenti lì? Se lascia l'informazione direi di sì. Era buono per fare il clustering, perché li separava più nettamente rispetto a PC1 e PC5...? E a quel punto ti puoi prendere PC1, PC3, e magari ci applicate un approccio di clustering che dipenda dallo spazio. Poi potete farci SIMCA. Poi siamo passati a fare l'anomaly detection sui campioni, per vedere se ci sono degli outlier. Abbiamo fatto più approcci. Prima abbiamo visto l'hotelling, e la cosa strana è che ci usciva che i campioni di wuality control erano...Perché i quality control sono pochi, questo andrebbe fatto dopo aver rimosso i QC. Non li dovete utilizzare. Perché i QC non erano fatti su tutti i campioni. Erano fatti utilizzando solo alcuni campioni. Se fossero stati fatti da tutti i campioni, sì. Ma siccome non sono fatti da tutti i campioni, è possibile che non vengono spiegati sufficientemente. Magari erano questi campioni messi qua. Quello che ti consiglierei di fare è togliere i QC. Cioè i QC li dovete mantenere fino alla prima fase in cui fate la valutazione di come è andata l'esperimento. Una volta fatta quella valutazione lì? Li togli. Però da quella valutazione cosa possiamo capire? Se i QC servono per capire se l'esperimento è stato fatto bene, è andato a buon fine. Se vediamo che i QC clusterizzano bene, allora vuol dire che l'esperimento è andato bene. Perché quello è lo stesso campione analizzato diverse volte nel tempo. Quindi tu ti aspetti che sia molto vicino tra loro, centrato, eccetera. Però nel positivo non sono così vicini? Perché purtroppo il positivo è fatto in ILIC. L'ILIC è una tecnica molto sensibile a variazioni perché sostanzialmente la colonna..Allora l'ILIC è un approccio abbastanza complesso perché l'interazione chimica non avviene tra la fase stazionaria e i nostri analiti. Ma sostanzialmente sulla nostra fase stazionaria abbiamo visto che la cromatografia ha una fase stazionaria che ha delle caratteristiche chimiche su quali noi passiamo i campioni e i campioni vengono attaccati sulla fase stazionaria. Poi noi passiamo un solvente con determinate caratteristiche che evolve nel tempo. Queste caratteristiche possono essere per esempio la polarità. Siccome queste caratteristiche evolvono nel tempo, aumenta l'affinità nel tempo di alcune molecole con quelle caratteristiche con il solvente. E quindi farà sì che le molecole ad esse sulla fase stazionaria si staccano in maniera selettiva grazie alle proprietà del solvente. Che significa? Allora, immaginiamo di avere una scolaresca. Facciamo questo esempio e metto in tavolo come ci stanno tutte le tipologie di caramelle di questo mondo. I bambini saranno attratti da tutte le caramelle di questo mondo e si attaccano al tavolo. Poi arriva la maestra e inizia a dire: "io ho i cioccolatini, il tavolo finisce però i bambini rimangono vicino al tavolo perché si aspettano altri...arriva la prima maestra e dice: "io ho i cioccolatini, si sposteranno solo i bambini che piacciono i cioccolatini e seguono la maestra. Poi arriva l'altra maestra e dice, "io ho le caramelle gommose, si staccano i bambini che piacciono solo le caramelle gommose. Alla fine arriva la maestra con gli anacardi e se ne andranno con i bambini tristi che non hanno beccato niente fino a quel punto. Questa è la stessa cosa della parte separativa. Tutte le molecole con determinate caratteristiche che gli piacciono, tutte le caramelle che stanno sul tavolo, si attaccano alla fase. Poi, nella fase stazionaria, mano a mano che io vado con il mio eloente, quindi le mie maestre con caratteristiche differenti nel tempo, le molecole che sono più affini a quelle proprietà si staccano e vanno con l'eluente per prendere lo spettometro di massa. Questo è l'approccio normale. Nella ILIC io non ho l'interazione diretta tra le molecole e la fase stazionaria, ma sulla fase stazionaria sostanzialmente si crea uno strato d'acqua. E quindi poi le molecole si vanno a predisporre in questo sistema sandwich. Che significa? Significa che ho una maggiore variabilità, perché l'interazione molecole-fase stazionaria dipenderà prima dall'interazione dell'acqua con la fase stazionaria, poi dipenderà da quanto sono stata brava a stabilizzare questo approccio. Quindi l'interazione delle molecole con la fase stazionaria sarà più variabile. Per questo avete una maggiore variabilità. L'ILIC purtroppo è una tecnica estremamente sensibile alle variazioni e vi assicuro che questo è un buon dataset con questa tecnica. Però poi per continuare l'analisi, togliete i qc, come avete fatto la valutazione vostra. Pure i replicati? Togliete i replicati perché i replicati non ce li avete di tutti. Un altro approccio utile è vedere quanto i replicati siano distanti tra loro. Siccome però i replicati non ce li avete di tutti, non è che potete di quelli che ce li avete i replicati, utilizzare la media e degli altri un valore solo. Perché altrimenti state confrontando un dato più robusto che quello con la media con un dato solo. E quindi quello che vi suggerisco è togliete il secondo replicato. Perché così sono tutti comparabili, tutti analizzati one shot. Ok? E poi fai questa valutazione su quelli che possono essere gli outlier. Anche perché la PCA vi cambierà quando…. Infatti, quella era la domanda. Noi abbiamo fatto tutti i diversi metodi, abbiamo fatto un intreccio tra quelli che ci davano come outlier e poi abbiamo tolto quelli che hanno .. outlier in più... Tutti quelli li hai tolto? No, no, no. Abbiamo usato tre metodi e poi se in tutti e tre diceva questo è l'outlier allora lo rimuoviamo.  Abbiamo dato meno peso all'SPM proprio perché data tanti outlier. Oh, altrimenti potreste pensare, anche perché poi gli outlier che togliete devono essere gli stessi esi+ e esi-, non è che li togliete da una parte e non dall'altra..Un altro approccio è fare questa cosa sulla sum PCA. Perché questo era il totale, il plot che ci diceva le votazioni, quanti erano usciti come outlier e in esi+ non avevamo tolto nessuno, solo in esi- avevamo tolto...però dopo si tolgono da entrambi altrimenti non è comparabile e poi facciamo di nuovo. Quindi l'analisi preliminare sui QC nel nostro caso è fine a se stessa? Nel nostro caso anche il report che facciamo è fine a se stesso. No comunque la devi fare perché devi imparare a leggerla. Però sì, fino a se stessa voi mi puoi anche dire guarda la valutazione che avete fatto voi io non l'avrei fatta così, avrei detto al wet lab, ti saresti assunto la responsabilità che dovevano rifare l'analisi. Ok, quindi questo a voi serve per capire che è una cosa che dovete considerare. Poi il resto, cioè tutto il report è fino a se stesso, non è che poi lo potete pubblicare ..Ci dice com'è andata l'analisi. Esatto, per esempio se vi rendeste conto, non è il vostro caso perché i campioni sono pochi, vi rendeste conto che c'è un effetto temporale, non è il vostro caso, nei QC, cioè per esempio che i QC magari si dispongono tre qua, tre qua, tre qua su PC1, vi rendeste conto che questo è un effetto batch, quindi poi intorno ai QC ci stanno dei campioni, a quel punto potreste utilizzare i QC per riallineare l'effetto batch, rimuovere l'effetto batch. Dovremmo però anche sapere a livello temporale come si..?. Innanzitutto te ne rendi conto dalla PCA perché se c'è un effetto batch PC1 il 99% delle volte spiega l'effetto batch e quindi lo vedi proprio. Poi quando tu vedi questi trend torni nel laboratorio e dici senti: "che mi mandi la sequenza con cui hai analizzato i campioni e lì poi torni tu al computer e ti matchi. Se sei stato bravo, cioè se quello che vedi è un effetto batch strumentale ti dovrebbe combaciare la linea temporale con questa cosa che vedi. Per esempio a noi c'era successo che vedevamo due cluster di questo tipo, però i QC stavano abbastanza bene e l'effetto batch era un effetto biologico, sostanzialmente a quelli che mantenevano i campioni li tenevano in due frigoriferi diversi e si è staccato il frigorifero. Quindi alcuni campioni erano andati a male e quelli poi sono irrecuperabili, cioè se la biologia non c'è non lo correggi quello con l'analisi dati. Poi, allora, prima di tutto volevo capire se i dati dovessero essere controllati per la mancanza di valori NAN proprio a monte, seppur non ci sono i valori NAN, non ci sono problemi di questo tipo, ma giusto per capire se è un controllo che va fatto prima, quindi con una possibile imputazione di valori che deve essere fatta prima ancora di passare per tutte le fasi di normalizzazzione. Dipende come tu faccia la normalizzazione. Se tu fai per esempio una normalizzazione per mediana, calcolare un quinto del valore minimo del dataset che poi dopo vai a dividere per la mediana, o calcolarlo dopo, alla fine non cambia niente. Se tu fai un'imputazione di calcolo, a quel punto cambia e ti direi di farlo sul dataset normalizzato, sul data set preprocessato, non è che lo puoi fare sul data set raw. Chiaramente l'imputazione dipende a che fase stai, perché è qualcosa che dovresti ripetere ogni volta, perché se fai diversi test di diverse normalizzazioni, per ogni test dovresti calcolarti la sua imputazione. Se tu: voglio provare pqn, median, voglio provare un picco che vedo dove è costante, e poi su questi per valutarli faccio la PCA, allora poi su ogni dataset dopo la normalizzazione devi rifare l'imputazione, perché se no la PCA con i missing non la puoi fare. Su questo ci devi ragionare, quando la devi fare l'imputazione, a che fase, cosa sto vedendo? Se incide sull'analisi dopo? Se incide sull'analisi dopo. Considerate che se voi utilizzate un quinto del valore minimo, o comunque la sostituzione con un valore molto piccolo ma costante, chiaramente quel valore, perché non utilizziamo questa tecnica? Perché non influenza la varianza se ci pensate, è un valore costante per tutti i NaN ed è molto piccolo, quindi non avrà peso sulla PCA, se ha peso sulla PCA avete un problema, perché allora vuol dire che quella variabile forse andrebbe scartata perché vuol dire che sono magari tutti NaN. Poi questa valutazione su quanti NaN avete per ogni variabile, fortunatamente non la dovete fare perché il dataset è già filtrato. Si, però era più una curiosità su quando effettivamente applicare questo approccio. Dipende da cosa si sta cercando. Esatto, dipende sempre da quello che si sta facendo e come lo sta imputando quel NaN, perché chiaramente se utilizzate un quinto del minimo, cambia poco che lo fate prima o dopo, però se invece utilizzate un metodo di imputazione che vi dà un valore calcolato, non reale, dovete lavorare sul data set pulito, normalizzato. Voi avete fatto l'imputazione? No, abbiamo controllato solo che non ci fossero missing values e non ci sono quindi non ci siamo posti il problema. A prescindere da tutte queste domande, allora io mi stavo iniziando molto a galvanizzare su questo progetto, e infatti stavo iniziando a fare diverse prove, a graficare diverse cose, tantp è vero che avevo provato a utilizzare anche delle tecniche che sono state indicate in uno dei due paper sulla normalizzazione sia sulla normalizzazione sia sulla trasformazione matematica. Median Level in Beach Samples, che sarebbe la median. Poi c'erano anche, proponevano anche alcune tecniche, indicava che esistono anche alcune tecniche sul web che però fanno diverse modifiche sul dataset ad esempio, non ricordo quale specifiche, però andava a rimuovere automaticamente o i QC, oppure andava a effettuare altre modifiche….Ora, tutte queste cose bellissime magari non anadre anche troppo nel dettaglio. Mi sono accorto che per esempio c'è una tecnica che suggeriva, cioè la normalizzazione....mi sono accorto che in alcune normalizzazioni sono praticamente identiche. E questo è un buon segno. Allora, diciamo che tutte queste tecniche, tutte queste analisi, tutti questi grafici o tecniche non sono state analizzate, cioè io stavo guardando come si stavano comportando gli algoritmi di per sé. Magari invece di avere un metodo automatico che ti grafichi il plot, almeno un grafico fatevelo da soli, cioè gli score, ci sono gli score per la PCA, PC1 e PC2. Allora, sulla parte di normalizzazione non è che avevo ancora scelto quale algoritmo di normalizzazione, anche perché poi c'era tutta un'analisi su quelli che erano i dati relativamente più anomali. Perché tra i dati anomali, almeno nel dataset negativo..però qui tu hai considerato anche i qc, tutte le valutazione le dovete fare senza qc...allora, o come succede a loro, i qc vengono estromessi ed identificati come outlier, e quindi ricopre i veri outlier, perché sono stati fatti non con tutti i campioni, ma con una selezione di alcuni campioni randomici, non hanno mischiato tutti i campioni. E quindi voi in realtà non state facendo una vera valutazione degli outlier. O come potrebbe succedere nel tuo caso, se hai utilizzato altri algoritmi, che, essendo il qc un'informazione media, si concentri il consensus nella parte centrale, perché stai sovracampionando una certa informazione. E quindi stai deviando la distribuzione dei tuoi campioni. E quindi a sua volta vai a deviare quello che è l'identificazione dell'outlier. Anche in questa visualizzazione, sia per questa sia per quella positiva, non ero molto sicuro di voler rimuovere questi campioni, o almeno rimuoverne soltanto uno o due, ma esagerando, perché non sono troppi campioni, non abbiamo troppe informazioni. Allora, quando fate però poi dovete pensare, quei campioni che per esempio stanno lì, che non so chi siano, sono dei campioni che, se ti dice bene, vengono inseriti nel training test. Poi dipende da come selezionate il training e il test set. Però voi non volete che il training set, scusate, veda troppo, o che comunque, se per esempio prendi quello estremamente esterno lì, tu hai questo qua, questo campione è qua. Tu questa zona qua non è campionata. Quindi quell'informazione lì non ce l'hai, quindi non puoi in realtà dire se quel campione è un outlier biologico perché non abbiamo campionato magari una donna, magari una cinese, asiatica...e magari non abbiamo campionato sufficienti donne asiatiche. Quindi però quel campione potrebbe deviare il tuo modello. Quindi una valutazione, come hanno fatto anche loro, una valutazione su quelli che sono gli outlier va fatta. Però con raziocinio. Invece lui, tolgo troppi campioni perché loro hanno un modello che praticamente vede metà campioni outlier, probabilmente perché non è adatto per campioni biologici. Poi l'algoritmo di SQM non si adatta bene con il nostro tipo di dati. E quindi magari potreste fare una valutazione sulla PCA, però dovete trovare un modo oggettivo. Non basta dire: "5 campioni per me sono troppi. Se il modello ti dice che sono 5 campioni outlier, dovresti farti due domande su come è stato fatto un dataset, ora voi non potete tornare indietro con quello. Però non esiste, "sono troppi, sono pochi, senza un motivo razionale", io a loro ho detto guarda sono troppi ma perché ho visto la distribuzione rispetto agli altri dati, lui semplicemente ha preso dati più esterni e dice: "ok questi sono outlier ma in realtà no perché quello potrebbe essere semplicemente la distribuzione" quello lì invece, quei tre lì guardando la distribuzione potrebbero essere potenziali outlier. Però qui ci sono ancora i qc. Io parlo di una distribuzione eventuale senza qc, se eventualmente la distribuzione deviene uguale senza c allora quello lì dovrebbe essere considerato forse come outlier, dipende se l'algoritmo te lo identificano è un outlier. Però rimuovendoli e andando a effettuare una valutazione di quella che è l'explained variance se dovesse aumentare o se dovesse diminuire drasticamente allora quello può essere un metodo oggettivo,  stavo pensando. Sì, potrebbe essere anche un metodo razionale. Poi io la valutazione sugli outlier la farei classe per classe, non sulle due classi insieme perché voi volete vedere se i campioni siano outlier per la loro classe non per la distribuzione complessiva del dataset. Se voi fate la PCA, non ho capito se l'algoritmo di... Voi l'avete fatto con t square e q residual..anche in quel caso, per esempio se utilizzate questo approccio qua chiaramente la PCA è influenzata da quali campioni che ci stanno dentro però voi la definizione di outlier la potreste vedere rispetto alla propria classe non rispetto a tutte le classi in gioco, è vero che qua c'è le due classi sole però potrebbe essere rischioso se fate una valutazione di questo tipo con tutti i campioni insieme. Quindi mi collego a quella che aveva detto prima, quindi adesso non l'abbiamo, però converrebbe quindi vederci quali componenti esprimono meglio la varianza per andare a fare l'analisi questo. Perché .. c'erano PC1 e PC2 però appunto perché non abbiamo ancora scelto tra... Allora, se lo fate classe per classe e andate a vedere magari le componenti principali che spiegano la maggior parte della varianza a quel punto fate la valutazione anche 20 componenti vanno bene e fate la valutazione sulla varianza spiegata tutta quanto insieme. Se lo fate sui campioni insieme, cioè su tutto il dataset insieme lì è un po' rischioso. Però potreste vedere sulle componenti principali che dividono le due classi. Perché dico è rischioso? Perché state introducendo un bias, non dico che c'è un cherry picking ma ci stiamo avvicinando perché io vado a vedere le componenti principali che mi dividono le due classi e quindi sto forzando affinché mi viene bene quel grafico lì perché mi sono focalizzata su: "voglio vedere questa specifica separazione questo campione mi si mette in mezzo tra i due, lo cancello. cherry picking. Per questo vi dico, io farei una valutazione sulla classe, mi vado a vedere la distribuzione della classe e vedo quali campioni deviano da quella distribuzione lì e quale distribuzione ho campionato per quella classe lì, non sulle due classi insieme perché mi sto a sistemare i dati. Infatti un'intuizione che ho avuto prima della PLSDA non so perché, però stavo pensando: ma non sarebbe più conveniente valutare la PCA per ogni classe e vedere come si comporta una sola classe di dati che tipo di... Sì, questo lo puoi fare come lo puoi fare per la valutazione degli outliers e anche per lo splitting, la divisione tra training e test set. Anche quando fate la separazione tra training e test set lo dovete fare classe per classe. Se fai un grafico con box plot sui campioni graficali tutti, anche se 5 e 5 e 5, perché qui ad esempio vedo solo controlli, devi vedere tutti i campioni. Comunque fate una valutazione, magari anche con tecniche esplorative..potete fare Volcano Plot vedete se vi vengono più o meno le stesse variabili significative, potete fare la PCA, potete fare come avete fatto qua il Box Plot. Avete diversi approcci nella vostra cascata che potete utilizzare. Gli approcci logaritmici sono effettivamente nel nostro caso possono aiutarci a ricavare un'informazione più robusta oppure possono essere più forvianti e quindi allontanarci da un risultato perché è nell'articolo credo che stesse facendo riferimento più alla diversità dei dati dopo un approccio di logaritmo naturale però suggeriva come questi approcci di trasformazione matematica possono introdurre un po' di deviazione da quello che è il significato biologico. Perché voi avete fatto logaritmo? Perché dovevamo far sì che tutti i campioni avessero un andamento gaussiano, una distribuzione normale, perché possiamo avere dei campioni particolarmente alti ed altri particolarmente bassi. Allora,  logaritmo va applicato proprio per questo perché in biologia non abbiamo distribuzione normale dei dati, e in spettrometria di masso anche, il logaritmo ci aiuta su questo. Chiaramente se andiamo a valutare variabile per variabile l'intensità media di quella variabile non è un'interpretazione reale ma questo approccio in realtà ha già anche poco senso rispetto alla nostra tecnica perché noi non abbiamo una tecnica quantitativa, noi non abbiamo la concentrazione assoluta dei nostri campioni noi abbiamo la concentrazione relativa quindi l'intensità è correlata in qualche modo alla concentrazione ma non è quantificata in maniera assoluta quindi se voi poi fate approcci univariati parametrici come per esempio il t-test per forza dovete utilizzare logaritmo, quello che potreste fare è vedere a monte se la distribuzione dei vostri dati è una distribuzione normale o non è una distribuzione normale, nel momento in cui vedete che la distribuzione non è una distribuzione normale e i vostri algoritmi o approcci richiedono una distribuzione normale a quel punto dovete utilizzare logaritmo. Allora immaginate che per il report noi non andremo a valutare il valore assoluto della vostra accuratezza, andremo a valutare il vostro ragionamento quindi voi potete anche dire: allora lo scopo è utilizzare gli strumenti che noi vi abbiamo dato quindi quello che vi direi è cercare di utilizzare più o meno non dico tutto però almeno una tecnica per ognuna, il variable selection, lo space reduction fate capire che avete capito la differenza tra l'uno e l'altro e sapete utilizzare l'uno e l'altro. io vi ho fatto tecniche di analisi esplorativa fate vedere che sapete utilizzare quello, abbiamo fatto modelli di classificazione più avanzati ragionate anche su quei modelli lì magari lo potete comparare con un approccio tipo PLSDA o tipo SIMCA che sono degli approcci che abbiamo visto, abbiamo visto oggi come fare la fusione magari la divisione di training e test set invece di utilizzare la PCA utilizzate la sum PCSA così avrete lo stesso training e test set per ESI positivo e ESI negativo quindi da un lato vi dico cercate di utilizzare perché lo scopo del vostro report non è avere un bel modello ma dimostrare che gli strumenti che vi sono stati dati li avete compresi e li sapete riutilizzare  però anche il fatto di studiare questa roba va benissimo mettila nel report "come dal paper ho visto che ci sono queste normalizzazioni abbiamo provato queste e poi abbiamo deciso di continuare la pipeline con queste altre" e quindi argomenti perché hai usato un approccio e non un altro poi quello che valutiamo è proprio il ragionamento che hai fatto. Quindi parlate nel report non mi mettete solo figure possibilmente con dei colori decenti e delle leggende e dei label su tutti gli assi delle figure. A lui va bene, ha utilizzato tre colori differenti, c'è la leggenda, gli assi sono leggibili, il titolo è leggibile i pallini sono leggibili, ci sono tre simboli differenti..però sui loadings ci possiamo migliorare.
