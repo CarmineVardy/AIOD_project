@@ -37,6 +37,7 @@ Pre-processing
     Random dataset shuffle (lasciamolo per dopo)
     Dataset splitting in training and test sets (lasciamolo per dopo)
         Leave One Out
+ 	Stratified K-fold
         Choose splitting ratio between 70-30% or 80-20%
         Analyze and choose the most tailored splitting technique with respect to the sample indipendence
         Biological replicates (In this case from same mother) -> same set
