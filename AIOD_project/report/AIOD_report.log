@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.9)  12 JAN 2026 17:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.9)  14 JAN 2026 23:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -365,28 +365,30 @@ Package caption Info: End \AtBeginDocument code.
 [0{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/texlive/202
 5/texmf-dist/fonts/enc/dvips/base/8r.enc}]
 (C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/AIOD_report.
-toc)
+toc (c:/texlive/2025/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+))
 \tf@toc=\write3
 \openout3 = `AIOD_report.toc'.
 
 
 
-[1] (c:/texlive/2025/texmf-dist/tex/latex/microtype/mt-cmr.cfg
-File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
-(RS)
-)
-<../images/BIPLOT_2024_Metabolomica_Neg.png, id=11, 858.3267pt x 714.9912pt>
+[1]
+
+[2]
+<../images/BIPLOT_2024_Metabolomica_Neg.png, id=15, 858.3267pt x 714.9912pt>
 File: ../images/BIPLOT_2024_Metabolomica_Neg.png Graphic file (type png)
 <use ../images/BIPLOT_2024_Metabolomica_Neg.png>
 Package pdftex.def Info: ../images/BIPLOT_2024_Metabolomica_Neg.png  used on in
-put line 250.
+put line 308.
 (pdftex.def)             Requested size: 258.0pt x 214.91359pt.
 
 
-[2 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../images
-/BIPLOT_2024_Metabolomica_Neg.png>]
-
 [3]
+
+[4 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../images
+/BIPLOT_2024_Metabolomica_Neg.png>]
 (C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/AIOD_report.
 aux)
  ***********
@@ -399,27 +401,28 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 7262 strings out of 473190
- 121845 string characters out of 5719980
- 557608 words of memory out of 5000000
- 30346 multiletter control sequences out of 15000+600000
- 603259 words of font info for 175 fonts, out of 8000000 for 9000
+ 7254 strings out of 473190
+ 121818 string characters out of 5719980
+ 558586 words of memory out of 5000000
+ 30353 multiletter control sequences out of 15000+600000
+ 601456 words of font info for 166 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,12n,65p,1008b,444s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,12n,65p,1008b,358s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/tex
 live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2025/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist
 /fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/texlive/2025/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texli
-ve/2025/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2025/texmf-dist
-/fonts/type1/urw/times/utmri8a.pfb>
+cmr8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
+c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2025/te
+xmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2025/texmf-dist/fonts/typ
+e1/urw/times/utmri8a.pfb>
 Output written on C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/re
-port/AIOD_report.pdf (4 pages, 514755 bytes).
+port/AIOD_report.pdf (5 pages, 530421 bytes).
 PDF statistics:
- 71 PDF objects out of 1000 (max. 8388607)
- 42 compressed objects within 1 object stream
+ 79 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 57862 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 53766 words of extra memory for PDF output out of 61914 (max. 10000000)
 

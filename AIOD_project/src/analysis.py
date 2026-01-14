@@ -147,6 +147,8 @@ def compute_feature_statistics(df):
         pd.DataFrame: A dataframe where index corresponds to feature names and columns
                       to the calculated statistics.
     """
+    # Separate numeric data (local reassignment, original df is safe)
+    df = df.drop(columns=['Class'])
 
     # 1. Initialize the statistics DataFrame
     # We use the transpose of describe() as a starting point (gives count, mean, std, min, 25%, 50%, 75%, max)
@@ -208,6 +210,8 @@ def compute_correlation_matrix(df, method='pearson'):
     Returns:
         pd.DataFrame: Square symmetric matrix of correlation coefficients.
     """
+    # Separate numeric data
+    df = df.drop(columns=['Class'])
     # Returns the correlation matrix (p x p features)
     return df.corr(method=method)
 
@@ -227,7 +231,7 @@ def identify_low_variance_features(stats_df, threshold_cv=30.0):
     unstable_features = stats_df[stats_df['cv_percent'] > threshold_cv].index.tolist()
     return unstable_features
 
-def perform_pca(df, n_components=None, scaling='pareto'):
+def perform_pca(df, n_components=None, scaling='autoscaling'):
     """
     Performs Principal Component Analysis (PCA) on the provided dataset.
 
@@ -259,6 +263,8 @@ def perform_pca(df, n_components=None, scaling='pareto'):
             - 'explained_variance': Array of variance ratio per PC.
             - 'cumulative_variance': Array of cumulative variance.
     """
+    # Separate numeric data for PCA calculation
+    df = df.drop(columns=['Class'])
 
     # 1. Scaling / Preprocessing
     data_mat = df.values
