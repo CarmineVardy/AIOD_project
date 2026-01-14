@@ -122,29 +122,54 @@ def run_pca_and_save_plots(df, dataset_label, output_folder):
 
 
 
+"""
+    Support function which saves the plot in a losses pdf format as default.
+    Plot and directory are passed to the function dinamically
+"""
+def save_plot(plt, filename, output_folder, custom_format='pdf'):
+
+    filename = f"{filename}.{custom_format}"
+
+    try:
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+            print(f"Created directory: {output_folder}")
+
+        plt.savefig(os.path.join(output_folder, filename), format=custom_format, bbox_inches='tight')
+        #plt.close()
+        print(f"Graph {filename} saved in: {output_folder}")
+    except:
+        print(f"[ERROR] in saving {filename}: {e}")
+
+
+
+"""
+    By assuming the first column contains names/IDs, this function extracts the first column of the dataframe in order to use the sample IDs in graphs
+"""
 def get_sample_names(df):
-    """
-    Extracts the first column of the dataframe to be used as sample identifiers.
-    Assumes the first column contains the names/IDs.
-    """
+
     # Reset index if the names are currently in the index
     if df.index.name is not None or not isinstance(df.index, pd.RangeIndex):
         return df.index.tolist()
-    
-    # Otherwise, return the first column
-    return df.iloc[:, 0].tolist()
+    elif df.T.equals(df):  # Check if DataFrame is transposed        
+        return df.iloc[:, 0].tolist() # Return the first column
+    else:
+        return df.iloc[0, :].tolist() # Return the first row
 
+
+
+"""
+    Function that generates a PCA Biplot (Scores + Loadings) for the given dataframe
+"""
 def biplot(df, dataset_label, output_folder):
-    """
-    Generates a PCA Biplot (Scores + Loadings) for the given dataframe.
-    """
+
     # 1. Pre-processing: Separate Numeric Data from Metadata
     # The error 'could not convert string to float' happens because we are trying to scale text columns.
     df_numeric = df.select_dtypes(include=[np.number])
     
     # If the dataframe is empty after filtering, we cannot proceed
     if df_numeric.empty:
-        print(f"Error: No numeric data found in {dataset_label} for PCA.")
+        print(f"Error: No numeric data found in {dataset_label} for PCA")
         return
 
     # Extract sample names for grouping
@@ -161,7 +186,7 @@ def biplot(df, dataset_label, output_folder):
     exp_var = pca.explained_variance_ratio_ * 100
 
     # 2. Setup Plot
-    fig = plt.figure(figsize=(12, 10))
+    fig = plt.figure(figsize=(8, 8))
     scale_factor = np.max(np.abs(scores[:, :2])) * 0.8
     
     # Assign Groups based on Sample Names
@@ -209,14 +234,25 @@ def biplot(df, dataset_label, output_folder):
         y_end = loadings[i, 1] * scale_factor
         c = colors_contributors[idx]
         feat_name = metabolite_names[i]
+
+        # 1. Vector line
+        # Removed invalid arguments: edgecolors, facecolors
+        # Fixed duplicate linewidth (kept 1.5)
+        plt.plot([0, x_end], [0, y_end], color=c, linewidth=1.5, alpha=0.8)
+
+        # 2. Endpoint
+        # Removed facecolors='none' so the dot is filled with color 'c'
+        # Added edgecolors='black' for the outline
+        plt.scatter(x_end, y_end, color=c, edgecolors='black', linewidth=0.5, s=40, zorder=10)
+
+        # 3. Label
+        # Added dynamic alignment so labels don't overlap the line
+        ha_align = 'left' if x_end > 0 else 'right'
+        va_align = 'bottom' if y_end > 0 else 'top'
         
-        # Vector line
-        plt.plot([0, x_end], [0, y_end], color=c, alpha=0.8, linewidth=1.5)
-        # Endpoint
-        plt.scatter(x_end, y_end, color=c, s=40, zorder=10)
-        # Label
         plt.text(x_end * 1.1, y_end * 1.1, feat_name,
-                 color=c, fontsize=8, fontweight='bold', ha='center')
+                color=c, fontsize=8, fontweight='bold', 
+                ha=ha_align, va=va_align)
     
     # Decorations
     plt.axhline(0, color='grey', linestyle='--', linewidth=0.8)
@@ -228,10 +264,12 @@ def biplot(df, dataset_label, output_folder):
     plt.grid(alpha=0.3)
     plt.tight_layout()
     
-    # Save/Show
-    # if output_folder:
-    #     plt.savefig(f"{output_folder}/Biplot_{dataset_label}.png", dpi=300)
+
+    # Save and show
+    save_plot(plt, f'Biplot - {dataset_label}', output_folder)
     plt.show()
+
+
 
 def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
     """
@@ -249,7 +287,6 @@ def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
         Number of samples to select from each group (Control and Case).
     """
     # 1. Prepare Data: Ensure we are working with numeric features for calculation
-    # We assume 'df' is already transposed, so index contains sample names.
     df_numeric = df.select_dtypes(include=[np.number])
     
     # 2. Identify Groups based on Index (Sample Names)
@@ -273,7 +310,7 @@ def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
     df_subset = pd.concat([subset_ctrl, subset_case])
     
     if df_subset.empty:
-        print("Error: No samples found for Z-score plotting after filtering.")
+        print("Error: No samples found for Z-score plotting after filtering")
         return
 
     # 4. Calculate Z-Scores
@@ -284,11 +321,10 @@ def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
     z_score_data = (sample_sums - sample_sums.mean()) / sample_sums.std()
     
     # 5. Assign Colors using Magma Palette
-    # We pick two distinct colors from the Magma colormap
-    # 0.2 is dark purple/black, 0.7 is reddish/orange
+
     cmap = plt.get_cmap("magma")
-    color_ctrl = cmap(0.2) 
-    color_case = cmap(0.7)
+    color_ctrl = cmap(0.2) # dark purple/black
+    color_case = cmap(0.7) # reddish/orange
     
     # Create a color list corresponding to the rows in df_subset
     # Since we concatenated [ctrl, case], the first N are ctrl, the rest are case.
@@ -303,41 +339,46 @@ def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
     plt.ylabel('Z-Score')
     plt.axhline(y=0, color='grey', linestyle='-', linewidth=0.8)
     
+
+    # Manage x-tick density using labels from the helper function
+    sample_names = get_sample_names(df_subset)
+
+
     # Set X-ticks with sample names
-    plt.xticks(range(len(z_score_data)), df_subset.index, rotation=90, fontsize=8)
+    plt.xticks(range(len(sample_names)), df_subset.index, rotation=70, fontsize=8)
+    # Increase space on X axis values
+    plt.tick_params(axis='x', which='both', labelsize=5, width=0.6, pad=0.6)
+    plt.margins(x=0.01)
     
     # Add threshold lines
-    plt.axhline(y=2, color='red', linestyle='--', alpha=0.5, label='Threshold (+/- 2)')
-    plt.axhline(y=-2, color='red', linestyle='--', alpha=0.5)
+    plt.axhline(y=2, color='#B73779', linestyle='--', alpha=0.5, label='Threshold (+/- 2)')
+    plt.axhline(y=-2, color='#B73779', linestyle='--', alpha=0.5)
     
     # 7. Create Custom Legend
     from matplotlib.lines import Line2D
     legend_elements = [
         Line2D([0], [0], color=color_ctrl, lw=4, label='Control'),
         Line2D([0], [0], color=color_case, lw=4, label='Case'),
-        Line2D([0], [0], color='red', linestyle='--', label='Outlier Threshold')
+        Line2D([0], [0], color='#B73779', linestyle='--', label='Outlier Threshold')
     ]
     plt.legend(handles=legend_elements, loc='upper right')
     
     plt.grid(True, axis='y', linestyle=':', alpha=0.6)
     plt.tight_layout()
 
-    '''
-    # Save/Show
-    if output_folder:
-        import os
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
-        plt.savefig(os.path.join(output_folder, f"Z_Score_Subset_{dataset_label}.png"), dpi=300)
-    '''
+
+    # Save and show
+    save_plot(plt, f'Z-Scores of Sample Intensities {dataset_label}', output_folder)
     plt.show()
 
 
-def internal_variability(df, dataset_label, output_folder, samples_per_group=25):
-    """
+
+"""
     Generates a boxplot representing the distribution of intensities for each sample.
     Filters for a subset of samples (Control vs Case) similar to the Z-score plot.
-    """
+"""
+def internal_variability(df, dataset_label, output_folder, samples_per_group=25):
+    
     # 1. Filter Data for Subset (Same logic as Z-score plot)
     # Ensure we are working with numeric features for plotting
     df_numeric_full = df.select_dtypes(include=[np.number])
@@ -364,12 +405,12 @@ def internal_variability(df, dataset_label, output_folder, samples_per_group=25)
 
     # 2. Prepare Data for Boxplot
     # Transpose so columns are samples (Seaborn interprets columns as x-axis categories)
-    df_plot = df_subset.T 
+    #df_plot = df_subset.T 
     
     fig, ax = plt.subplots(figsize=(16, 8))
     
     # Generate Boxplot
-    sns.boxplot(data=df_plot, palette="magma", ax=ax, showfliers=False, linewidth=0.8)
+    sns.boxplot(data=df, palette="magma", ax=ax, showfliers=False, linewidth=0.8)
     
     # Aesthetics
     ax.set_title(f'Internal Variability (Subset: {samples_per_group}/group) - {dataset_label}', fontsize=14, fontweight='bold')
@@ -379,22 +420,21 @@ def internal_variability(df, dataset_label, output_folder, samples_per_group=25)
     # Manage x-tick density using labels from the helper function
     sample_names = get_sample_names(df_subset)
     
-    if df_plot.shape[1] > 60:
+    if df.shape[1] > 60:
         ax.set_xticks([]) # Hide labels if too crowded
     else:
         # Set ticks manually to ensure alignment with sample names
         ax.set_xticks(range(len(sample_names)))
-        ax.set_xticklabels(sample_names, rotation=90, fontsize=8)
+        ax.set_xticklabels(sample_names, rotation=70, fontsize=8)
         
     plt.tight_layout()
-    
-    # Save/Show logic can be added here if needed, consistent with z_score_plot
-    if output_folder:
-        import os
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
-        plt.savefig(os.path.join(output_folder, f"Internal_Variability_Subset_{dataset_label}.png"), dpi=300)
 
+    # Increase space on X axis values
+    plt.tick_params(axis='x', which='both', labelsize=5, width=0.6, pad=0.6)
+    plt.margins(x=0.01)
+
+    # Save and show
+    save_plot(plt, f'Internal Variability {dataset_label}', output_folder)
     plt.show()
     
     
