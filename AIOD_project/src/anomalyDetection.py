@@ -1,3 +1,19 @@
+import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from sklearn.covariance import EllipticEnvelope
+from sklearn.mixture import GaussianMixture
+from sklearn.svm import OneClassSVM
+from sklearn.linear_model import SGDOneClassSVM
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
+from sklearn.pipeline import make_pipeline
+from sklearn.kernel_approximation import Nystroem
+from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score
+
 class AnomalyDetector:
     """
     A class dedicated to detecting anomalies in metabolomic datasets using various
@@ -38,38 +54,6 @@ class AnomalyDetector:
         X_pca = pca.fit_transform(X)
         return X_pca, pca
 
-    def prepare_data(self, df, fname: str):
-        """
-        Prepares the data for anomaly detection.
-
-        The assumption is that the input dataframe has samples as rows and
-        metabolites as columns (after transposition).
-
-        Parameters:
-        -----------
-        df : pd.DataFrame
-            The input dataset.
-        fname : str
-            Filename or identifier for the dataset.
-
-        Returns:
-        --------
-        tuple
-            (X_pca, algorithms) - The processed data and the list of algorithms.
-        """
-        # 1. Data Preparation
-        # If the df is still (Metabolites x Samples), we transpose it here just in case.
-        if df.shape[0] > df.shape[1]:
-            # Heuristic: usually metabolites >> samples. If rows > cols, it might be correct.
-            # But based on previous steps, we expect [Samples, Features].
-            pass
-
-        # In this specific workflow, we assume the input is ready or just needs assignment
-        X_pca = df
-
-        # Note: Variance explained logging would typically happen here if PCA was explicitly run
-        return X_pca, self.algorithms
-
     def plot_mahalanobis_contours(self, df, title="Mahalanobis Distance Analysis"):
         """
         Calculates and visualizes the Mahalanobis distance of samples in a reduced 2D PCA space.
@@ -88,6 +72,7 @@ class AnomalyDetector:
         # It is necessary to project to 2D to draw the contour levels.
         if df.shape[0] < df.shape[1]:
             X = df.T
+            print("Transposed")
         else:
             X = df
 
@@ -251,7 +236,8 @@ class AnomalyDetector:
 
         plt.show()
 
-    def calculate_z_scores(self, df, fname: str):
+
+    def calculate_z_scores(self, df):
         """
         Calculates Z-scores based on the sum of intensities per sample.
         This serves as a simple proxy for total metabolic content to identify
@@ -268,7 +254,7 @@ class AnomalyDetector:
         --------
         tuple
             (z_scores, std_dev)
-        """
+        """           
         # Sum of intensities per sample (a simple proxy for total metabolic content)
         sample_sums = df.sum(axis=1)
 
@@ -279,13 +265,13 @@ class AnomalyDetector:
         z_scores = (sample_sums - mean_val) / std_dev
 
         return z_scores, std_dev
-
+   
     def benchmark_algorithms(self, df, fname: str):
         """
         Benchmarks various anomaly detection algorithms using the Silhouette Score.
         Note: The algorithms used here are fresh instances fitted on the full
         dimensional data, not the 2D projection.
-
+        
         Parameters:
         -----------
         df : pd.DataFrame

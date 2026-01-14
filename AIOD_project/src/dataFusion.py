@@ -7,8 +7,8 @@ class DataFusion:
     A class to perform Data Fusion on metabolomic datasets using Multiblock approaches.
     
     This class supports:
-    1. Standard Low-Level Data Fusion: Concatenation with block scaling based on total block variance.
-    2. QC-based Data Fusion: Concatenation with block scaling based on Quality Control (QC) sample variance.
+    1. Standard Low-Level Data Fusion: Concatenation with block scaling based on total block variance
+    2. QC-based Data Fusion: Concatenation with block scaling based on Quality Control (QC) sample variance
     """
 
     def __init__(self, dataframe_list):
@@ -110,7 +110,7 @@ class DataFusion:
             The fused DataFrame containing metadata and scaled features.
         """
         if not self.dataframe_list or len(self.dataframe_list) < 2:
-            print("[ERROR] Fusion requires at least 2 DataFrames.")
+            print("[ERROR] Fusion requires at least 2 DataFrames")
             return None
 
         print(f"Starting Standard Low-Level Fusion on {len(self.dataframe_list)} blocks...")

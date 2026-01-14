@@ -10,8 +10,8 @@ Dataset è ribaltato
 Project pipeline
 Pre-processing
     QC assestement (Carmine)
-    QC and duplicate removal (Carmine)
-    Anomaly detection (Marco)
+    QC and duplicate removal
+    Anomaly detection (Marco - da testare)
         Standard deviation and z-score
         Benchmarking Anomaly Detection Algorithms
         Loadings removal
@@ -20,7 +20,7 @@ Pre-processing
         Total ion count
         PQN (Probabilistic Quotient Normalization)
         Quantile normalization
-    Dataset merging (Marco)
+    Dataset merging (Marco - da testare)
         Dataset merging -> Normalization / Normalization -> dataset merging
         guardare il cambiamento della media, mediana e dei fattori correttivi tra una scelta e l'altra
         Se effettuare il merging, usare i QC
@@ -31,12 +31,14 @@ Pre-processing
         Biplot	(Marco)
         Loadings (Carmine)
         Internal variability (Marco)
+        z-score (Marco)
     Centering (Carmine)
     Cleaning Nan samples (Marco)
         Already done in the original datasets
-    Random dataset shuffle (lasciamolo per dopo)
-    Dataset splitting in training and test sets (lasciamolo per dopo)
+    Random dataset shuffle
+    Dataset splitting in training and test sets (Marco)
         Leave One Out
+ 	Stratified K-fold
         Choose splitting ratio between 70-30% or 80-20%
         Analyze and choose the most tailored splitting technique with respect to the sample indipendence
         Biological replicates (In this case from same mother) -> same set
