@@ -1,1 +1,5 @@
+# Ignore this folder
+__pycache__/
+
+# execution extensions
 .pyc
