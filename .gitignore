@@ -1,5 +1,6 @@
 # Ignore this folder
-__pycache__/
+/AIOD_project/src/__pycache__
 
 # execution extensions
 .pyc
+
