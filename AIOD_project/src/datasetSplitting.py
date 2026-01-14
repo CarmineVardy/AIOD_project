@@ -45,7 +45,7 @@ class DatasetSplitting:
         else:
             self.groups = None
             
-        # 2. Extract X (Features) - FIX APPLIED HERE
+        # 2. Extract X (Features)
         # We drop the metadata columns AND strictly select only numeric columns.
         # This prevents string columns (like Sample Names) from crashing the ML model.
         self.X = df.drop(columns=cols_to_drop).select_dtypes(include=[np.number])
@@ -87,7 +87,7 @@ class DatasetSplitting:
         Performs Leave-One-Out (LOO) or Leave-One-Group-Out (LOGO).
         """
         if self.groups is not None:
-            print(f"Detected biological groups. Switching LOO to Leave-One-Group-Out ({self.group_col}).")
+            print(f"Detected biological groups. Switching LOO to Leave-One-Group-Out ({self.group_col})")
             cv = LeaveOneGroupOut()
             split_gen = cv.split(self.X, self.y, self.groups)
         else:
@@ -103,7 +103,7 @@ class DatasetSplitting:
 
     def stratified_k_fold(self, n_splits=5):
         """
-        Performs Stratified K-Fold or Stratified Group K-Fold.
+        Performs Stratified K-Fold or Stratified Group K-Fold
         """
         if self.groups is not None:
             print(f"Detected biological groups. Using Stratified Group K-Fold (k={n_splits}).")
@@ -120,7 +120,7 @@ class DatasetSplitting:
 
     def benchmark_methods(self, model=None):
         """
-        Benchmarks the different splitting techniques using a simple model.
+        Benchmarks the different splitting techniques using a simple model
         """
         if model is None:
             # Solver 'liblinear' is good for small datasets, handle numeric inputs only
@@ -189,7 +189,7 @@ class DatasetSplitting:
         
         # Plotting Benchmark Performance
         plt.figure(figsize=(10, 6))
-        sns.barplot(x="Method", y="Mean Accuracy", data=df_res, palette="viridis", capsize=.1)
+        sns.barplot(x="Method", y="Mean Accuracy", data=df_res, palette="magma", capsize=.1)
         plt.title("Splitting Technique Benchmark (Model Accuracy)", fontsize=14)
         plt.ylim(0, 1.0)
         plt.ylabel("Accuracy Score")
@@ -240,7 +240,7 @@ class DatasetSplitting:
             Patch(facecolor='cornflowerblue', label='Training Set'),
             Patch(facecolor='#FC8961', label='Test Set')
         ]
-        fig.legend(handles=legend_elements, loc='upper center', ncol=2, bbox_to_anchor=(0.5, 1.02))
+        fig.legend(handles=legend_elements, loc='upper right', ncol=2, bbox_to_anchor=(0.5, 1.02))
         
         plt.tight_layout()
         plt.show()

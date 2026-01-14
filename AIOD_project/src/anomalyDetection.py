@@ -48,7 +48,7 @@ class AnomalyDetector:
 
     def _generate_pca(self, X, n_components=2):
         """
-        Helper method to perform PCA projection if not already provided.
+        Helper method to perform PCA projection if not already provided
         """
         pca = PCA(n_components=n_components)
         X_pca = pca.fit_transform(X)
