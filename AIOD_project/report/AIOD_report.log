@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.9)  14 JAN 2026 23:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.9)  14 JAN 2026 23:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -395,10 +395,6 @@ aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
  7254 strings out of 473190
@@ -419,7 +415,7 @@ c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2025/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2025/texmf-dist/fonts/typ
 e1/urw/times/utmri8a.pfb>
 Output written on C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/re
-port/AIOD_report.pdf (5 pages, 530421 bytes).
+port/AIOD_report.pdf (5 pages, 530444 bytes).
 PDF statistics:
  79 PDF objects out of 1000 (max. 8388607)
  47 compressed objects within 1 object stream

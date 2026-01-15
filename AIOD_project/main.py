@@ -6,9 +6,13 @@ from src.analysis import *
 from src.anomalyDetection import *
 from src.data_loader import *
 from src.dataFusion import *
+from src.datasetSplitting import *
 from src.evaluation import *
 from src.models import *
+from src.pca import *
+from src.plsDa import *
 from src.preprocessing import *
+from src.simca import *
 from src.univariate_analysis import *
 from src.visualization import *
 
