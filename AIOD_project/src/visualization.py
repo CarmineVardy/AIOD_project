@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import math
-
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.patches import Ellipse
@@ -14,66 +13,10 @@ from matplotlib.lines import Line2D
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+from scipy.stats import norm
 
-# ==============================================================================
-# GLOBAL VISUALIZATION SETTINGS
-# ==============================================================================
+from config_visualization import *
 
-# 1. GRAPHICS FORMAT CONFIGURATION
-# Saving as PDF is preferred for high-resolution vector graphics in reports.
-SAVE_FORMAT = 'pdf'
-
-# Matplotlib global configuration for consistent styling
-plt.rcParams.update({
-    'figure.figsize': (10, 6),      # Default figure size
-    'figure.dpi': 300,              # High resolution for display
-    'axes.titlesize': 14,           # Title font size
-    'axes.labelsize': 12,           # Axis label font size
-    'xtick.labelsize': 10,          # X-axis tick font size
-    'ytick.labelsize': 10,          # Y-axis tick font size
-    'legend.fontsize': 10,          # Legend font size
-    'lines.markersize': 8,          # Marker size for better visibility
-    'font.family': 'sans-serif',    # Clean font family
-    'pdf.fonttype': 42              # Ensure fonts are embedded as TrueType (editable in vector soft)
-})
-
-# ==============================================================================
-# COLOR PALETTE & ACCESSIBILITY
-# ==============================================================================
-
-# AVAILABLE PALETTES (Viridis family - Colorblind friendly & Perceptually Uniform)
-# Change the 'SELECTED_PALETTE' variable below to switch the theme for all plots.
-# Options:
-#   'viridis'  : The default. Blue -> Green -> Yellow. High contrast.
-#   'plasma'   : Blue -> Red -> Yellow. Higher contrast, very vibrant.
-#   'inferno'  : Black -> Red -> Yellow. Good for dark backgrounds or high intensity.
-#   'magma'    : Black -> Purple -> Peach. Similar to inferno but softer.
-#   'cividis'  : Specifically designed for color vision deficiency (CVD). Blue -> Yellow.
-#   'mako'     : Dark Blue -> Green. Ocean-like.
-#   'rocket'   : Dark Purple -> Red -> White.
-#   'turbo'    : Rainbow alternative (use with caution, but better than Jet).
-
-SELECTED_PALETTE = 'viridis'  # <--- MODIFY THIS to test different variants
-
-# Generate a list of discrete colors from the continuous colormap.
-# We extract 10 distinct colors to handle multiple classes or clusters if needed.
-# For binary classes (CTRL vs CHD), the first two or specific indices will be used.
-_cmap =  plt.get_cmap(SELECTED_PALETTE)
-DISCRETE_COLORS = [_cmap(i) for i in np.linspace(0, 1, 10)]
-
-# Set Seaborn default palette to match
-sns.set_palette(DISCRETE_COLORS)
-
-# ==============================================================================
-# MARKERS FOR BLACK & WHITE COMPATIBILITY
-# ==============================================================================
-# To ensure accessibility when printed in grayscale, we map classes to specific markers.
-# Order: Circle, Square, Triangle Up, Diamond, Triangle Down, Cross, Plus
-MARKERS = ['o', 's', '^', 'D', 'v', 'X', 'P']
-
-# ==============================================================================
-# PLOTTING FUNCTIONS
-# ==============================================================================
 
 def plot_boxplots(df, features, output_dir, file_prefix="boxplot", class_col='Class', ylabel='Peak Area',
                   features_per_page=6):
@@ -105,6 +48,8 @@ def plot_boxplots(df, features, output_dir, file_prefix="boxplot", class_col='Cl
 
     # Get unique classes to map markers consistently
     unique_classes = df[class_col].unique()
+    # Fix Warning: Slice the palette to match exactly the number of classes found
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
     # Create a dictionary mapping classes to markers from our global MARKERS list
     # e.g., {'CTRL': 'o', 'CHD': 's'}
     class_marker_map = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
@@ -135,7 +80,7 @@ def plot_boxplots(df, features, output_dir, file_prefix="boxplot", class_col='Cl
             # 1. Draw the Box Plot (The Statistical Summary)
             # whis=1.5 enforces the standard IQR rule (Q1-1.5*IQR, Q3+1.5*IQR)
             sns.boxplot(x=class_col, y=feature, data=df, ax=ax,
-                        palette=DISCRETE_COLORS,  # Use our global accessible palette
+                        palette=current_palette,  # Use our global accessible palette
                         showfliers=False,  # Hide default outliers to avoid duplication with stripplot
                         width=0.5, linewidth=1.5)
 
@@ -143,7 +88,7 @@ def plot_boxplots(df, features, output_dir, file_prefix="boxplot", class_col='Cl
             # We use markers to distinguish classes in B&W
             sns.stripplot(x=class_col, y=feature, data=df, ax=ax,
                           hue=class_col,  # Color by class
-                          palette=DISCRETE_COLORS,  # Same palette
+                          palette=current_palette,  # Same palette
                           dodge=False,  # Align with box
                           jitter=True,  # Add random noise to X to separate overlapping points
                           size=6, alpha=0.7,  # Transparency
@@ -231,6 +176,8 @@ def plot_overlay_dotplots(df, features, output_dir, file_prefix="dotplot", class
 
     # Map classes to markers for consistency
     unique_classes = df[class_col].unique()
+    # Fix Warning: Slice palette
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
     class_marker_map = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
 
     num_features = len(features)
@@ -254,7 +201,7 @@ def plot_overlay_dotplots(df, features, output_dir, file_prefix="dotplot", class
             # --- LAYER 1: The Statistical Context (Box Plot) ---
             # We use a lighter alpha (transparency) for the box so it doesn't obscure the dots.
             sns.boxplot(x=class_col, y=feature, data=df, ax=ax,
-                        palette=DISCRETE_COLORS,
+                        palette=current_palette,
                         showfliers=False,  # We hide automatic outliers because we show ALL points below
                         width=0.5,
                         linewidth=1.2,
@@ -264,7 +211,7 @@ def plot_overlay_dotplots(df, features, output_dir, file_prefix="dotplot", class
             # This provides the "crucial transparency" described in the theory.
             sns.stripplot(x=class_col, y=feature, data=df, ax=ax,
                           hue=class_col,
-                          palette=DISCRETE_COLORS,
+                          palette=current_palette,
                           dodge=False,  # Align dots with the box center
                           jitter=0.2,  # Spread points horizontally to avoid overlap
                           size=7,  # Larger points for better visibility
@@ -306,23 +253,116 @@ def plot_overlay_dotplots(df, features, output_dir, file_prefix="dotplot", class
         print(f"   Saved: {save_path}")
 
 
-def plot_feature_histograms(df, features, output_dir, file_prefix="hist", class_col='Class', xlabel='Intensity',
-                            features_per_page=6):
+def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", class_col='Class', samples_per_page=20):
     """
-    Generates Histograms with overlaid Density Curves (KDE) to visualize the frequency distribution
-    of continuous numerical data.
+    Generates Box Plots visualizing the global intensity distribution of EACH SAMPLE.
+
+    THEORY & USE CASE:
+    ------------------
+    - QC (Quality Control): Essential to identify outlier samples (e.g., dilution errors, instrument failure).
+    - Normalization Check: Before normalization, boxplots might be uneven.
+      After normalization, medians and IQRs should be roughly aligned across all samples.
+
+    Args:
+        df (pd.DataFrame): Dataset (Samples x Features).
+        output_dir (str): Output directory.
+        file_name (str): Output filename prefix.
+        class_col (str): Column identifying the group (used for coloring).
+        samples_per_page (int): Number of samples (X-axis) to show per PDF page.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 1. Identify Numeric Features (Metabolites)
+    # We exclude the Class column and any other non-numeric info
+    numeric_df = df.select_dtypes(include=[np.number])
+
+    # We need the class column aligned with numeric data for coloring
+    # Ensure indices match
+    classes = df[class_col]
+
+    # 2. Setup Coloring
+    unique_classes = df[class_col].unique()
+    # Fix Warning: Slice palette
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
+
+    # 3. Pagination Logic (Iterate by Samples/Rows)
+    num_samples = len(df)
+    num_pages = math.ceil(num_samples / samples_per_page)
+
+    print(f"Generating Sample QC Boxplots: {num_samples} samples across {num_pages} file(s)...")
+
+    # List of Sample IDs
+    sample_ids = df.index.tolist()
+
+    for page in range(num_pages):
+        start_idx = page * samples_per_page
+        end_idx = min(start_idx + samples_per_page, num_samples)
+
+        current_batch_ids = sample_ids[start_idx:end_idx]
+
+        # Subset the dataframe for the current page
+        # We need "Long Format" for Seaborn: SampleID | Class | Intensity
+        # This allows us to plot x=SampleID, y=Intensity, hue=Class
+
+        batch_numeric = numeric_df.loc[current_batch_ids]
+        batch_classes = classes.loc[current_batch_ids]
+
+        # Merge for melting
+        batch_combined = batch_numeric.copy()
+        batch_combined['__Class__'] = batch_classes  # Temporary column
+        batch_combined['__SampleID__'] = batch_combined.index
+
+        # Melt: Transform from Wide (Cols=Metabolites) to Long (Rows=Measurements)
+        # This is heavy, but we do it only for the page subset
+        df_melted = batch_combined.melt(id_vars=['__SampleID__', '__Class__'],
+                                        var_name='Metabolite',
+                                        value_name='Intensity')
+
+        # Plotting
+        fig, ax = plt.subplots(figsize=(12, 6))
+
+        sns.boxplot(data=df_melted, x='__SampleID__', y='Intensity',
+                    hue='__Class__',  # Color the sample box by its class
+                    palette=current_palette,
+                    showfliers=False,  # Hide outliers (too many dots for a QC plot)
+                    linewidth=1.0, width=0.6, ax=ax)
+
+        # Visual Polish
+        ax.set_title(f"Sample Intensity Distributions (Page {page + 1}/{num_pages})", fontweight='bold')
+        ax.set_xlabel("Sample ID")
+        ax.set_ylabel("Intensity Distribution (All Metabolites)")
+
+        # Rotate X labels (Sample Names) for readability
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=90, ha='center', fontsize=9)
+
+        # Legend
+        if ax.get_legend():
+            ax.get_legend().set_title("Group")
+
+        ax.grid(True, axis='y', linestyle='--', alpha=0.3)
+
+        plt.tight_layout()
+
+        filename = f"{file_name}_page{page + 1}.{SAVE_FORMAT}"
+        plt.savefig(os.path.join(output_dir, filename), format=SAVE_FORMAT, bbox_inches='tight')
+        plt.close(fig)
+        print(f"   Saved: {os.path.join(output_dir, filename)}")
+
+def plot_feature_histograms(df, features, output_dir, file_prefix="hist", class_col='Class', xlabel='Intensity',
+                            features_per_page=6, add_gaussian=True):
+    """
+    Generates Histograms to visualize the frequency distribution of continuous data.
+    Can overlay both the empirical density (KDE) and the theoretical Normal Distribution (Gaussian).
 
     THEORY & IMPLEMENTATION DETAILS:
     --------------------------------
-    1. Structure (No Gaps):
-       - Represents continuous data (metabolite intensity).
-       - Bins are adjacent rectangles with no spacing, as per statistical definition.
-    2. Density Curve (KDE):
-       - Overlays a Kernel Density Estimate to approximate the frequency curve.
-       - Helps evaluate skewness (asymmetry) and deviation from a Normal (Gaussian) distribution.
-    3. Comparison:
-       - Plots distributions for different classes (e.g., CTRL vs CHD) on the same axes
-         for direct comparison of shift and shape.
+    1. Structure:
+       - Plots frequency/density of metabolite intensities.
+    2. KDE (Solid Line):
+       - Shows the REAL shape of the data (skewness, multimodal, etc.).
+    3. Gaussian/Normal (Dashed Line) [Optional]:
+       - Shows the THEORETICAL shape if data were perfectly normal (parametric).
+       - Comparison: If Solid and Dashed lines match, T-test is safe. If they differ, consider Mann-Whitney.
 
     Args:
         df (pd.DataFrame): Dataset.
@@ -330,11 +370,20 @@ def plot_feature_histograms(df, features, output_dir, file_prefix="hist", class_
         output_dir (str): Output directory.
         file_prefix (str): Filename prefix.
         class_col (str): Grouping variable.
-        xlabel (str): Label for the X-axis (variable being measured).
+        xlabel (str): Label for the X-axis.
         features_per_page (int): Number of subplots per PDF.
+        add_gaussian (bool): If True, overlaps the theoretical Gaussian curve (dashed).
     """
 
     os.makedirs(output_dir, exist_ok=True)
+
+    # Fix Warning: Slice palette to match number of classes
+    n_classes = df[class_col].nunique()
+    current_palette = DISCRETE_COLORS[:n_classes]
+
+    # Map classes to colors for manual plotting of Gaussian lines
+    unique_classes = df[class_col].unique()
+    color_map = dict(zip(unique_classes, current_palette))
 
     num_features = len(features)
     num_pages = math.ceil(num_features / features_per_page)
@@ -354,25 +403,46 @@ def plot_feature_histograms(df, features, output_dir, file_prefix="hist", class_
         for i, feature in enumerate(current_features):
             ax = axes[i]
 
-            # Plot Histogram with KDE
-            # 'element="step"' or "bars" with binwidth ensures no gaps logic visually,
-            # but standard histplot handles continuous data correctly.
+            # 1. Plot Histogram with Empirical Density (KDE)
             sns.histplot(data=df, x=feature, hue=class_col,
-                         palette=DISCRETE_COLORS,
-                         kde=True,  # Overlay Frequency/Density Curve
-                         element="bars",  # Standard histogram bars
-                         stat="density",  # Normalize to density to make KDE comparable
-                         common_norm=False,  # Normalize each group independently
-                         alpha=0.4,  # Transparency for overlap visibility
-                         edgecolor=None,  # No border on bars to emphasize continuity
+                         palette=current_palette,
+                         kde=True,  # Real Data Curve (Solid)
+                         element="bars",
+                         stat="density",  # Normalize to density
+                         common_norm=False,
+                         alpha=0.3,
+                         edgecolor=None,
+                         line_kws={'linewidth': 1.5},  # Thicker KDE line
                          ax=ax)
 
-            ax.set_title(f"{feature} Distribution", fontweight='bold')
+            # 2. (Optional) Overlay Theoretical Gaussian Curve
+            if add_gaussian:
+                # We calculate and plot a Gaussian for EACH class separately
+                x_min, x_max = ax.get_xlim()
+                x_axis = np.linspace(x_min, x_max, 100)
+
+                for cls in unique_classes:
+                    # Extract data for this class
+                    cls_data = df[df[class_col] == cls][feature].dropna()
+
+                    if len(cls_data) > 1:
+                        # Fit Normal Distribution (Calculate Mean and Std Dev)
+                        mu, std = norm.fit(cls_data)
+
+                        # Generate PDF (Probability Density Function)
+                        p = norm.pdf(x_axis, mu, std)
+
+                        # Plot Dashed Line in the same color as the class
+                        ax.plot(x_axis, p, linestyle='--', linewidth=1.5,
+                                color=color_map[cls], alpha=0.8,
+                                label=f'{cls} Normal' if i == 0 else "")  # Label only once to avoid legend clutter
+
+            ax.set_title(f"{feature} Normality Check", fontweight='bold')
             ax.set_xlabel(xlabel)
-            ax.set_ylabel("Density / Frequency")
+            ax.set_ylabel("Density")
             ax.grid(True, linestyle=':', alpha=0.4)
 
-            # Clean up legend (default seaborn legend can be verbose)
+            # Clean up legend
             if ax.get_legend():
                 ax.get_legend().set_title(class_col)
 
@@ -386,7 +456,6 @@ def plot_feature_histograms(df, features, output_dir, file_prefix="hist", class_
         plt.savefig(os.path.join(output_dir, filename), format=SAVE_FORMAT, bbox_inches='tight')
         plt.close(fig)
         print(f"   Saved: {os.path.join(output_dir, filename)}")
-
 
 def plot_feature_means_bar(df, features, output_dir, file_prefix="barplot", class_col='Class', ylabel='Mean Intensity',
                            features_per_page=6):
@@ -418,6 +487,9 @@ def plot_feature_means_bar(df, features, output_dir, file_prefix="barplot", clas
 
     os.makedirs(output_dir, exist_ok=True)
 
+    n_classes = df[class_col].nunique()
+    current_palette = DISCRETE_COLORS[:n_classes]
+
     num_features = len(features)
     num_pages = math.ceil(num_features / features_per_page)
     n_cols = 2
@@ -442,7 +514,7 @@ def plot_feature_means_bar(df, features, output_dir, file_prefix="barplot", clas
             # Bar Plot: Calculates Mean by default
             # capsize adds the little horizontal lines to the error bars
             bar_plot = sns.barplot(x=class_col, y=feature, data=df, ax=ax,
-                                   palette=DISCRETE_COLORS,
+                                   palette=current_palette,
                                    edgecolor='black',  # Add border to bars
                                    errorbar='sd',  # Show Standard Deviation (or 'ci' for 95% CI)
                                    capsize=0.1,  # Width of error bar caps
@@ -576,6 +648,8 @@ def plot_scatter(df, x_col, y_col, output_dir, file_name="scatter", class_col='C
 
     # Map classes to markers manually for consistency with other plots
     unique_classes = df[class_col].unique()
+    # Fix Warning: Slice palette
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
     markers_dict = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
 
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -586,7 +660,7 @@ def plot_scatter(df, x_col, y_col, output_dir, file_name="scatter", class_col='C
                     hue=class_col,
                     style=class_col,
                     markers=markers_dict,
-                    palette=DISCRETE_COLORS,
+                    palette=current_palette,
                     s=80,  # Size of points
                     alpha=0.8,  # Transparency
                     edgecolor='k',  # Black edge for better definition
@@ -705,356 +779,9 @@ def plot_clustermap(df, features, output_dir, file_name="heatmap", class_col='Cl
     print(f"   Saved: {save_path}")
 
 
-def plot_volcano(results_df, output_dir, file_name="volcano_plot",
-                 p_thresh=0.05, fc_thresh=2.0, use_adj_pval=True, top_n_labels=10):
-    """
-    Generates a Volcano Plot to visualize Univariate Analysis results.
 
-    THEORY & IMPLEMENTATION DETAILS:
-    --------------------------------
-    1. Axes Definition:
-       - X-axis: Magnitude of change (Log2 Fold Change).
-         Positive = Up-regulated in Group 1 vs Group 2.
-         Negative = Down-regulated.
-       - Y-axis: Statistical Significance (-Log10 p-value).
-         Higher values = More significant.
-    2. Thresholds (Regions of Interest):
-       - Horizontal Line: Statistical significance cutoff (e.g., p < 0.05).
-         Can use raw p-value or FDR-adjusted p-value (recommended).
-       - Vertical Lines: Biological relevance cutoff (Fold Change).
-         Input is linear FC (e.g., 2.0), converted to +/- Log2(FC) for plotting.
-    3. Quadrants:
-       - Top-Right: Significantly Up-regulated.
-       - Top-Left: Significantly Down-regulated.
-       - Bottom / Center: Not significant (Noise).
 
-    Args:
-        results_df (pd.DataFrame): Output from 'perform_univariate_analysis'.
-                                   Must contain 'p_value' (or 'p_value_adj') and 'log2_fc'.
-        output_dir (str): Output directory.
-        file_name (str): Filename.
-        p_thresh (float): Significance threshold (default 0.05).
-        fc_thresh (float): Fold Change threshold (linear, e.g., 2.0 implies 2x change).
-        use_adj_pval (bool): If True, uses 'p_value_adj' (FDR). If False, uses raw 'p_value'.
-        top_n_labels (int): Number of top significant features to annotate with text.
-    """
 
-    os.makedirs(output_dir, exist_ok=True)
-
-    # 1. Prepare Data for Plotting
-    df = results_df.copy()
-
-    # Select which p-value to use
-    pval_col = 'p_value_adj' if use_adj_pval else 'p_value'
-
-    # Calculate -Log10(p-value) for Y-axis
-    # Adding a tiny epsilon to avoid log(0) if p-value is extremely small
-    df['neg_log10_p'] = -np.log10(df[pval_col] + 1e-300)
-
-    # Calculate Log2 threshold from linear FC input
-    # e.g., FC=2.0 -> log2(2)=1.0. We check for > 1.0 and < -1.0
-    log2_fc_thresh = np.log2(fc_thresh)
-    neg_log10_p_thresh = -np.log10(p_thresh)
-
-    # 2. Categorize Points (Up, Down, NS)
-    # Define conditions
-    cond_sig = df[pval_col] < p_thresh
-    cond_up = df['log2_fc'] > log2_fc_thresh
-    cond_down = df['log2_fc'] < -log2_fc_thresh
-
-    conditions = [
-        (cond_sig & cond_up),
-        (cond_sig & cond_down)
-    ]
-    choices = ['UP', 'DOWN']
-    df['status'] = np.select(conditions, choices, default='NS')
-
-    # 3. Plotting
-    fig, ax = plt.subplots(figsize=(10, 8))
-
-    # Map colors: NS -> Grey, UP -> Red/Yellow-ish, DOWN -> Blue/Purple-ish
-    # We pick colors from our global DISCRETE_COLORS or define specific ones for contrast
-    # Using 'tab10' or manual mapping for clear distinction
-    palette = {
-        'NS': 'lightgrey',
-        'UP': '#d62728',  # Red
-        'DOWN': '#1f77b4'  # Blue
-    }
-
-    sns.scatterplot(data=df, x='log2_fc', y='neg_log10_p',
-                    hue='status', style='status',
-                    palette=palette,
-                    hue_order=['NS', 'UP', 'DOWN'],
-                    markers={'NS': 'o', 'UP': '^', 'DOWN': 'v'},
-                    s=60, alpha=0.8, edgecolor='k', linewidth=0.5,
-                    ax=ax)
-
-    # 4. Add Threshold Lines
-    # Horizontal (Significance)
-    ax.axhline(neg_log10_p_thresh, color='k', linestyle='--', linewidth=1, alpha=0.7)
-    # Vertical (Fold Change)
-    ax.axvline(log2_fc_thresh, color='k', linestyle='--', linewidth=1, alpha=0.7)
-    ax.axvline(-log2_fc_thresh, color='k', linestyle='--', linewidth=1, alpha=0.7)
-
-    # 5. Annotate Top Features
-    # We sort by p-value (ascending) to find the most significant ones
-    top_hits = df[df['status'] != 'NS'].sort_values(by=pval_col).head(top_n_labels)
-
-    texts = []
-    for idx, row in top_hits.iterrows():
-        texts.append(plt.text(row['log2_fc'], row['neg_log10_p'], idx, fontsize=9))
-
-    # Adjust text positions to avoid overlap (requires 'adjustText' library if available,
-    # otherwise basic placement. Here we assume standard matplotlib).
-    # If you have adjustText installed: from adjustText import adjust_text; adjust_text(texts, arrowprops=dict(arrowstyle='-', color='k', lw=0.5))
-
-    # 6. Labels and Title
-    pval_label = "FDR (adj. p-value)" if use_adj_pval else "Raw p-value"
-    ax.set_xlabel(r"$Log_2$ Fold Change", fontweight='bold')
-    ax.set_ylabel(r"$-Log_{10}$ " + f"({pval_label})", fontweight='bold')
-
-    title_str = f"Volcano Plot (Thresh: p<{p_thresh}, FC>{fc_thresh})"
-    ax.set_title(title_str, fontweight='bold')
-
-    # Add informative legend text about quadrants
-    info_text = (f"UP: p<{p_thresh} & FC>{fc_thresh}\n"
-                 f"DOWN: p<{p_thresh} & FC<1/{fc_thresh}")
-    plt.text(0.98, 0.02, info_text, transform=ax.transAxes,
-             fontsize=9, verticalalignment='bottom', horizontalalignment='right',
-             bbox=dict(boxstyle="round,pad=0.3", edgecolor="gray", facecolor="white", alpha=0.9))
-
-    plt.tight_layout()
-
-    save_path = os.path.join(output_dir, f"{file_name}.{SAVE_FORMAT}")
-    plt.savefig(save_path, format=SAVE_FORMAT, bbox_inches='tight')
-    plt.close(fig)
-
-    print(f"Generating Volcano Plot saved to {save_path}")
-    print(f"   Significant features highlighted: {len(df[df['status'] != 'NS'])}")
-
-
-
-
-def plot_pca_scree(pca_results, output_dir, file_name="pca_scree_plot", threshold=0.9):
-    """
-    Generates a Scree Plot (Elbow Method) to help select the optimal number of components.
-
-    Displays both individual Explained Variance (Bars) and Cumulative Variance (Line).
-    """
-    os.makedirs(output_dir, exist_ok=True)
-
-    var_ratio = pca_results['explained_variance']
-    cum_var = pca_results['cumulative_variance']
-    n_pcs = len(var_ratio)
-
-    # Limit to first 20 PCs for readability if many dimensions exist
-    n_plot = min(20, n_pcs)
-    x_range = np.arange(1, n_plot + 1)
-
-    fig, ax1 = plt.subplots(figsize=(10, 6))
-
-    # Bar Chart (Individual Variance)
-    ax1.bar(x_range, var_ratio[:n_plot] * 100, color=DISCRETE_COLORS[0], alpha=0.7, label='Individual Variance')
-    ax1.set_xlabel('Principal Components')
-    ax1.set_ylabel('Explained Variance (%)', color=DISCRETE_COLORS[0])
-    ax1.tick_params(axis='y', labelcolor=DISCRETE_COLORS[0])
-    ax1.set_xticks(x_range)
-
-    # Line Chart (Cumulative Variance)
-    ax2 = ax1.twinx()
-    ax2.plot(x_range, cum_var[:n_plot] * 100, color=DISCRETE_COLORS[4], marker='o', linewidth=2,
-             label='Cumulative Variance')
-    ax2.set_ylabel('Cumulative Variance (%)', color=DISCRETE_COLORS[4])
-    ax2.tick_params(axis='y', labelcolor=DISCRETE_COLORS[4])
-
-    # Threshold Line (e.g., 90%)
-    ax2.axhline(y=threshold * 100, color='grey', linestyle='--', alpha=0.5)
-    ax2.text(n_plot, threshold * 100 + 1, f'{int(threshold * 100)}% Threshold', color='grey', ha='right')
-
-    plt.title('PCA Scree Plot (Explained Variance)', fontweight='bold')
-
-    save_path = os.path.join(output_dir, f"{file_name}.{SAVE_FORMAT}")
-    plt.savefig(save_path, format=SAVE_FORMAT, bbox_inches='tight')
-    plt.close(fig)
-    print(f"Generating PCA Scree Plot saved to {save_path}")
-
-
-def plot_pca_scores(pca_results, df, output_dir, pc_x=1, pc_y=2, file_name="pca_score_plot", class_col='Class',
-                    show_ellipse=True):
-    """
-    Generates the PCA Score Plot with Hotelling's T2 Confidence Ellipse.
-
-    THEORY:
-    - Visualizes samples in the reduced space (PCx vs PCy).
-    - Ellipse: Represents the 95% Confidence Interval for the Normal Distribution of the model.
-      Strictly calculated on the GLOBAL dataset (unsupervised), not per-class.
-    - Outliers: Samples outside the ellipse are potential candidates based on T2 distance.
-    """
-    os.makedirs(output_dir, exist_ok=True)
-
-    scores = pca_results['scores']
-    var_ratio = pca_results['explained_variance']
-
-    # Get PC labels and data
-    pc_x_label = f"PC{pc_x}"
-    pc_y_label = f"PC{pc_y}"
-
-    x_data = scores[pc_x_label]
-    y_data = scores[pc_y_label]
-
-    # Map markers
-    unique_classes = df[class_col].unique()
-    markers_dict = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
-
-    fig, ax = plt.subplots(figsize=(10, 8))
-
-    # Scatter Plot
-    sns.scatterplot(x=x_data, y=y_data,
-                    hue=df[class_col], style=df[class_col],
-                    palette=DISCRETE_COLORS, markers=markers_dict,
-                    s=100, alpha=0.9, edgecolor='k', ax=ax)
-
-    # --- HOTELLING'S T2 ELLIPSE CALCULATION ---
-    if show_ellipse:
-        # The ellipse is calculated on the assumption of multivariate normality of the SCORES.
-        # Since PCA scores are orthogonal (uncorrelated), the axes of the ellipse align with X and Y.
-        # Width/Height are proportional to the square root of the eigenvalues (variance) * Chi-Square critical value.
-
-        # Chi-Square critical value for 95% confidence with 2 Degrees of Freedom is ~5.991
-        chi2_val = 5.991
-
-        # Variance of the plotted PCs
-        std_x = np.std(x_data)
-        std_y = np.std(y_data)
-
-        # Width and Height (Total length, so 2 * radius)
-        width = 2 * np.sqrt(chi2_val) * std_x
-        height = 2 * np.sqrt(chi2_val) * std_y
-
-        ellipse = Ellipse((0, 0), width=width, height=height,
-                          facecolor='none', edgecolor='black', linestyle='--', linewidth=1.5,
-                          label='95% Confidence (Hotelling T²)')
-        ax.add_patch(ellipse)
-
-    # Labels with Explained Variance
-    var_x = var_ratio[pc_x - 1] * 100
-    var_y = var_ratio[pc_y - 1] * 100
-
-    ax.set_xlabel(f"{pc_x_label} ({var_x:.1f}%)", fontweight='bold')
-    ax.set_ylabel(f"{pc_y_label} ({var_y:.1f}%)", fontweight='bold')
-    ax.set_title(f"PCA Score Plot: {pc_x_label} vs {pc_y_label}", fontweight='bold')
-
-    # Center lines
-    ax.axhline(0, color='grey', linestyle=':', linewidth=0.8)
-    ax.axvline(0, color='grey', linestyle=':', linewidth=0.8)
-
-    plt.tight_layout()
-    save_path = os.path.join(output_dir, f"{file_name}_PC{pc_x}vsPC{pc_y}.{SAVE_FORMAT}")
-    plt.savefig(save_path, format=SAVE_FORMAT, bbox_inches='tight')
-    plt.close(fig)
-    print(f"Generating PCA Score Plot ({pc_x}vs{pc_y}) saved to {save_path}")
-
-
-def plot_pca_loadings(pca_results, output_dir, pc_x=1, pc_y=2, file_name="pca_loading_plot", top_n=20):
-    """
-    Generates the PCA Loading Plot to interpret variable contributions.
-
-    Shows the weight of each metabolite on the selected PCs.
-    Since we have many features, we use a Scatter representation (Simpler Biplot concept).
-    """
-    os.makedirs(output_dir, exist_ok=True)
-
-    loadings = pca_results['loadings']
-    pc_x_label = f"PC{pc_x}"
-    pc_y_label = f"PC{pc_y}"
-
-    # Calculate magnitude (distance from origin) to identify top contributors
-    magnitude = np.sqrt(loadings[pc_x_label] ** 2 + loadings[pc_y_label] ** 2)
-    loadings['magnitude'] = magnitude
-
-    # Sort and take top N for labeling
-    top_loadings = loadings.sort_values(by='magnitude', ascending=False).head(top_n)
-
-    fig, ax = plt.subplots(figsize=(10, 8))
-
-    # Plot all features as small grey dots
-    ax.scatter(loadings[pc_x_label], loadings[pc_y_label], c='lightgrey', alpha=0.5, s=20, label='All Features')
-
-    # Plot top features as highlighted points
-    ax.scatter(top_loadings[pc_x_label], top_loadings[pc_y_label], c=DISCRETE_COLORS[0], s=50,
-               label=f'Top {top_n} Contributors')
-
-    # Annotate Top N
-    texts = []
-    for feature, row in top_loadings.iterrows():
-        # Anche il testo usa il colore della palette
-        texts.append(plt.text(row[pc_x_label], row[pc_y_label], feature, fontsize=8, color=DISCRETE_COLORS[0],
-                              fontweight='bold'))
-
-    # Center lines
-    ax.axhline(0, color='k', linestyle='-', linewidth=0.8)
-    ax.axvline(0, color='k', linestyle='-', linewidth=0.8)
-
-    # Draw circle of correlation (optional visual aid, radius depends on scaling, usually 1 or max loading)
-    # Here we just keep axes symmetric
-    max_val = max(abs(loadings[pc_x_label].max()), abs(loadings[pc_y_label].max())) * 1.1
-    ax.set_xlim(-max_val, max_val)
-    ax.set_ylim(-max_val, max_val)
-
-    ax.set_xlabel(f"Loading {pc_x_label}", fontweight='bold')
-    ax.set_ylabel(f"Loading {pc_y_label}", fontweight='bold')
-    ax.set_title(f"PCA Loading Plot: {pc_x_label} vs {pc_y_label}", fontweight='bold')
-    ax.legend()
-
-    plt.tight_layout()
-    save_path = os.path.join(output_dir, f"{file_name}_PC{pc_x}vsPC{pc_y}.{SAVE_FORMAT}")
-    plt.savefig(save_path, format=SAVE_FORMAT, bbox_inches='tight')
-    plt.close(fig)
-    print(f"Generating PCA Loading Plot saved to {save_path}")
-
-
-def plot_loading_profile(pca_results, output_dir, pc_index=1, file_name="loading_profile", top_n=15):
-    """
-    Generates a 'Manhattan-style' loading plot for a SINGLE component.
-    Useful to identify exactly which metabolites drive the separation on PCx.
-    """
-    os.makedirs(output_dir, exist_ok=True)
-
-    pc_label = f"PC{pc_index}"
-    loadings = pca_results['loadings'][pc_label].copy()
-
-    # Sort by absolute value to find top contributors
-    loadings_abs = loadings.abs().sort_values(ascending=False)
-    top_features = loadings_abs.head(top_n).index
-
-    # Filter data for plotting (we plot only top N for clarity, or all if preferred)
-    # Here we visualize top N specifically to read names
-    subset = loadings.loc[top_features]
-
-    fig, ax = plt.subplots(figsize=(12, 6))
-
-    # Create a stem plot (lollipop chart)
-    # We use a color from our palette (e.g., color 0 for consistency)
-    marker_color = DISCRETE_COLORS[0]
-
-    (markers, stemlines, baseline) = ax.stem(range(len(subset)), subset.values)
-    plt.setp(markers, marker='D', markersize=8, markeredgecolor='k', color=marker_color)
-    plt.setp(stemlines, color=marker_color, linewidth=1.5)
-    plt.setp(baseline, color='gray', linewidth=0.5)
-
-    # Customizing X-axis
-    ax.set_xticks(range(len(subset)))
-    ax.set_xticklabels(subset.index, rotation=45, ha='right', fontsize=9, fontweight='bold')
-
-    ax.set_ylabel(f"Loading Value ({pc_label})")
-    ax.set_title(f"Top {top_n} Contributors to {pc_label}", fontweight='bold')
-    ax.grid(True, axis='y', linestyle='--', alpha=0.3)
-
-    plt.tight_layout()
-    save_path = os.path.join(output_dir, f"{file_name}_{pc_label}.{SAVE_FORMAT}")
-    plt.savefig(save_path, format=SAVE_FORMAT, bbox_inches='tight')
-    plt.close(fig)
-    print(f"Generating PCA Loading Profile ({pc_label}) saved to {save_path}")
 
 
 """

@@ -183,37 +183,95 @@
     The short abstract (50-80 words) is intended to give the reader an overview of the work.
 \end{abstract}
 
-% Each section begins with a \section{title} command
 \section{Introduction}
-	% \PARstart{}{} creates a tall first letter for this first paragraph
-	This section introduces the report and leads the reader on to the main part. The introduction should briefly recall the problem you face in your report, the method you propose and the results you have obtained.
 
-% Main Part
+\subsection{Background Clinico}
+Breve panoramica sulla patologia (CHD) e importanza di trovare nuovi biomarcatori non invasivi.
+
+\subsection{La Metabolomica Untargeted}
+Perché la LC-MS è la scelta giusta qui (visione olistica del fenotipo).
+
+\subsection{Problematiche Aperte}
+Qui introduci il "problema" del tuo progetto: la complessità dei dati, la necessità di integrare due modi di ionizzazione (ESI+/ESI-) e la scelta del miglior metodo di preprocessing (non esiste una "ricetta unica").
+
+\subsection{Scopo del Lavoro}
+Valutare e ottimizzare un workflow chemiometrico (dal preprocessing alla Data Fusion) per distinguere soggetti Sani vs Patologici e identificare le feature biologicamente rilevanti.
+
 \section{Materials and Methods}
-	% LaTeX takes complete care of your document layout ...
-	The report's content is summarized in the report in 6~pages.
-	% ... but you can insert a line break manually with two backslashes, if needed: \\
-	You should fill, but not exceed, this space. \\
-	The report should be a self-contained paper, so that it can be understood without studying additional literature.
-	A possible organization of the report could include a description of the problem in Section II, a description of the method(s) you propose or use in your project in Section III, the presentation of the results you have obtained and a discussion in Section IV, some conclusions with possible future work in Section V.  
+
+\subsection{Descrizione del Dataset}
+Origine dei dati (LC-MS). I due blocchi: ESI+ e ESI-. Composizione delle classi (Controlli vs CHD).
+
+\subsection{Quality Assessment \& Data Cleaning}
+Descrizione dei QC e dei Replicati Tecnici.
+\textbf{Nota:} Spiegare chiaramente che QC e duplicati sono stati utilizzati per una valutazione iniziale della stabilità ma rimossi dal dataset finale di modeling (es. numero esiguo, impossibilità di mediare).
+
+\subsection{Strategie di Pre-processing (Iterativo)}
+Elenco delle tecniche testate: Normalizzazione, Trasformazione Logaritmica, Scaling (Autoscaling).
+
+\subsection{Anomaly Detection}
+Descrizione del metodo usato per identificare e rimuovere gli outlier (fondamentale per la pulizia del dato).
+
+\subsection{Feature Selection}
+Metodi statistici/algoritmici utilizzati per ridurre la dimensionalità e rimuovere il rumore prima del modeling.
+
+\subsection{Strategie di Data Fusion}
+Definizione degli approcci: Low-Level (concatenazione semplice) vs High-Level (o altri approcci). L'obiettivo è sfruttare la complementarità ESI+/ESI-.
+
+\subsection{Analisi Statistica e Machine Learning}
+\begin{itemize}
+    \item \textbf{Unsupervised:} PCA (per l'esplorazione).
+    \item \textbf{Supervised:} PLS-DA, SVM, Random Forest, Logistic Regression.
+    \item \textbf{Validazione:} Descrizione rigorosa dello split Training Set vs Validation Set (o Cross-Validation) per evitare l'overfitting.
+\end{itemize}
+
+\subsection{Stack Tecnologico}
+Breve paragrafo sulle librerie Python utilizzate (Pandas, Scikit-learn, ecc.) per garantire la riproducibilità.
 
 \section{Results and Discussion}
-	The report can be written in \LaTeX{}. You can also use Microsoft Word, but \textbf{in this case it's your job to make your paper similar to this document}.
 
-	% You can cite a book or paper by using \cite{reference}.
-	% The references will be defined at the end of this .tex file in the bibliography
-	References should be cited as numbers, and should be ordered by their appearance (example: ``... as shown in \cite{HOP96}, ...'').
-	Only references that are actually cited can be listed in the references section.
-	The references' format should be evident from the examples in this text.
+\subsection{Valutazione dell'Analisi Esplorativa (PCA)}
+Visualizzazione dei dati ESI+ e ESI- separati. Valutazione degli Outlier (prima e dopo la rimozione). Confronto delle tecniche di scaling (es. efficacia dell'autoscaling).
 
-	References should be of academic character and should be published and accessible.
-	You must cite all used sources.
-	Examples of good references include text books and scientific journals or conference proceedings.
-	If possible, citing internet pages should be avoided. In particular, Wikipedia is \emph{not} an appropriate reference in academic reports.
-	Avoiding references in languages other than English is recommended.
+\subsection{Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}
+Confronto delle metriche (Accuratezza, Specificità, Sensibilità) tra PLS-DA, SVM, RF, LR. Quale modello performa meglio sui dati positivi? E sui negativi?
 
-	% You can reference tables and figure by using the \ref{label} command. Each table and figure needs to have a UNIQUE label.
-	Figures and tables should be labeled and numbered, such as in Table~\ref{tab:simParameters} and Fig.~\ref{fig:tf_plot}.
+\subsection{Risultati della Data Fusion}
+La fusione dei dati ha migliorato la classificazione rispetto ai dataset singoli?
+
+\subsection{Interpretabilità e Biomarcatori (Feature Importance)}
+Analisi delle Feature Importances e Analisi Univariata (Volcano Plot). Identificazione/interpretazione biologica dei top-metaboliti.
+
+
+\section{Conclusions}
+Sintesi del miglior workflow identificato. Considerazioni sull'interpretabilità biologica e limiti dello studio (es. numero di campioni, assenza di validazione esterna).
+
+
+% Now we need a bibliography:
+\begin{thebibliography}{5}
+
+	%Each item starts with a \bibitem{reference} command and the details thereafter.
+	\bibitem{HOP96} % Transaction paper
+	J.~Hagenauer, E.~Offer, and L.~Papke. Iterative decoding of binary block
+	and convolutional codes. {\em IEEE Trans. Inform. Theory},
+	vol.~42, no.~2, pp.~429–-445, Mar. 1996.
+
+	\bibitem{MJH06} % Conference paper
+	T.~Mayer, H.~Jenkac, and J.~Hagenauer. Turbo base-station cooperation for intercell interference cancellation. {\em IEEE Int. Conf. Commun. (ICC)}, Istanbul, Turkey, pp.~356--361, June 2006.
+
+	\bibitem{Proakis} % Book
+	J.~G.~Proakis. {\em Digital Communications}. McGraw-Hill Book Co.,
+	New York, USA, 3rd edition, 1995.
+
+	\bibitem{talk} % Web document
+	F.~R.~Kschischang. Giving a talk: Guidelines for the Preparation and Presentation of Technical Seminars.
+	\url{http://www.comm.toronto.edu/frank/guide/guide.pdf}.
+
+	\bibitem{5}
+	IEEE Transactions \LaTeX and Microsoft Word Style Files.
+	\url{http://www.ieee.org/web/publications/authors/transjnl/index.html}
+
+\end{thebibliography}
 
 	% This is how you define a table: the [!hbt] means that LaTeX is forced (by the !) to place the table exactly here (by h), or if that doesnt work because of a pagebreak or so, it tries to place the table to the bottom of the page (by b) or the top (by t).
 	\begin{table}[!hbt]
@@ -254,35 +312,6 @@
 		\label{fig:tf_plot}
 		\end{center}
 	\end{figure}
-
-\section{Conclusions}
-	This section summarizes the paper.
-
-% Now we need a bibliography:
-\begin{thebibliography}{5}
-
-	%Each item starts with a \bibitem{reference} command and the details thereafter.
-	\bibitem{HOP96} % Transaction paper
-	J.~Hagenauer, E.~Offer, and L.~Papke. Iterative decoding of binary block
-	and convolutional codes. {\em IEEE Trans. Inform. Theory},
-	vol.~42, no.~2, pp.~429–-445, Mar. 1996.
-
-	\bibitem{MJH06} % Conference paper
-	T.~Mayer, H.~Jenkac, and J.~Hagenauer. Turbo base-station cooperation for intercell interference cancellation. {\em IEEE Int. Conf. Commun. (ICC)}, Istanbul, Turkey, pp.~356--361, June 2006.
-
-	\bibitem{Proakis} % Book
-	J.~G.~Proakis. {\em Digital Communications}. McGraw-Hill Book Co.,
-	New York, USA, 3rd edition, 1995.
-
-	\bibitem{talk} % Web document
-	F.~R.~Kschischang. Giving a talk: Guidelines for the Preparation and Presentation of Technical Seminars.
-	\url{http://www.comm.toronto.edu/frank/guide/guide.pdf}.
-
-	\bibitem{5}
-	IEEE Transactions \LaTeX and Microsoft Word Style Files.
-	\url{http://www.ieee.org/web/publications/authors/transjnl/index.html}
-
-\end{thebibliography}
 
 % Your document ends here!
 \end{document}

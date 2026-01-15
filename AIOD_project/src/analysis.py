@@ -1,10 +1,7 @@
-import os
-import pandas as pd
 import numpy as np
-from scipy.stats import iqr, sem
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-import scipy.stats as stats
+import pandas as pd
+from scipy.stats import sem
+
 
 def generate_dataset_report(df, dataset_name):
     """
@@ -147,6 +144,8 @@ def compute_feature_statistics(df):
         pd.DataFrame: A dataframe where index corresponds to feature names and columns
                       to the calculated statistics.
     """
+    # Separate numeric data (local reassignment, original df is safe)
+    df = df.drop(columns=['Class'])
 
     # 1. Initialize the statistics DataFrame
     # We use the transpose of describe() as a starting point (gives count, mean, std, min, 25%, 50%, 75%, max)
@@ -208,6 +207,8 @@ def compute_correlation_matrix(df, method='pearson'):
     Returns:
         pd.DataFrame: Square symmetric matrix of correlation coefficients.
     """
+    # Separate numeric data
+    df = df.drop(columns=['Class'])
     # Returns the correlation matrix (p x p features)
     return df.corr(method=method)
 
@@ -226,129 +227,3 @@ def identify_low_variance_features(stats_df, threshold_cv=30.0):
     # Filter features where CV > threshold
     unstable_features = stats_df[stats_df['cv_percent'] > threshold_cv].index.tolist()
     return unstable_features
-
-def perform_pca(df, n_components=None, scaling='pareto'):
-    """
-    Performs Principal Component Analysis (PCA) on the provided dataset.
-
-    THEORY & IMPLEMENTATION DETAILS:
-    --------------------------------
-    1. Preprocessing:
-       - PCA is scale-dependent.
-       - Options provided: 'autoscaling' (mean=0, std=1) or 'pareto' (mean=0, std=sqrt(std)).
-       - User must ensure data is cleaned (no NaNs) before calling this.
-    2. Calculation:
-       - Uses SVD decomposition via sklearn.
-    3. Output Organization:
-       - Returns a dictionary containing Scores (Samples), Loadings (Features),
-         and Variance stats, all labeled with proper indices.
-
-    Args:
-        df (pd.DataFrame): Input data (Samples x Features).
-        n_components (int): Number of components to keep. If None, keeps all.
-        scaling (str): 'autoscaling', 'pareto', or None.
-                       - 'autoscaling': Recommended for general LC-MS.
-                       - 'pareto': Recommended if noise is high (reduces noise amplification).
-                       - None: Assumes data is already scaled externally.
-
-    Returns:
-        dict: A dictionary containing:
-            - 'model': The trained PCA sklearn object.
-            - 'scores': pd.DataFrame of Score values (Samples x PCs).
-            - 'loadings': pd.DataFrame of Loading values (Features x PCs).
-            - 'explained_variance': Array of variance ratio per PC.
-            - 'cumulative_variance': Array of cumulative variance.
-    """
-
-    # 1. Scaling / Preprocessing
-    data_mat = df.values
-
-    if scaling == 'autoscaling':
-        # Mean=0, Std=1
-        scaler = StandardScaler()
-        data_scaled = scaler.fit_transform(data_mat)
-    elif scaling == 'pareto':
-        # Mean Centering
-        data_centered = data_mat - np.mean(data_mat, axis=0)
-        # Pareto: Divide by sqrt(STD)
-        data_scaled = data_centered / np.sqrt(np.std(data_mat, axis=0))
-    else:
-        # Assume external scaling or just Mean Centering (default in PCA)
-        data_scaled = data_mat
-
-    # 2. PCA Execution
-    # If n_components is None, sklearn computes all min(n_samples, n_features)
-    pca = PCA(n_components=n_components)
-    scores_data = pca.fit_transform(data_scaled)
-
-    # 3. Formatting Outputs
-    # Create column names [PC1, PC2, ..., PCn]
-    pc_labels = [f"PC{i + 1}" for i in range(scores_data.shape[1])]
-
-    # Scores DataFrame (Rows=Samples)
-    scores_df = pd.DataFrame(data=scores_data, index=df.index, columns=pc_labels)
-
-    # Loadings DataFrame (Rows=Features)
-    # sklearn components_ is (n_components, n_features), so we transpose
-    loadings_df = pd.DataFrame(data=pca.components_.T, index=df.columns, columns=pc_labels)
-
-    results = {
-        'model': pca,
-        'scores': scores_df,
-        'loadings': loadings_df,
-        'explained_variance': pca.explained_variance_ratio_,
-        'cumulative_variance': np.cumsum(pca.explained_variance_ratio_)
-    }
-
-    return results
-
-def detect_pca_outliers(pca_results, conf_level=0.95):
-    """
-    Calculates Hotelling's T2 statistic for each sample to identify outliers
-    in the PCA model space.
-
-    Args:
-        pca_results (dict): Output from perform_pca.
-        conf_level (float): Confidence level (default 0.95).
-
-    Returns:
-        pd.DataFrame: A dataframe containing T2 values and a boolean 'is_outlier' flag.
-    """
-    scores = pca_results['scores']
-    eigenvalues = pca_results['explained_variance']  # This is variance ratio, typically we need eigenvalues
-    # Note: sklearn's explained_variance_ IS the eigenvalue
-    model = pca_results['model']
-    eigenvalues = model.explained_variance_
-
-    # Calculate T2 for each sample
-    # T2 = sum( (score_i^2) / eigenvalue_i ) for the selected components
-    # We use all components calculated in the model for a robust check,
-    # or just the first few (e.g., PC1, PC2). Usually calculated on the retained PCs.
-
-    n_components = scores.shape[1]
-    n_samples = scores.shape[0]
-
-    # Formula: T^2 = Score^2 / Eigenvalue
-    t2_values = np.sum((scores.values ** 2) / eigenvalues[:n_components], axis=1)
-
-    # Calculate Critical Value (F-distribution based limit)
-    # T2 limit = ((n-1)(n+1) / n(n-k)) * F_crit(k, n-k-1)
-    F_crit = stats.f.ppf(conf_level, n_components, n_samples - n_components - 1)
-    t2_limit = (n_components * (n_samples - 1) / (n_samples - n_components)) * F_crit
-
-    outlier_df = pd.DataFrame({
-        'T2': t2_values,
-        'Limit': t2_limit,
-        'is_outlier': t2_values > t2_limit
-    }, index=scores.index)
-
-    return outlier_df
-
-def get_optimal_components(pca_results, variance_threshold=0.90):
-    """
-    Returns the number of components needed to explain the given variance threshold.
-    """
-    cum_var = pca_results['cumulative_variance']
-    # np.argmax returns the index of the first True value
-    n_components = np.argmax(cum_var >= variance_threshold) + 1
-    return n_components

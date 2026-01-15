@@ -55,6 +55,11 @@ def compute_classification_metrics(y_true, y_pred, y_prob=None):
     # Note: Can be misleading in imbalanced datasets (e.g. 990 negatives, 10 positives).
     accuracy = accuracy_score(y_true, y_pred)
 
+    # Classification Error (Misclassification Rate)
+    # Formula: 1 - Accuracy  OR  (FP + FN) / Total
+    # Goal: Measure the proportion of samples assigned to the wrong class.
+    class_error = 1.0 - accuracy
+
     # F1 Score
     # Formula: 2 * (Precision * Recall) / (Precision + Recall)
     # Goal: Harmonic mean, good for imbalanced data when positive class is the focus.
@@ -75,6 +80,7 @@ def compute_classification_metrics(y_true, y_pred, y_prob=None):
     metrics = {
         "Confusion_Matrix": {"TP": int(tp), "TN": int(tn), "FP": int(fp), "FN": int(fn)},
         "Accuracy": accuracy,
+        "Classification_Error": class_error,
         "Sensitivity": sensitivity,
         "Specificity": specificity,
         "Precision": precision,
@@ -96,5 +102,61 @@ def compute_classification_metrics(y_true, y_pred, y_prob=None):
             # Handle cases where AUC cannot be computed (e.g., only one class present in y_true)
             print("Warning: AUC could not be computed (possibly only one class in y_true).")
             metrics["AUC"] = np.nan
+
+    return metrics
+
+
+def compute_simca_metrics(y_true, y_pred, classes):
+    """
+    Computes SIMCA-specific metrics: Sensitivity, Specificity, and Efficiency.
+    Handles 'Alien' and 'Confused' assignments.
+
+    Args:
+        y_true: True labels.
+        y_pred: SIMCA predicted labels (can include 'Alien', 'Confused').
+        classes: List of known classes (e.g. ['CTRL', 'CHD']).
+    """
+    metrics = {}
+
+    # Overall Accuracy (Strict): Correct only if Exact Match
+    # 'Alien' or 'Confused' counts as Error here
+    accuracy = np.mean(y_true == y_pred)
+    metrics['Accuracy_Strict'] = accuracy
+    metrics['Error_Rate'] = 1 - accuracy
+
+    # Per-Class Metrics
+    for cls in classes:
+        # Sensitivity: Fraction of TRUE 'cls' predicted as 'cls'
+        true_cls_indices = (y_true == cls)
+        n_true_cls = np.sum(true_cls_indices)
+
+        if n_true_cls > 0:
+            n_correctly_assigned = np.sum(y_pred[true_cls_indices] == cls)
+            sensitivity = n_correctly_assigned / n_true_cls
+        else:
+            sensitivity = 0.0
+
+        metrics[f'{cls}_Sensitivity'] = sensitivity
+
+        # Specificity: Fraction of NOT 'cls' REJECTED by 'cls' model
+        # Rejection means predicted as anything OTHER than 'cls' (could be OtherClass, Alien, or Confused)
+        # Wait, strictly speaking for SIMCA model of Class A:
+        # Specificity = (True Negatives) / (True Negatives + False Positives)
+        # Here "False Positive" means a non-A sample predicted as A.
+
+        not_cls_indices = (y_true != cls)
+        n_not_cls = np.sum(not_cls_indices)
+
+        if n_not_cls > 0:
+            # We want samples that are NOT A, and are NOT predicted as A
+            n_correctly_rejected = np.sum(y_pred[not_cls_indices] != cls)
+            specificity = n_correctly_rejected / n_not_cls
+        else:
+            specificity = 0.0
+
+        metrics[f'{cls}_Specificity'] = specificity
+
+        # Efficiency (Geometric Mean)
+        metrics[f'{cls}_Efficiency'] = np.sqrt(sensitivity * specificity)
 
     return metrics
