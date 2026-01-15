@@ -1,25 +1,24 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
 import seaborn as sns
-
+from scipy.spatial.distance import cdist
+from sklearn.base import clone
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import (
-    train_test_split, 
-    StratifiedKFold, 
-    LeaveOneOut, 
+    train_test_split,
+    StratifiedKFold,
+    LeaveOneOut,
     GroupShuffleSplit,
     StratifiedGroupKFold,
     LeaveOneGroupOut
 )
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from scipy.spatial.distance import cdist
-from sklearn.linear_model import LogisticRegression
-from sklearn.base import clone
-from sklearn.metrics import accuracy_score
-from sklearn.decomposition import PCA
 
 from src.visualization import save_plot
+
 
 class DatasetSplitting:
     """

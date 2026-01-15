@@ -1,19 +1,12 @@
-import os
-import pandas as pd
-import numpy as np
-import seaborn as sns
 import math
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from matplotlib.patches import Ellipse
-import matplotlib.transforms as transforms
+import os
+
 import matplotlib.patheffects as pe
+import pandas as pd
 from matplotlib.lines import Line2D
-
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-
 from scipy.stats import norm
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 from config_visualization import *
 
