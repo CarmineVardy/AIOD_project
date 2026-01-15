@@ -6,7 +6,7 @@ from matplotlib.patches import Ellipse
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-from config_visualization import *
+from src.config_visualization import *
 
 
 def perform_pca(df, n_components=None, scaling='autoscaling'):

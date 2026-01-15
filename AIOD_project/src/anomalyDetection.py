@@ -46,43 +46,37 @@ class AnomalyDetector:
             # novelty=True is required to use 'decision_function' for plotting contours
         ]
 
-    def _generate_pca(self, X, n_components=2):
+    def _generate_pca(self, df, n_components=2):
         """
-        Helper method to perform PCA projection if not already provided
+        Helper to perform PCA reduction.
         """
+        # 1. Select only numeric columns
+        df_numeric = df.select_dtypes(include=[np.number])
+        
+        # 2. Fill NaNs
+        X = df_numeric.fillna(0)
+        
+        # 3. Fit Transform
         pca = PCA(n_components=n_components)
         X_pca = pca.fit_transform(X)
+        
         return X_pca, pca
 
     def plot_mahalanobis_contours(self, df, title="Mahalanobis Distance Analysis"):
         """
         Calculates and visualizes the Mahalanobis distance of samples in a reduced 2D PCA space.
-        It fits a Robust Covariance estimate (Elliptic Envelope) to draw decision boundary curves.
-        This visualization highlights the distribution of 'normal' inliers versus potential outliers
-        based on the central tendency of the multivariate data.
-
-        Parameters:
-        -----------
-        df : pd.DataFrame
-            The input data.
-        title : str
-            The title for the plot.
         """
-        # 1. Data Preparation (Transposition + 2D PCA)
-        # It is necessary to project to 2D to draw the contour levels.
-        if df.shape[0] < df.shape[1]:
-            X = df.T
-            print("Transposed")
-        else:
-            X = df
-
-        X = X.fillna(0)
+        # FIX 1: Select only numeric columns to avoid "could not convert string to float"
+        df_numeric = df.select_dtypes(include=[np.number])
+        
+        # FIX 2: Fill NaNs in the numeric data
+        X = df_numeric.fillna(0)
         
         # Determine PCA projection
-        X_pca, _ = self._generate_pca(X)
+        pca = PCA(n_components=2) # We only need 2 components for the 2D plot
+        X_pca = pca.fit_transform(X)
 
         # 2. Fit Elliptic Envelope (Robust Covariance)
-        # contamination=0.01 assumes that 99% of the data is "normal"
         ee = EllipticEnvelope(contamination=0.01, random_state=42)
         ee.fit(X_pca)
 
@@ -90,23 +84,24 @@ class AnomalyDetector:
         y_pred = ee.predict(X_pca)
 
         # 3. Create Meshgrid for contour levels
-        xx, yy = np.meshgrid(np.linspace(X_pca[:, 0].min() - 2, X_pca[:, 0].max() + 2, 500),
-                             np.linspace(X_pca[:, 1].min() - 2, X_pca[:, 1].max() + 2, 500))
+        x_min, x_max = X_pca[:, 0].min() - 2, X_pca[:, 0].max() + 2
+        y_min, y_max = X_pca[:, 1].min() - 2, X_pca[:, 1].max() + 2
+        
+        xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500),
+                             np.linspace(y_min, y_max, 500))
 
-        # Calculate the decision function on the grid (inverse Mahalanobis distance)
+        # Calculate the decision function on the grid
         Z = ee.decision_function(np.c_[xx.ravel(), yy.ravel()])
         Z = Z.reshape(xx.shape)
 
         # 4. Plot
         fig, ax = plt.subplots(figsize=(10, 8))
 
-        # Draw contour levels (Background)
-        # Level 0 is the boundary decided by the algorithm
+        # Draw contour levels
         ax.contourf(xx, yy, Z, levels=np.linspace(Z.min(), 0, 7), cmap=plt.cm.PuBu_r, alpha=0.2)
         ax.contour(xx, yy, Z, levels=[0], linewidths=2, colors='darkred')  # Outlier Boundary
 
-        # Scatter Plot of points
-        # Inliers (Normal) in Blue, Outliers in Red
+        # Scatter Plot
         inliers = X_pca[y_pred == 1]
         outliers = X_pca[y_pred == -1]
 

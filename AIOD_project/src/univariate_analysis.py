@@ -4,7 +4,7 @@ import pandas as pd
 from scipy import stats
 from statsmodels.stats.multitest import multipletests
 
-from config_visualization import *
+from src.config_visualization import *
 
 
 def perform_univariate_analysis(df, class_col='Class', test_type='ttest', equal_var=False, log2_transform_fc=True):

@@ -5,17 +5,17 @@
 \contentsline {subsection}{\numberline {1.4}Scopo del Lavoro}{2}{}%
 \contentsline {section}{\numberline {2}Materials and Methods}{2}{}%
 \contentsline {subsection}{\numberline {2.1}Descrizione del Dataset}{2}{}%
-\contentsline {subsection}{\numberline {2.2}Quality Assessment \& Data Cleaning}{2}{}%
-\contentsline {subsection}{\numberline {2.3}Strategie di Pre-processing (Iterativo)}{2}{}%
-\contentsline {subsection}{\numberline {2.4}Anomaly Detection}{2}{}%
-\contentsline {subsection}{\numberline {2.5}Feature Selection}{2}{}%
-\contentsline {subsection}{\numberline {2.6}Strategie di Data Fusion}{2}{}%
-\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{2}{}%
-\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{2}{}%
+\contentsline {subsection}{\numberline {2.2}Quality Assessment \& Data Cleaning}{3}{}%
+\contentsline {subsection}{\numberline {2.3}Strategie di Pre-processing (Iterativo)}{3}{}%
+\contentsline {subsection}{\numberline {2.4}Anomaly Detection}{3}{}%
+\contentsline {subsection}{\numberline {2.5}Feature Selection}{3}{}%
+\contentsline {subsection}{\numberline {2.6}Strategie di Data Fusion}{3}{}%
+\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{3}{}%
+\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{3}{}%
 \contentsline {section}{\numberline {3}Results and Discussion}{3}{}%
 \contentsline {subsection}{\numberline {3.1}Valutazione dell'Analisi Esplorativa (PCA)}{3}{}%
 \contentsline {subsection}{\numberline {3.2}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{3}{}%
 \contentsline {subsection}{\numberline {3.3}Risultati della Data Fusion}{3}{}%
-\contentsline {subsection}{\numberline {3.4}Interpretabilità e Biomarcatori (Feature Importance)}{3}{}%
-\contentsline {section}{\numberline {4}Conclusions}{3}{}%
-\contentsline {section}{References}{3}{}%
+\contentsline {subsection}{\numberline {3.4}Interpretabilità e Biomarcatori (Feature Importance)}{4}{}%
+\contentsline {section}{\numberline {4}Conclusions}{4}{}%
+\contentsline {section}{References}{4}{}%

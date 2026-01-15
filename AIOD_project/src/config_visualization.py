@@ -41,6 +41,9 @@ plt.rcParams.update({
 
 SELECTED_PALETTE = 'magma'  # <--- MODIFY THIS to test different variants
 
+def getPalette():
+    return self.SELECTED_PALETTE
+
 # Generate a list of discrete colors from the continuous colormap.
 # For binary classes (CTRL vs CHD), the first two or specific indices will be used.
 _cmap =  plt.get_cmap(SELECTED_PALETTE)

@@ -1,14 +1,22 @@
 import math
 import os
+import numpy as np
+import pandas as pd
 
 import matplotlib.patheffects as pe
-import pandas as pd
 from matplotlib.lines import Line2D
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+from matplotlib.patches import Ellipse
+import matplotlib.transforms as transforms
+
 from scipy.stats import norm
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-from config_visualization import *
+from src.config_visualization import *
+
+
 
 
 def plot_boxplots(df, features, output_dir, file_prefix="boxplot", class_col='Class', ylabel='Peak Area',
@@ -588,8 +596,7 @@ def plot_class_distribution_pie(df, output_dir, file_name="class_balance_pie", c
 
     # Style the percentage text inside the slices
     # We make it white if the slice is dark, or black if light, but white usually works well with Viridis/Plasma
-    plt.setp(autotexts, size=11, weight="bold", color="white", path_effects=[])
-
+    plt.setp(autotexts, size=11, weight="bold", color="white", path_effects=[])    
     # 4. Detailed Legend
     # We add the absolute count (n) to the legend for completeness
     legend_labels = [f"{label} (n={count})" for label, count in zip(class_counts.index, class_counts)]
@@ -812,12 +819,23 @@ def get_sample_names(df):
         return df.iloc[0, :].tolist() # Return the first row
 
 
+"""
+    Function that separates numeric data from strings and text inside the dataframe
+"""
+def get_df_numeric(df):    
+    return df.select_dtypes(include=[np.number])
 
-def sumPCA(df, dataset_label, output_folder):
-    """
-    Calculates PCA for the fused dataset and saves a plot with PC1 vs PC2 
+
+"""
+    Calculates SUMPCA for the fused dataset and saves a plot with PC1 vs PC2 
     and explained variance.
-    """
+"""
+def sumPCA(df, dataset_label, output_folder):
+
+    if df.empty:
+        print(f"Error: No numeric data found in {dataset_label}")
+        return
+
     # 1. Separate Data
     num_cols = df.select_dtypes(include=['number']).columns
     
@@ -832,7 +850,7 @@ def sumPCA(df, dataset_label, output_folder):
     X = df[num_cols]
     
     # 2. Scale Data
-    X_scaled = StandardScaler().fit_transform(X)
+    X_scaled = StandardScaler().fit_transform(get_df_numeric(df))
 
     # 3. Run PCA
     pca = PCA(n_components=2)
@@ -858,50 +876,44 @@ def sumPCA(df, dataset_label, output_folder):
             
     pca_df['Group'] = groups
 
-    # Define markers
-    group_markers = {
-        'QC': 's',      # Square
-        'Control': 'o', # Circle
-        'Case': '^'     # Triangle
-    }
-
-    # Define Colors (Magma-like manual selection or mapping)
-    # Note: 'magma' is a colormap, not a discrete palette dict. 
-    # Here we pick 3 distinct colors from the magma range or define them manually to match previous plots.
-    # Method A: Manual hex codes (Best for consistency with biplot)
-    group_colors = {
-        'QC': '#FC8961',
-        'Control': '#B73779',
-        'Case': '#51127C'
-    }
-
-    # 5. Plotting
-    plt.figure(figsize=(10, 8))
-    sns.set_style("whitegrid")
+    # 5. Setup Dynamic Palette & Markers (Global Config)
+    # Get unique classes present in this specific dataset
+    unique_classes = pca_df['Group'].unique()
     
-    # We use style= to handle markers and palette= for colors
+    # Slice the global palette to match the number of classes
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
+    
+    # Map markers dynamically using the global MARKERS list
+    markers_dict = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
+
+    # 6. Plotting
+    fig, ax = plt.subplots(figsize=(10, 8))
+    
+    # Use style= to handle markers and palette= for colors
     sns.scatterplot(
         x='PC1', 
         y='PC2', 
         data=pca_df,
         hue='Group',       # Controls Color
         style='Group',     # Controls Marker shape
-        markers=group_markers, 
-        palette=group_colors,
+        markers=markers_dict, 
+        palette=current_palette,
         s=100, 
-        alpha=0.8
+        alpha=0.9,
+        edgecolor='k',
+        ax=ax
     )
 
-    plt.axhline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
-    plt.axvline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
-    plt.grid(color='gray', linestyle='dashed', linewidth=0.5, alpha=0.7)
+    ax.axhline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
+    ax.axvline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
+    ax.grid(color='gray', linestyle='dashed', linewidth=0.5, alpha=0.7)
 
-    plt.title(f'PCA - {dataset_label}', fontsize=15)
-    plt.xlabel(f'PC1 ({exp_var_pc1:.2f}%)', fontsize=12)
-    plt.ylabel(f'PC2 ({exp_var_pc2:.2f}%)', fontsize=12)
+    ax.set_title(f'SUMPCA - {dataset_label}', fontsize=15, fontweight='bold')
+    ax.set_xlabel(f'PC1 ({exp_var_pc1:.2f}%)', fontsize=12)
+    ax.set_ylabel(f'PC2 ({exp_var_pc2:.2f}%)', fontsize=12)
     
     # Improve legend
-    plt.legend(bbox_to_anchor=(1, 1), loc='upper left', borderaxespad=0.)
+    ax.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0, title="Group")
     plt.tight_layout()
 
     # Save and show
@@ -914,31 +926,15 @@ def sumPCA(df, dataset_label, output_folder):
 """
 def biplot(df, dataset_label, output_folder):
 
-    # 1. Pre-processing: Separate Numeric Data from Metadata
-    df_numeric = df.select_dtypes(include=[np.number])
-       
-    if df_numeric.empty:
-        print(f"Error: No numeric data found in {dataset_label} for PCA")
+    if df.empty:
+        print(f"Error: No numeric data found in {dataset_label}")
         return
 
-    # Extract sample names for grouping
+    df_numeric = get_df_numeric(df) 
+
+    contributors = 10
+
     sample_names = get_sample_names(df)
-
-    # Standardize the numeric data
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(df_numeric)
-
-    # PCA
-    pca = PCA(n_components=5)
-    scores = pca.fit_transform(X_scaled)
-    loadings = pca.components_.T
-    exp_var = pca.explained_variance_ratio_ * 100
-
-    # 2. Setup Plot
-    fig = plt.figure(figsize=(8, 8))
-    scale_factor = np.max(np.abs(scores[:, :2])) * 0.8
-    
-    # Assign Groups based on Sample Names
     groups = []
     for name in sample_names:
         name_str = str(name).upper()
@@ -948,41 +944,58 @@ def biplot(df, dataset_label, output_folder):
             groups.append('Control')
         else:
             groups.append('Case')
-    groups = np.array(groups)
-    unique_groups = ['QC', 'Control', 'Case']
-
-    group_colors = {
-        'QC': '#FC8961',
-        'Control': '#B73779',
-        'Case': '#51127C'
-    }
     
-    # Define markers for the groups
-    group_markers = {
-        'QC': 's',      # Square
-        'Control': 'o', # Circle
-        'Case': '^'     # Triangle
-    }
+    # 3. PCA Calculation
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(df_numeric)
 
-    # 3. Plot Scores (Samples)
-    for group in unique_groups:
-        mask = groups == group
-        if np.any(mask):
-            plt.scatter(scores[mask, 0], scores[mask, 1],
-                        c=group_colors.get(group, 'grey'),
-                        label=group, 
-                        marker=group_markers.get(group, 'o'),
-                        alpha=0.6, 
-                        s=60, edgecolors='w')
+    pca = PCA(n_components=2)
+    scores = pca.fit_transform(X_scaled)
+    loadings = pca.components_.T
+    exp_var = pca.explained_variance_ratio_ * 100
 
-    # 4. Plot Top 10 Contributors (Loadings)
+    # 4. Prepare DataFrame for Seaborn
+    # This enables the use of hue/style mapping
+    scores_df = pd.DataFrame(scores, columns=['PC1', 'PC2'])
+    scores_df['Group'] = groups
+
+    # 5. Setup Dynamic Palette & Markers (Global Config)
+    # Get unique classes present in this specific dataset
+    unique_classes = scores_df['Group'].unique()
+    
+    # Slice the global palette to match the number of classes
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
+    
+    # Map markers dynamically using the global MARKERS list
+    markers_dict = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
+
+    # 6. Plotting
+    fig, ax = plt.subplots(figsize=(10, 8))
+
+    # --- SCORES (Samples) ---
+    sns.scatterplot(data=scores_df, x='PC1', y='PC2',
+                    hue='Group', 
+                    style='Group',
+                    palette=current_palette, 
+                    markers=markers_dict,
+                    s=100, 
+                    alpha=0.9, 
+                    edgecolor='k', 
+                    ax=ax)
+
+    # --- LOADINGS (Vectors) ---
+    # Scale vectors to match the visual range of the scores
+    scale_factor = np.max(np.abs(scores)) * 0.8
+    
+    # Calculate magnitude to find top contributors
     magnitude = np.sqrt(loadings[:, 0]**2 + loadings[:, 1]**2)
-    top_indices = np.argsort(magnitude)[-10:]
+    top_indices = np.argsort(magnitude)[-contributors:]
     
     metabolite_names = df_numeric.columns
     
-    cmap = plt.get_cmap("magma")
-    colors_contributors = [cmap(i) for i in np.linspace(0, 1, len(top_indices))]
+    # Use gradient colors for vectors
+    cmap = plt.get_cmap(SELECTED_PALETTE)
+    colors_contributors = [cmap(i) for i in np.linspace(0.1, 0.9, len(top_indices))]
     
     for idx, i in enumerate(top_indices):
         x_end = loadings[i, 0] * scale_factor
@@ -990,35 +1003,37 @@ def biplot(df, dataset_label, output_folder):
         c = colors_contributors[idx]
         feat_name = metabolite_names[i]
 
-        # 1. Vector line - Added label=feat_name so it appears in legend
-        plt.plot([0, x_end], [0, y_end], color=c, linewidth=1.5, alpha=0.8)
+        # Draw Vector Line (Fixed: removed 'edgecolors' arg which caused the crash)
+        ax.plot([0, x_end], [0, y_end], color=c, linewidth=1.5, 
+                path_effects=[pe.withStroke(linewidth=0.5, foreground='black')], 
+                alpha=0.8)
 
-        # 2. Endpoint
-        plt.scatter(x_end, y_end, color=c, edgecolors='black', linewidth=0.5, s=40, zorder=10, label=feat_name)
+        # Draw Endpoint Dot
+        ax.scatter(x_end, y_end, color=c, marker=MARKERS[3], edgecolors='black', linewidth=0.5, s=60, zorder=10, label=feat_name)
 
-        # 3. Label with Outline
+        # Draw Label with Outline
         ha_align = 'left' if x_end > 0 else 'right'
         va_align = 'bottom' if y_end > 0 else 'top'
-        
-        txt = plt.text(x_end * 1.1, y_end * 1.1, feat_name,
-                       color=c, fontsize=8, fontweight='bold', 
-                       ha=ha_align, va=va_align)
-        
-        # Add black outline (stroke) to text
-        txt.set_path_effects([pe.withStroke(linewidth=0.5, foreground='black')])
-    
-    # Decorations
-    plt.axhline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
-    plt.axvline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
-    plt.grid(color='gray', linestyle='dashed', linewidth=0.5, alpha=0.7)
 
-    plt.xlabel(f'PC1 ({exp_var[0]:.2f}%)')
-    plt.ylabel(f'PC2 ({exp_var[1]:.2f}%)')
-    plt.title(f'Biplot: Samples & Contributors - {dataset_label}')
+        """
+        txt = ax.text(x_end * 1.1, y_end * 1.1, feat_name,
+                      color=c, fontsize=9, fontweight='bold', 
+                      ha=ha_align, va=va_align)
+        
+        txt.set_path_effects([pe.withStroke(linewidth=0.5, foreground='black')])
+        """
+
+    ax.axhline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
+    ax.axvline(0, color='#050402', linestyle='solid', linewidth=0.8, alpha=0.8)
+    ax.grid(color='gray', linestyle='dashed', linewidth=0.5, alpha=0.7)
+
+    ax.set_xlabel(f'PC1 ({exp_var[0]:.2f}%)')
+    ax.set_ylabel(f'PC2 ({exp_var[1]:.2f}%)')
+    ax.set_title(f'Biplot: Samples & Top {contributors} contributors - {dataset_label}', fontweight='bold')
     
-    # Legend now includes samples (shapes) and top 10 metabolites (lines)
-    plt.legend(loc='upper right', framealpha=0.9, fontsize='small')
-    plt.grid(alpha=0.3)
+    # Place legend outside to prevent overlapping
+    ax.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0, title=f"Classes and contributors")
+    
     plt.tight_layout()
 
     # Save and show
@@ -1026,22 +1041,38 @@ def biplot(df, dataset_label, output_folder):
     #plt.show()
 
 
-
+"""
+    Calculates Z-scores for a subset of samples (Control vs Case) and plots them
+"""
 def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
-    """
-    Calculates Z-scores for a subset of samples (Control vs Case) and plots them.
-    """
-    # 1. Prepare Data
-    df_numeric = df.select_dtypes(include=[np.number])
+
+    if df.empty:
+        print(f"Error: No numeric data found in {dataset_label}")
+        return
+
+    df_numeric = get_df_numeric(df)  
     
-    # Filter out QCs
-    mask_qc = df.index.str.contains('QC', case=False, na=False)
-    df_no_qc = df_numeric[~mask_qc]
+    # 1. Analyze ALL samples to establish the same Color/Marker mapping
+    sample_names_all = get_sample_names(df)
+    groups = []
+    for name in sample_names_all:
+        name_str = str(name).upper()
+        if 'QC' in name_str:
+            groups.append('QC')
+        elif 'CTRL' in name_str:
+            groups.append('Control')
+        else:
+            groups.append('Case')
+            
+    unique_groups_all = pd.unique(groups)
     
+    markers_map = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_groups_all)}
+    colors_map = {cls: DISCRETE_COLORS[i % len(DISCRETE_COLORS)] for i, cls in enumerate(unique_groups_all)}
+
     # Identify Controls and Cases
-    mask_ctrl = df_no_qc.index.str.contains('CTRL', case=False, na=False)
-    df_ctrl = df_no_qc[mask_ctrl]
-    df_case = df_no_qc[~mask_ctrl]
+    mask_ctrl = df_numeric.index.str.contains('CTRL', case=False, na=False)
+    df_ctrl = df_numeric[mask_ctrl]
+    df_case = df_numeric[~mask_ctrl]
     
     # 3. Select Subset
     subset_ctrl = df_ctrl.iloc[:samples_per_group]
@@ -1050,52 +1081,50 @@ def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
     # Combine the subsets
     df_subset = pd.concat([subset_ctrl, subset_case])
     
-    if df_subset.empty:
-        print("Error: No samples found for Z-score plotting after filtering")
-        return
-
     # 4. Calculate Z-Scores (Total Ion Current proxy)
     sample_sums = df_subset.sum(axis=1)
     z_score_data = (sample_sums - sample_sums.mean()) / sample_sums.std()
     
-    # 5. Assign Colors
-    cmap = plt.get_cmap("magma")
-    color_ctrl = cmap(0.2)
-    color_case = cmap(0.7)
+    # 5. Assign Colors from Global Palette
+    # We assume standard order: 0 = Control (usually), 1 = Case
+    color_ctrl = colors_map.get('Control', 'blue')
+    color_case = colors_map.get('Case', 'red')
+    
     colors = [color_ctrl] * len(subset_ctrl) + [color_case] * len(subset_case)
     
     # 6. Plotting
     plt.figure(figsize=(15, 6))
     
-    plt.bar(range(len(z_score_data)), z_score_data, color=colors, alpha=0.9)
+    plt.bar(range(len(z_score_data)), z_score_data, color=colors, alpha=0.9, edgecolor='black', linewidth=0.5)
     
-    plt.title(f'Z-Scores of Sample Intensities (Subset: {samples_per_group}/group) - {dataset_label}', fontsize=14)
+    plt.title(f'Z-Scores of Sample Intensities (Subset: {samples_per_group}/group) - {dataset_label}', fontsize=14, fontweight='bold')
     plt.ylabel('Z-Score')
     plt.axhline(y=0, color='grey', linestyle='-', linewidth=0.8)
 
-    # --- FIX START ---
-    # Use the index directly as it contains the sample names (guaranteed by your filtering logic)
     sample_names = df_subset.index.tolist()
 
-    # Set ticks explicitly
-    plt.xticks(range(len(sample_names)), sample_names, rotation=90, fontsize=8)
+    # Set ticks explicitly with rotation and smaller font
+    plt.xticks(range(len(sample_names)), sample_names, rotation=70, fontsize=8, ha='center')
     
-    # FIX: Increased pad from 0.6 to 4 to ensure labels are not covered by the axis
+    # Ensure labels are not covered
     plt.tick_params(axis='x', which='both', labelcolor='black', width=0.9, length=4, pad=4)
     
-    # Ensure margins don't cut off the first/last bars
     plt.margins(x=0.01)
-    # --- FIX END ---
     
     # Add threshold lines
-    plt.axhline(y=2, color='#B73779', linestyle='--', alpha=0.5, label='Threshold (+/- 2)')
-    plt.axhline(y=-2, color='#B73779', linestyle='--', alpha=0.5)
+    threshold_color = 'red' # Distinct color for threshold
+    plt.axhline(y=2, color=threshold_color, linestyle='--', alpha=0.5)
+    plt.axhline(y=-2, color=threshold_color, linestyle='--', alpha=0.5)
     
     # 7. Legend
     legend_elements = [
-        Line2D([0], [0], color=color_ctrl, lw=4, label='Control'),
-        Line2D([0], [0], color=color_case, lw=4, label='Case'),
-        Line2D([0], [0], color='#B73779', linestyle='--', label='Outlier Threshold')
+        Line2D([0], [0], marker=markers_map.get('Control', 'o'), color='w', 
+               markerfacecolor=color_ctrl, markersize=10, markeredgecolor='k', label='Control'),
+        
+        Line2D([0], [0], marker=markers_map.get('Case', '^'), color='w', 
+               markerfacecolor=color_case, markersize=10, markeredgecolor='k', label='Case'),
+        
+        Line2D([0], [0], color=threshold_color, linestyle='dashed', label='Threshold (+/- 2)')
     ]
     plt.legend(handles=legend_elements, loc='upper right')
     
@@ -1110,50 +1139,91 @@ def internal_variability(df, dataset_label, output_folder, samples_per_group=25)
     """
     Generates a boxplot representing the distribution of intensities for each sample.
     """
-    # 1. Filter Data (Same logic)
-    df_numeric_full = df.select_dtypes(include=[np.number])
+    df_numeric = get_df_numeric(df)
+       
+    if df_numeric.empty:
+        print(f"Error: No numeric data found in {dataset_label}")
+        return
     
-    mask_qc = df.index.str.contains('QC', case=False, na=False)
-    df_no_qc = df_numeric_full[~mask_qc]
+    # 1. Analyze ALL samples to establish the same Color/Marker mapping
+    sample_names_all = get_sample_names(df)
+    groups = []
+    for name in sample_names_all:
+        name_str = str(name).upper()
+        if 'QC' in name_str:
+            groups.append('QC')
+        elif 'CTRL' in name_str:
+            groups.append('Control')
+        else:
+            groups.append('Case')
+            
+    unique_groups_all = pd.unique(groups)
     
-    mask_ctrl = df_no_qc.index.str.contains('CTRL', case=False, na=False)
-    df_ctrl = df_no_qc[mask_ctrl]
-    df_case = df_no_qc[~mask_ctrl]
+    markers_map = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_groups_all)}
+    colors_map = {cls: DISCRETE_COLORS[i % len(DISCRETE_COLORS)] for i, cls in enumerate(unique_groups_all)}
+
+    # Filter Controls and Cases (assuming 'df' index has sample names)
+    mask_ctrl = df_numeric.index.str.contains('CTRL', case=False, na=False)
+    df_ctrl = df_numeric[mask_ctrl]
+    df_case = df_numeric[~mask_ctrl]
     
     subset_ctrl = df_ctrl.iloc[:samples_per_group]
     subset_case = df_case.iloc[:samples_per_group]
     
+    # Combine (Samples as Rows)
     df_subset = pd.concat([subset_ctrl, subset_case])
     
-    if df_subset.empty:
-        print("Error: No samples found for Internal Variability plotting after filtering.")
-        return
-
-    # --- FIX START ---
-    # 2. Transpose Data: We want 1 box per SAMPLE. 
-    # Seaborn plots columns, so we must make Samples the Columns.
-    df_plot = df_subset.T 
+    # Transpose for Boxplot (Samples on X-axis = Columns in Dataframe for plotting)
+    df_plot = df_subset.T
     
     fig, ax = plt.subplots(figsize=(16, 8))
     
-    # Plot using the TRANSPOSED data (df_plot), NOT the original df
-    sns.boxplot(data=df_plot, palette="magma", ax=ax, showfliers=False, linewidth=0.8)
+    # Create a palette list matching the columns (samples)
+    color_ctrl = colors_map.get('Control', 'blue')
+    color_case = colors_map.get('Case', 'red')
+    
+    palette_list = [color_ctrl] * len(subset_ctrl) + [color_case] * len(subset_case)
+
+    # Plot using the TRANSPOSED data
+    sns.boxplot(data=df_plot, 
+                palette=palette_list, 
+                ax=ax, 
+                showfliers=False, 
+                linewidth=0.8, 
+                boxprops=dict(alpha=0.5),
+                meanprops={'linestyle': 'dashed', 'linewidth': 2.0, 'color': 'black'},
+                medianprops={'linestyle': 'solid', 'linewidth': 1.5, 'color': 'black'})
     
     ax.set_title(f'Internal Variability (Subset: {samples_per_group}/group) - {dataset_label}', fontsize=14, fontweight='bold')
     ax.set_xlabel("Samples", fontsize=12)
-    ax.set_ylabel("Log Intensity / Abundance", fontsize=12)
+    ax.set_ylabel("Abundance", fontsize=12)
     
-    # Get names from the columns of the transposed dataframe (which are the samples)
+    # Get names from the columns of the transposed dataframe
     sample_names = df_plot.columns.tolist()
     
-    # Set ticks explicitly using the correct names
+    # Set ticks explicitly with rotation
     ax.set_xticks(range(len(sample_names)))
-    ax.set_xticklabels(sample_names, rotation=90, fontsize=8)
+    ax.set_xticklabels(sample_names, rotation=70, fontsize=8, ha='right')
     
-    # FIX: Ensure padding is sufficient and labelsize is not too small
+    # Adjust padding
     ax.tick_params(axis='x', which='both', width=0.6, pad=4)
-    # --- FIX END ---
         
+    # 7. Legend
+    legend_elements = [
+        Line2D([0], [0], marker=markers_map.get('Control', 'o'), color='w', 
+               markerfacecolor=color_ctrl, markersize=10, markeredgecolor='k', label='Control'),
+        
+        Line2D([0], [0], marker=markers_map.get('Case', '^'), color='w', 
+               markerfacecolor=color_case, markersize=10, markeredgecolor='k', label='Case'),
+        
+        Line2D([0], [0], color='white', linewidth=0, label=''),
+
+        # Line Explanations
+        Line2D([0], [0], color='black', linestyle='solid', linewidth=1.5, label='Median'),
+        Line2D([0], [0], color='black', linestyle='dashed', linewidth=1.5, label='Mean')
+    ]
+    ax.legend(handles=legend_elements, loc='upper right')
+
     plt.tight_layout()
     plt.margins(x=0.01)
 
