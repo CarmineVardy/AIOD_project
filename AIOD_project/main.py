@@ -114,7 +114,6 @@ def main():
     else:
         print("No extreme intensity outliers (>3 sigma) detected")
 
-    print(f"\n\n {type(outliers_z)} \n\n")
     df_neg_clean = detector.remove_outliers(df_neg_raw, outliers_z)
 
     biplot(df_neg_raw, "Negative Raw", plots_dir)
@@ -130,12 +129,6 @@ def main():
 
     detector.identify_consensus_outliers(df_neg_raw, fname="Negative Dataset")
 
-    # Optional: Save these IDs to a file if needed
-    if consensus_outliers:
-        for sample in consensus_outliers:
-            print(f"{sample}\n")
-
-    print(f"\n\n {type(consensus_outliers)} \n\n")
     df_neg_clean_2 = detector.remove_outliers(df_neg_raw, consensus_outliers)
 
     biplot(df_neg_clean_2, "Negative anomaly cleaned 2", plots_dir)
