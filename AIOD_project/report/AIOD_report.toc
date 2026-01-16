@@ -5,17 +5,24 @@
 \contentsline {subsection}{\numberline {1.4}Scopo del Lavoro}{2}{}%
 \contentsline {section}{\numberline {2}Materials and Methods}{2}{}%
 \contentsline {subsection}{\numberline {2.1}Descrizione del Dataset}{2}{}%
-\contentsline {subsection}{\numberline {2.2}Quality Assessment \& Data Cleaning}{2}{}%
-\contentsline {subsection}{\numberline {2.3}Strategie di Pre-processing (Iterativo)}{2}{}%
-\contentsline {subsection}{\numberline {2.4}Anomaly Detection}{2}{}%
-\contentsline {subsection}{\numberline {2.5}Feature Selection}{2}{}%
-\contentsline {subsection}{\numberline {2.6}Strategie di Data Fusion}{2}{}%
-\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{2}{}%
-\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{2}{}%
-\contentsline {section}{\numberline {3}Results and Discussion}{3}{}%
-\contentsline {subsection}{\numberline {3.1}Valutazione dell'Analisi Esplorativa (PCA)}{3}{}%
-\contentsline {subsection}{\numberline {3.2}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{3}{}%
-\contentsline {subsection}{\numberline {3.3}Risultati della Data Fusion}{3}{}%
-\contentsline {subsection}{\numberline {3.4}Interpretabilità e Biomarcatori (Feature Importance)}{3}{}%
-\contentsline {section}{\numberline {4}Conclusions}{3}{}%
-\contentsline {section}{References}{3}{}%
+\contentsline {subsection}{\numberline {2.2}Quality Assessment and Data Cleaning}{2}{}%
+\contentsline {subsubsection}{\numberline {2.2.1}PCA on Raw Data: Unsupervised Evaluation}{2}{}%
+\contentsline {paragraph}{\numberline {2.2.1a}Variance and Model Structure}{2}{}%
+\contentsline {paragraph}{\numberline {2.2.1b}Instrumental Stability (QC Analysis)}{2}{}%
+\contentsline {paragraph}{\numberline {2.2.1c}Technical Reproducibility (Replicates Analysis)}{2}{}%
+\contentsline {subsubsection}{\numberline {2.2.2}Dataset Refinement for Downstream Analysis}{3}{}%
+\contentsline {paragraph}{\numberline {2.2.2a}Removal of Quality Control Samples}{3}{}%
+\contentsline {paragraph}{\numberline {2.2.2b}Removal of Technical Duplicates}{4}{}%
+\contentsline {subsection}{\numberline {2.3}Strategie di Pre-processing}{4}{}%
+\contentsline {subsection}{\numberline {2.4}Anomaly Detection}{5}{}%
+\contentsline {subsection}{\numberline {2.5}Feature Selection}{5}{}%
+\contentsline {subsection}{\numberline {2.6}Strategie di Data Fusion}{6}{}%
+\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{6}{}%
+\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{7}{}%
+\contentsline {section}{\numberline {3}Results and Discussion}{7}{}%
+\contentsline {subsection}{\numberline {3.1}Valutazione dell'Analisi Esplorativa (PCA)}{7}{}%
+\contentsline {subsection}{\numberline {3.2}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{7}{}%
+\contentsline {subsection}{\numberline {3.3}Risultati della Data Fusion}{7}{}%
+\contentsline {subsection}{\numberline {3.4}Interpretabilità e Biomarcatori (Feature Importance)}{7}{}%
+\contentsline {section}{\numberline {4}Conclusions}{7}{}%
+\contentsline {section}{References}{7}{}%

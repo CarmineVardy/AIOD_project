@@ -6,7 +6,7 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.model_selection import StratifiedKFold, permutation_test_score
 from sklearn.preprocessing import LabelEncoder
 
-from config_visualization import *
+from src.config_visualization import *
 
 
 def _calculate_vips(model):

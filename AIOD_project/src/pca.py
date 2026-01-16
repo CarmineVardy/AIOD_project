@@ -1,12 +1,13 @@
 import os
 
+import numpy as np
 import pandas as pd
 import scipy.stats as stats
 from matplotlib.patches import Ellipse
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-from config_visualization import *
+from src.config_visualization import *
 
 
 def perform_pca(df, n_components=None, scaling='autoscaling'):
@@ -153,7 +154,7 @@ def plot_pca_scree(pca_results, output_dir, file_name="pca_scree_plot", threshol
     n_plot = min(20, n_pcs)
     x_range = np.arange(1, n_plot + 1)
 
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+    fig, ax1 = plt.subplots()
 
     # Bar Chart (Individual Variance)
     ax1.bar(x_range, var_ratio[:n_plot] * 100, color=DISCRETE_COLORS[0], alpha=0.7, label='Individual Variance')
@@ -172,6 +173,11 @@ def plot_pca_scree(pca_results, output_dir, file_name="pca_scree_plot", threshol
     # Threshold Line (e.g., 90%)
     ax2.axhline(y=threshold * 100, color='grey', linestyle='--', alpha=0.5)
     ax2.text(n_plot, threshold * 100 + 1, f'{int(threshold * 100)}% Threshold', color='grey', ha='right')
+
+    #Legend
+    lines_1, labels_1 = ax1.get_legend_handles_labels()
+    lines_2, labels_2 = ax2.get_legend_handles_labels()
+    ax2.legend(lines_1 + lines_2, labels_1 + labels_2, loc='center right')
 
     plt.title('PCA Scree Plot (Explained Variance)', fontweight='bold')
 
@@ -204,18 +210,26 @@ def plot_pca_scores(pca_results, df, output_dir, pc_x=1, pc_y=2, file_name="pca_
     x_data = scores[pc_x_label]
     y_data = scores[pc_y_label]
 
-    # Map markers
-    unique_classes = df[class_col].unique()
-    current_palette = DISCRETE_COLORS[:len(unique_classes)]
-    markers_dict = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(unique_classes)}
+    fig, ax = plt.subplots()
 
-    fig, ax = plt.subplots(figsize=(10, 8))
+    #Handling of class NotShow if we don't want to see class in plotting
+    mask_hidden = df[class_col] == 'NotShow'
+    mask_visible = ~mask_hidden
+
+    if mask_hidden.any():
+        ax.scatter(x_data[mask_hidden], y_data[mask_hidden],
+                   alpha=0, s=100, edgecolor='none')
+
+    visible_classes = df.loc[mask_visible, class_col].unique()
+    current_palette = DISCRETE_COLORS[:len(visible_classes)]
+    markers_dict = {cls: MARKERS[i % len(MARKERS)] for i, cls in enumerate(visible_classes)}
 
     # Scatter Plot
-    sns.scatterplot(x=x_data, y=y_data,
-                    hue=df[class_col], style=df[class_col],
+    sns.scatterplot(x=x_data[mask_visible], y=y_data[mask_visible],
+                    hue=df.loc[mask_visible, class_col],
+                    style=df.loc[mask_visible, class_col],
                     palette=current_palette, markers=markers_dict,
-                    s=100, alpha=0.9, edgecolor='k', ax=ax)
+                    s=100, alpha=0.8, edgecolor='k', ax=ax)
 
     # --- HOTELLING'S T2 ELLIPSE CALCULATION ---
     if show_ellipse:
@@ -278,21 +292,21 @@ def plot_pca_loadings(pca_results, output_dir, pc_x=1, pc_y=2, file_name="pca_lo
     # Sort and take top N for labeling
     top_loadings = loadings.sort_values(by='magnitude', ascending=False).head(top_n)
 
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots()
 
     # Plot all features
     # Usiamo un colore secondario della palette (es. ind. 3) per lo sfondo, con trasparenza
-    ax.scatter(loadings[pc_x_label], loadings[pc_y_label], color=DISCRETE_COLORS[3], alpha=0.4, s=20, label='All Features')
+    ax.scatter(loadings[pc_x_label], loadings[pc_y_label], color=DISCRETE_COLORS[3], alpha=0.7, s=20, label='All Features')
 
     # Plot top features as highlighted points
-    ax.scatter(top_loadings[pc_x_label], top_loadings[pc_y_label], color=DISCRETE_COLORS[0], s=50,
-               label=f'Top {top_n} Contributors')
+    if top_n > 0:
+        ax.scatter(top_loadings[pc_x_label], top_loadings[pc_y_label], color=DISCRETE_COLORS[9], s=50,
+                   label=f'Top {top_n} Contributors')
 
     # Annotate Top N
     texts = []
     for feature, row in top_loadings.iterrows():
-        # Anche il testo usa il colore della palette
-        texts.append(plt.text(row[pc_x_label], row[pc_y_label], feature, fontsize=8, color=DISCRETE_COLORS[0],
+        texts.append(plt.text(row[pc_x_label], row[pc_y_label], feature, fontsize=8, color=DISCRETE_COLORS[9],
                               fontweight='bold'))
 
     # Center lines
@@ -334,7 +348,7 @@ def plot_loading_profile(pca_results, output_dir, pc_index=1, file_name="loading
     # Retrieve loadings for the specific PC
     loadings = pca_results['loadings'][pc_label]
 
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots()
 
     # --- 1. Determine X-Axis (Numeric m/z or Sequential) ---
     try:
@@ -372,6 +386,9 @@ def plot_loading_profile(pca_results, output_dir, pc_index=1, file_name="loading
 
     # Optional: Fill area under curve slightly for better visual impact
     # ax.fill_between(x_plot, 0, y_plot, color=line_color, alpha=0.1)
+
+    # Legend
+    ax.legend(loc='upper right')
 
     plt.tight_layout()
 

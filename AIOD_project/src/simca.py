@@ -4,7 +4,7 @@ import pandas as pd
 from scipy.stats import f
 from sklearn.decomposition import PCA
 
-from config_visualization import *
+from src.config_visualization import *
 
 
 class SIMCAModel:
