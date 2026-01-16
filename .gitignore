@@ -1,6 +1,14 @@
 # Ignore this folder
 /AIOD_project/src/__pycache__
 
+
+/AIOD_project/report/AIOD_report.aux
+/AIOD_project/report/AIOD_report.log
+/AIOD_project/report/AIOD_report.synctex.gz
+/AIOD_project/report/AIOD_report.synctex.gz.sum.synctex
+/AIOD_project/report/AIOD_report.toc
+
+
 # execution extensions
 .pyc
 
