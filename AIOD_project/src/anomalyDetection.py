@@ -14,6 +14,8 @@ from sklearn.kernel_approximation import Nystroem
 from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
 
+from src.visualization import save_plot
+
 class AnomalyDetector:
     """
     A class dedicated to detecting anomalies in metabolomic datasets using various
@@ -62,35 +64,50 @@ class AnomalyDetector:
         
         return X_pca, pca
 
-    def plot_mahalanobis_contours(self, df, title="Mahalanobis Distance Analysis"):
+
+
+    def plot_mahalanobis_contours(self, df, filename, output_dir):
         """
         Calculates and visualizes the Mahalanobis distance of samples in a reduced 2D PCA space.
         """
-        # FIX 1: Select only numeric columns to avoid "could not convert string to float"
+        # FIX 1: Select only numeric columns
         df_numeric = df.select_dtypes(include=[np.number])
         
-        # FIX 2: Fill NaNs in the numeric data
+        # FIX 2: Fill NaNs
         X = df_numeric.fillna(0)
         
         # Determine PCA projection
-        pca = PCA(n_components=2) # We only need 2 components for the 2D plot
+        pca = PCA(n_components=2)
         X_pca = pca.fit_transform(X)
+
+        # Calculate Explained Variance
+        exp_var_pc1 = pca.explained_variance_ratio_[0] * 100
+        exp_var_pc2 = pca.explained_variance_ratio_[1] * 100
 
         # 2. Fit Elliptic Envelope (Robust Covariance)
         ee = EllipticEnvelope(contamination=0.01, random_state=42)
         ee.fit(X_pca)
-
-        # Prediction (-1 outlier, 1 inlier)
         y_pred = ee.predict(X_pca)
 
-        # 3. Create Meshgrid for contour levels
-        x_min, x_max = X_pca[:, 0].min() - 2, X_pca[:, 0].max() + 2
-        y_min, y_max = X_pca[:, 1].min() - 2, X_pca[:, 1].max() + 2
-        
-        xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500),
-                             np.linspace(y_min, y_max, 500))
+        # --- FIX 3: DYNAMIC PADDING ---
+        # Calculate range (max - min) for each axis
+        x_range = X_pca[:, 0].max() - X_pca[:, 0].min()
+        y_range = X_pca[:, 1].max() - X_pca[:, 1].min()
 
-        # Calculate the decision function on the grid
+        # Define padding as 10% of the range (prevents "zoomed in" look)
+        x_pad = x_range * 0.1
+        y_pad = y_range * 0.1
+
+        # Apply padding to limits
+        x_min, x_max = X_pca[:, 0].min() - x_pad, X_pca[:, 0].max() + x_pad
+        y_min, y_max = X_pca[:, 1].min() - y_pad, X_pca[:, 1].max() + y_pad
+        # ------------------------------
+
+        # 3. Create Meshgrid
+        xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500),
+                            np.linspace(y_min, y_max, 500))
+
+        # Calculate decision function
         Z = ee.decision_function(np.c_[xx.ravel(), yy.ravel()])
         Z = Z.reshape(xx.shape)
 
@@ -99,7 +116,7 @@ class AnomalyDetector:
 
         # Draw contour levels
         ax.contourf(xx, yy, Z, levels=np.linspace(Z.min(), 0, 7), cmap=plt.cm.PuBu_r, alpha=0.2)
-        ax.contour(xx, yy, Z, levels=[0], linewidths=2, colors='darkred')  # Outlier Boundary
+        ax.contour(xx, yy, Z, levels=[0], linewidths=2, colors='darkred')
 
         # Scatter Plot
         inliers = X_pca[y_pred == 1]
@@ -108,32 +125,22 @@ class AnomalyDetector:
         ax.scatter(inliers[:, 0], inliers[:, 1], c='blue', s=40, edgecolors='k', label='Normal Data (Inliers)')
         ax.scatter(outliers[:, 0], outliers[:, 1], c='red', s=60, marker='X', edgecolors='k', label='Outliers')
 
-        ax.set_title(f"{title}\nRobust Mahalanobis Distance Contours", fontsize=14)
-        ax.set_xlabel("Principal Component 1")
-        ax.set_ylabel("Principal Component 2")
+        ax.set_title(f"{filename}", fontsize=14)
+        ax.set_xlabel(f'PC1 ({exp_var_pc1:.2f}%)', fontsize=12)
+        ax.set_ylabel(f'PC2 ({exp_var_pc2:.2f}%)', fontsize=12)
         ax.legend()
         ax.grid(True, linestyle='--', alpha=0.5)
 
-        plt.show()
 
-    def plot_anomaly_grid(self, X, algorithms, fname: str, output_dir: str = '.', save_plots: bool = False):
+        save_plot(plt, filename, output_dir)
+        #plt.show()
+
+    def plot_anomaly_grid(self, X, filename, output_dir, algorithms):
         """
         Generates a grid of plots comparing different anomaly detection algorithms
         on the same dataset.
-
-        Parameters:
-        -----------
-        X : array-like
-            The input data (usually 2D projected).
-        algorithms : list
-            List of (name, model) tuples.
-        fname : str
-            Filename identifier.
-        output_dir : str
-            Directory to save the plot.
-        save_plots : bool
-            Whether to save the figure to disk.
         """
+
         # Setup plot grid (Adjusted for 6 algorithms: 3 rows x 2 columns)
         n_algos = len(algorithms)
         rows = (n_algos + 1) // 2
@@ -142,11 +149,21 @@ class AnomalyDetector:
         plt.subplots_adjust(left=.05, right=.95, bottom=.08, top=.92, wspace=.2, hspace=.35)
         axs = axs.flatten()
 
-        # Meshgrid for contours
-        x_min, x_max = X[:, 0].min() - 2, X[:, 0].max() + 2
-        y_min, y_max = X[:, 1].min() - 2, X[:, 1].max() + 2
+        # --- FIX 1: DYNAMIC PADDING ---
+        # Calculate proper padding (e.g., 20% of the range) to ensure boundaries are visible
+        x_range = X[:, 0].max() - X[:, 0].min()
+        y_range = X[:, 1].max() - X[:, 1].min()
+        
+        x_pad = x_range * 0.2
+        y_pad = y_range * 0.2
+
+        x_min, x_max = X[:, 0].min() - x_pad, X[:, 0].max() + x_pad
+        y_min, y_max = X[:, 1].min() - y_pad, X[:, 1].max() + y_pad
+        
+        # Create larger meshgrid
         xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100),
                              np.linspace(y_min, y_max, 100))
+        # ------------------------------
 
         plot_num = 0
 
@@ -154,15 +171,13 @@ class AnomalyDetector:
             if plot_num >= len(axs): break
             ax = axs[plot_num]
 
-            # Fit algorithm on the 2D projected data
-            # Note: SGD requires positive values or specific scaling sometimes,
-            # but StandardScaler usually works fine.
             try:
                 algorithm.fit(X)
 
                 # Logic for prediction and contours
                 if "Gaussian Mixture" in name:
                     scores = algorithm.score_samples(X)
+                    # Threshold: lowest 10%
                     threshold = np.percentile(scores, 10)
                     y_pred = np.ones(X.shape[0])
                     y_pred[scores < threshold] = -1
@@ -177,7 +192,6 @@ class AnomalyDetector:
                     elif hasattr(algorithm, "score_samples"):
                         Z = algorithm.score_samples(np.c_[xx.ravel(), yy.ravel()])
                     else:
-                        # Fallback for models without decision_function (rare in this list)
                         Z = np.zeros(xx.ravel().shape)
 
                 Z = Z.reshape(xx.shape)
@@ -185,12 +199,20 @@ class AnomalyDetector:
                 # --- VISUALIZATION ---
                 # 1. Contours
                 if "Gaussian Mixture" in name:
+                    # GMM Contours based on density
                     ax.contour(xx, yy, Z, levels=np.linspace(Z.min(), Z.max(), 7),
                                linewidths=1.5, colors='darkgreen', alpha=0.6)
                 else:
-                    ax.contour(xx, yy, Z, levels=[0], linewidths=2, colors='black')
-                    ax.contour(xx, yy, Z, levels=np.linspace(Z.min(), 0, 5), linewidths=0.8, colors='black',
-                               alpha=0.3)
+                    # FIX 2: Check if 0 is within Z range before plotting to avoid warnings
+                    if Z.min() < 0 < Z.max():
+                        ax.contour(xx, yy, Z, levels=[0], linewidths=2, colors='black')
+                    
+                    # Fill contours (using safe linspace)
+                    # We ensure the end is at least slightly above min to avoid range errors
+                    end_level = min(0, Z.max())
+                    if Z.min() < end_level:
+                        levels = np.linspace(Z.min(), end_level, 5)
+                        ax.contour(xx, yy, Z, levels=levels, linewidths=0.8, colors='black', alpha=0.3)
 
                 # 2. Scatter Plot
                 colors = np.array(['gold' if x == -1 else '#4B0082' for x in y_pred])
@@ -211,7 +233,7 @@ class AnomalyDetector:
             fig.delaxes(axs[i])
 
         # Main Title
-        fig.suptitle(f"Anomaly Detection Comparison: {fname}", fontsize=14, fontweight='bold')
+        fig.suptitle(f"Anomaly Detection Comparison: {filename}", fontsize=14, fontweight='bold')
 
         # Legend
         legend_elements = [
@@ -223,13 +245,7 @@ class AnomalyDetector:
         ]
         fig.legend(handles=legend_elements, loc='lower center', ncol=3, fontsize=10, frameon=False)
 
-        if save_plots:
-            clean_name = os.path.splitext(fname)[0]
-            save_path = os.path.join(output_dir, f"ANOMALY_COMPARISON_{clean_name}.png")
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
-            print(f"Plot saved to {save_path}")
-
-        plt.show()
+        save_plot(plt, filename, output_dir)
 
 
     def calculate_z_scores(self, df):
@@ -249,65 +265,80 @@ class AnomalyDetector:
         --------
         tuple
             (z_scores, std_dev)
-        """           
+        """          
         # Sum of intensities per sample (a simple proxy for total metabolic content)
-        sample_sums = df.sum(axis=1)
+        # FIX: Added numeric_only=True to prevent errors with string columns (e.g., IDs)
+        sample_sums = df.sum(axis=1, numeric_only=True)
 
         # Calculate Z-score: (x - mean) / std
         mean_val = sample_sums.mean()
-        std_dev = sample_sums.std()
+        std_dev = sample_sums.std() # This calculates std of raw intensities
 
         z_scores = (sample_sums - mean_val) / std_dev
 
         return z_scores, std_dev
    
+
+   
     def benchmark_algorithms(self, df, fname: str):
         """
         Benchmarks various anomaly detection algorithms using the Silhouette Score.
-        Note: The algorithms used here are fresh instances fitted on the full
-        dimensional data, not the 2D projection.
-        
-        Parameters:
-        -----------
-        df : pd.DataFrame
-            The input data (scaled).
-        fname : str
-            Dataset identifier.
-
-        Returns:
-        --------
-        pd.DataFrame
-            A dataframe sorted by Silhouette Score containing benchmark results.
         """
-        X_scaled = df
+        # FIX 1: Select numeric columns AND convert to numpy array immediately (.values)
+        # This prevents the "fitted with feature names" warning in LOF
+        X_scaled = df.select_dtypes(include=[np.number]).values
 
-        # Define algorithms (Same configuration as above)
-        # Note: We create new instances to avoid fitting on 2D data; benchmarking uses FULL DIMENSIONS
+        # Define algorithms
         algos = {
-            "Isolation Forest": IsolationForest(contamination=0.1, random_state=42),
             "Robust Covariance": EllipticEnvelope(contamination=0.1),
+            
+            # FIX 2: Added reg_covar=1e-5 to prevent "ill-defined empirical covariance" crash
+            "Gaussian Mixture": GaussianMixture(n_components=2, covariance_type='full', 
+                                                random_state=42, reg_covar=1e-5),
+            
             "One-Class SVM": OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1),
-            "Local Outlier Factor": LocalOutlierFactor(n_neighbors=20, contamination=0.1),
-            # novelty=False for fit_predict
+            
+            "One-Class SVM (SGD)": make_pipeline(
+                Nystroem(gamma=0.1, random_state=42, n_components=150),
+                SGDOneClassSVM(nu=0.15, shuffle=True, fit_intercept=True, random_state=42, tol=1e-6)
+            ),
+            
+            "Isolation Forest": IsolationForest(contamination=0.1, random_state=42),
+            
+            "Local Outlier Factor": LocalOutlierFactor(n_neighbors=20, contamination=0.1, novelty=True)
         }
 
         results = []
 
+        print(f"\n--- Running Benchmark for {fname} ---")
+
         for name, model in algos.items():
             try:
-                # Predict labels (-1 for outlier, 1 for inlier)
-                if hasattr(model, 'fit_predict'):
-                    labels = model.fit_predict(X_scaled)
-                else:
+                # --- Special Handling for Gaussian Mixture ---
+                if name == "Gaussian Mixture":
                     model.fit(X_scaled)
-                    labels = model.predict(X_scaled)
+                    # GMM doesn't predict -1/1. We use log-likelihood (score_samples).
+                    scores = model.score_samples(X_scaled)
+                    # Threshold: Mark the lowest 10% density samples as outliers
+                    threshold = np.percentile(scores, 10) 
+                    labels = np.where(scores < threshold, -1, 1)
 
+                # --- Handling for Standard Detectors ---
+                else:
+                    # Fit and Predict
+                    if hasattr(model, 'fit_predict') and not (name == "Local Outlier Factor"):
+                        labels = model.fit_predict(X_scaled)
+                    else:
+                        # LOF with novelty=True or Pipeline requires fit() then predict()
+                        model.fit(X_scaled)
+                        labels = model.predict(X_scaled)
+
+                # --- Calculate Metrics ---
                 # Check if we actually found outliers
                 n_outliers = np.sum(labels == -1)
 
                 if n_outliers > 0 and n_outliers < len(labels):
-                    # Silhouette Score: Measures cluster separation (Inliers vs Outliers)
-                    # Range: -1 to 1. Higher is better.
+                    # Silhouette Score: Measures cluster separation
                     sil_score = silhouette_score(X_scaled, labels)
                     results.append({'Algorithm': name, 'Silhouette Score': sil_score, 'Outliers Found': n_outliers})
                 else:
@@ -316,9 +347,129 @@ class AnomalyDetector:
             except Exception as e:
                 print(f"Benchmarking error for {name}: {e}")
 
+        if not results:
+            print("No valid benchmark results generated.")
+            return pd.DataFrame()
+
         # Create comparison table
         bench_df = pd.DataFrame(results).sort_values(by='Silhouette Score', ascending=False)
 
-        print(f"\n--- Anomaly Benchmark for {fname} ---")
         print(bench_df)
         return bench_df
+
+
+    def remove_outliers(self, df, samples_to_remove):
+        """
+        Removes samples from the dataframe based on a provided container of IDs.
+        Handles lists, pandas Indices, or pandas Series (extracts the index automatically).
+
+        Parameters:
+        -----------
+        df : pd.DataFrame
+            The input dataframe.
+        samples_to_remove : list, pd.Index, or pd.Series
+            The samples to remove. If a Series is passed (e.g., outliers_z), 
+            its index is used as the list of IDs.
+
+        Returns:
+        --------
+        pd.DataFrame
+            The cleaned dataframe.
+        """
+        # 1. Handle "None" or empty inputs safely
+        if samples_to_remove is None or len(samples_to_remove) == 0:
+            print("\nNo samples provided for removal. Returning original dataframe.")
+            return df
+
+        # 2. TYPE CHECKING: Extract IDs based on input type
+        if isinstance(samples_to_remove, pd.Series):
+            # If it's a Series (like your Z-score output), we want the INDEX (Sample IDs)
+            print("  -> Input is a Series; extracting indices...")
+            target_ids = samples_to_remove.index.tolist()
+        
+        elif isinstance(samples_to_remove, pd.Index):
+            # If it's a raw pandas Index
+            target_ids = samples_to_remove.tolist()
+            
+        elif isinstance(samples_to_remove, list):
+            # If it's already a list
+            target_ids = samples_to_remove
+            
+        else:
+            # Fallback for numpy arrays or other iterables
+            target_ids = list(samples_to_remove)
+
+        # 3. Filter IDs: Only remove samples that actually exist in this dataframe
+        valid_samples_to_drop = [s for s in target_ids if s in df.index]
+
+        # 4. Perform Removal
+        if valid_samples_to_drop:
+            print(f"\n--- Removing {len(valid_samples_to_drop)} Outliers ---")
+            df_cleaned = df.drop(index=valid_samples_to_drop)
+            print(f"Data shape before: {df.shape} -> after: {df_cleaned.shape}")
+            return df_cleaned
+        else:
+            print("\nNone of the provided outlier IDs were found in this dataframe.")
+            return df
+
+    def identify_consensus_outliers(self, df, fname: str):
+        """
+        Identifies outliers based on the consensus of the top 3 performing algorithms:
+        Local Outlier Factor, Isolation Forest, and Robust Covariance.
+
+        Parameters:
+        -----------
+        df : pd.DataFrame
+            The input dataframe (samples as rows).
+        fname : str
+            Dataset identifier.
+
+        Returns:
+        --------
+        list
+            A list of sample indices (names) that are considered outliers by ALL 3 models.
+        """
+        print(f"\n--- Calculating Consensus Outliers for {fname} ---")
+        
+        # 1. Prepare Data (Numeric only, convert to numpy)
+        X = df.select_dtypes(include=[np.number]).values
+        sample_indices = df.index  # Keep track of sample names
+
+        # 2. Define the Top 3 Algorithms
+        # (Using the same settings that worked well in the benchmark)
+        detectors = {
+            "LOF": LocalOutlierFactor(n_neighbors=20, contamination=0.1, novelty=False), # novelty=False for fit_predict
+            "IsoForest": IsolationForest(contamination=0.1, random_state=42),
+            "RobustCov": EllipticEnvelope(contamination=0.1, random_state=42)
+        }
+
+        outlier_votes = pd.DataFrame(index=sample_indices)
+
+        # 3. Run each model and collect votes
+        for name, model in detectors.items():
+            try:
+                if name == "LOF":
+                    # LOF fit_predict (standard mode)
+                    labels = model.fit_predict(X)
+                else:
+                    # Others
+                    labels = model.fit_predict(X)
+                
+                # Store result: True if outlier (-1), False if inlier (1)
+                outlier_votes[name] = (labels == -1)
+                
+            except Exception as e:
+                print(f"Error running {name} for consensus: {e}")
+
+        # 4. Find Consensus (Intersection)
+        # A sample is a consensus outlier if ALL columns are True
+        outlier_votes['is_consensus'] = outlier_votes.all(axis=1)
+        
+        consensus_outliers = outlier_votes[outlier_votes['is_consensus']].index.tolist()
+
+        # 5. Print Summary
+        print(f"Total Samples: {len(df)}")
+        print(f"Consensus Outliers Found (Agreed by LOF, IsoForest, RobustCov): {len(consensus_outliers)}")
+        print(f"Outlier Sample IDs: {consensus_outliers}")
+
+        return consensus_outliers

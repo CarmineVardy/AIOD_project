@@ -1092,6 +1092,24 @@ def z_score_plot(df, dataset_label, output_folder, samples_per_group=25):
     
     colors = [color_ctrl] * len(subset_ctrl) + [color_case] * len(subset_case)
     
+   
+    # 1. Flatten the dataframe to treat it as one giant list of numbers
+    flat_data = df_numeric.values.flatten()
+
+    # 2. Calculate the Single Global Mean and Standard Deviation
+    global_mean = flat_data.mean()
+    global_std = flat_data.std(ddof=1) # ddof=1 for Sample Std Dev
+
+    # 3. Calculate the Single Z-score for a specific point
+    # Example: Let's calculate the Z-score for the MAXIMUM value in the dataset
+    max_value = flat_data.max()
+    max_zscore = (max_value - global_mean) / global_std
+
+    print(f"Global Standard Deviation: {global_std:.4f}")
+    print(f"Maximum Value in Data:     {max_value:.4f}")
+    print(f"Z-Score of Maximum Value:  {max_zscore:.4f}")
+
+
     # 6. Plotting
     plt.figure(figsize=(15, 6))
     
@@ -1188,16 +1206,20 @@ def internal_variability(df, dataset_label, output_folder, samples_per_group=25)
     sns.boxplot(data=df_plot, 
                 palette=palette_list, 
                 ax=ax, 
-                showfliers=False, 
+                showfliers=False,
+                showmeans=False,
+                meanline=False,
                 linewidth=0.8, 
                 boxprops=dict(alpha=0.5),
-                meanprops={'linestyle': 'dashed', 'linewidth': 2.0, 'color': 'black'},
+                meanprops={'linestyle': 'dotted', 'linewidth': 2.0, 'color': 'black'},
                 medianprops={'linestyle': 'solid', 'linewidth': 1.5, 'color': 'black'})
-    
+
+    #ax.set_yscale('log')
     ax.set_title(f'Internal Variability (Subset: {samples_per_group}/group) - {dataset_label}', fontsize=14, fontweight='bold')
     ax.set_xlabel("Samples", fontsize=12)
     ax.set_ylabel("Abundance", fontsize=12)
     
+
     # Get names from the columns of the transposed dataframe
     sample_names = df_plot.columns.tolist()
     
@@ -1215,12 +1237,10 @@ def internal_variability(df, dataset_label, output_folder, samples_per_group=25)
         
         Line2D([0], [0], marker=markers_map.get('Case', '^'), color='w', 
                markerfacecolor=color_case, markersize=10, markeredgecolor='k', label='Case'),
-        
-        Line2D([0], [0], color='white', linewidth=0, label=''),
-
+    
         # Line Explanations
         Line2D([0], [0], color='black', linestyle='solid', linewidth=1.5, label='Median'),
-        Line2D([0], [0], color='black', linestyle='dashed', linewidth=1.5, label='Mean')
+        #Line2D([0], [0], color='black', linestyle='dashed', linewidth=1.5, label='Mean')
     ]
     ax.legend(handles=legend_elements, loc='upper right')
 

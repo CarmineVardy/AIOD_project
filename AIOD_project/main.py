@@ -56,7 +56,7 @@ def main():
 
     plots_dir = os.path.join(STEP2_DIR, "plots")
 
-    #plot_class_distribution_pie(df_neg_raw, plots_dir, "Datset Negative raw")
+    """#plot_class_distribution_pie(df_neg_raw, plots_dir, "Datset Negative raw")
     #plot_class_distribution_pie(df_pos_raw, plots_dir, "Datset Positive raw")
 
     biplot(df_neg_raw, "Negative Raw", plots_dir)
@@ -74,7 +74,7 @@ def main():
     z_score_plot(df_pos_raw, "Z-score positive Raw", plots_dir)
 
     internal_variability(df_neg_raw, "Internal variability negative Raw", plots_dir)
-    internal_variability(df_pos_raw, "Internal variability positive Raw", plots_dir)
+    internal_variability(df_pos_raw, "Internal variability positive Raw", plots_dir)"""
 
 
 # ==============================================================================
@@ -83,21 +83,21 @@ def main():
 
     detector = AnomalyDetector() 
 
-    # 2. Visualizing Mahalanobis Contours
+    """# 2. Visualizing Mahalanobis Contours
     # This method creates a specific plot for Robust Covariance
     print("\n--- 1. Mahalanobis Distance Analysis ---")
-    detector.plot_mahalanobis_contours(df_neg_raw, title="Negative Dataset")
+    detector.plot_mahalanobis_contours(df_neg_raw, "Negative Dataset - Mahalanobis Distance Contours", plots_dir)
     # 3. Visualizing Algorithm Grid
     # This method compares multiple algorithms on a 2D grid.
     # We must project the data to 2D (PCA) before passing it to the grid plotter.
     print("\n--- 2. Algorithm Comparison Grid ---")
     X_pca_2d, _ = detector._generate_pca(df_neg_raw, n_components=2)
     detector.plot_anomaly_grid(
-        X_pca_2d, 
-        detector.algorithms, 
-        fname="Negative_Dataset_Anomaly_Grid", 
-        save_plots=False
-    )
+        X_pca_2d,         
+        "Negative Dataset Anomaly Grid", 
+        plots_dir,
+        detector.algorithms
+    )"""
     # 4. Z-Score Analysis
     # Calculates outliers based on total sample intensity (Total Ion Current proxy)
     print("\n--- 3. Z-Score Analysis ---")
@@ -113,11 +113,32 @@ def main():
         print(outliers_z.index.tolist())
     else:
         print("No extreme intensity outliers (>3 sigma) detected")
+
+    print(f"\n\n {type(outliers_z)} \n\n")
+    df_neg_clean = detector.remove_outliers(df_neg_raw, outliers_z)
+
+    biplot(df_neg_raw, "Negative Raw", plots_dir)
+    biplot(df_neg_clean, "Negative anomaly cleaned", plots_dir)
+    
     # 5. Benchmarking
     # Runs all algorithms on the full dataset and scores them using Silhouette Score
     print("\n--- 4. Benchmarking Algorithms ---")
     benchmark_results = detector.benchmark_algorithms(df_neg_raw, fname="Negative Dataset")
     # The benchmark method prints the table automatically, but it is also returned here
+
+    consensus_outliers = detector.identify_consensus_outliers(df_neg_raw, fname="Negative Dataset")
+
+    detector.identify_consensus_outliers(df_neg_raw, fname="Negative Dataset")
+
+    # Optional: Save these IDs to a file if needed
+    if consensus_outliers:
+        for sample in consensus_outliers:
+            print(f"{sample}\n")
+
+    print(f"\n\n {type(consensus_outliers)} \n\n")
+    df_neg_clean_2 = detector.remove_outliers(df_neg_raw, consensus_outliers)
+
+    biplot(df_neg_clean_2, "Negative anomaly cleaned 2", plots_dir)
 
 
 
