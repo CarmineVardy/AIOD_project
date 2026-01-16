@@ -5,6 +5,7 @@ import pandas as pd
 
 import matplotlib.patheffects as pe
 from matplotlib.lines import Line2D
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.patches import Ellipse
@@ -254,7 +255,7 @@ def plot_overlay_dotplots(df, features, output_dir, file_prefix="dotplot", class
         print(f"   Saved: {save_path}")
 
 
-def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", class_col='Class', samples_per_page=20, plot_title="Sample Intensity Distributions"):
+def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", class_col='Class', samples_per_page=20, plot_title=None):
     """
     Generates Box Plots visualizing the global intensity distribution of EACH SAMPLE.
 
@@ -272,6 +273,9 @@ def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", cl
         samples_per_page (int): Number of samples (X-axis) to show per PDF page.
     """
     os.makedirs(output_dir, exist_ok=True)
+
+    if plot_title is None:
+        plot_title = "Sample Intensity Distributions"
 
     # 1. Identify Numeric Features (Metabolites)
     # We exclude the Class column and any other non-numeric info
@@ -365,6 +369,204 @@ def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", cl
         plt.savefig(os.path.join(output_dir, filename), format=SAVE_FORMAT, bbox_inches='tight')
         plt.close(fig)
         print(f"   Saved: {os.path.join(output_dir, filename)}")
+
+
+def plot_features_overview(df, output_dir, file_name="features_overview", class_col='Class', features_per_page=20,
+                           plot_title=None):
+    """
+    Generates a dense overview of Feature Distributions.
+    Unlike 'plot_boxplots' (which makes separate subplots), this puts multiple features
+    on the SAME X-AXIS to compare their relative intensities side-by-side.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+
+    if plot_title is None:
+        plot_title = "Metabolite Intensity Overview"
+
+    # 1. Identify Features (All columns except Class)
+    # This is the main difference: we iterate over COLUMNS, not rows.
+    all_features = [col for col in df.columns if col != class_col]
+
+    num_features = len(all_features)
+    num_pages = math.ceil(num_features / features_per_page)
+
+    # Setup Coloring
+    unique_classes = df[class_col].unique()
+    current_palette = DISCRETE_COLORS[:len(unique_classes)]
+
+    print(f"Generating Features Overview: {num_features} features across {num_pages} file(s)...")
+
+    for page in range(num_pages):
+        start_idx = page * features_per_page
+        end_idx = min(start_idx + features_per_page, num_features)
+
+        # Slice the LIST of features
+        current_batch_features = all_features[start_idx:end_idx]
+
+        # 2. Subset & Melt
+        # We take the Class column + the current batch of features
+        subset_df = df[[class_col] + current_batch_features].copy()
+
+        # Transform to Long Format:
+        # Rows become: [Class, FeatureName, Intensity]
+        df_melted = subset_df.melt(id_vars=[class_col],
+                                   value_vars=current_batch_features,
+                                   var_name='Metabolite',
+                                   value_name='Intensity')
+
+        # 3. Plotting (A4 Landscape Fixed Size)
+        fig, ax = plt.subplots(figsize=(12, 4))
+
+        sns.boxplot(data=df_melted, x='Metabolite', y='Intensity',
+                    hue=class_col,
+                    palette=current_palette,
+                    showfliers=False,
+                    linewidth=0.5, width=0.7,
+                    # Stesso stile mediana della funzione Sample
+                    medianprops={'color': 'white', 'linewidth': 1.0,
+                                 'path_effects': [pe.withStroke(linewidth=2.0, foreground='black')]},
+                    ax=ax)
+
+        # Visual Polish
+        page_info = f" (Features {start_idx + 1}-{end_idx} of {num_features})" if num_pages > 1 else ""
+        ax.set_title(f"{plot_title}{page_info}", fontweight='bold')
+        ax.set_ylabel("Intensity")
+
+        step = 20
+        tick_positions = range(0, len(current_batch_features), step)
+        tick_labels = range(start_idx, start_idx + len(current_batch_features), step)
+
+        ax.set_xticks(tick_positions)
+        ax.set_xticklabels(tick_labels)
+        ax.set_xlabel("Metabolite Index")
+        ax.tick_params(axis='x', rotation=0)  # Numeri dritti
+
+        # Legend Customization (con stile mediana)
+        handles, labels = ax.get_legend_handles_labels()
+        median_proxy = Line2D([0], [0], color='white', linewidth=1.0,
+                              path_effects=[pe.withStroke(linewidth=2.0, foreground='black')],
+                              label='Median')
+        handles.append(median_proxy)
+        labels.append("Median")
+
+        ax.legend(handles=handles, labels=labels, title="Group", loc='best')
+
+        ax.grid(True, axis='y', linestyle='--', alpha=0.3)
+
+        plt.tight_layout()
+
+        full_filename = f"{file_name}_page{page + 1}.{SAVE_FORMAT}"
+        plt.savefig(os.path.join(output_dir, full_filename), format=SAVE_FORMAT, bbox_inches='tight')
+        plt.close(fig)
+        print(f"   Saved: {os.path.join(output_dir, full_filename)}")
+
+def plot_global_density(df, output_dir, file_name="global_density_plot", class_col='Class', xlabel='Intensity', add_gaussian=True, plot_title=None):
+    """
+    Generates a Global Density Plot (Histogram + KDE) to visualize the effect of data transformations.
+    Instead of plotting individual features, it pools ALL metabolite intensities together to assess
+    global normality and skewness reduction.
+
+    THEORY & IMPLEMENTATION DETAILS:
+    --------------------------------
+    1. Aggregation:
+       - Flattens the Sample x Feature matrix into a single vector of intensities per class.
+       - Essential for evaluating if a transformation (e.g., Log10) effectively compresses
+         the dynamic range and centers the global distribution.
+    2. KDE (Solid Line):
+       - Shows the EMPIRICAL shape of the transformed data.
+    3. Gaussian/Normal (Dashed Line) [Optional]:
+       - Shows the THEORETICAL shape. Ideally, after transformation, the Solid and Dashed lines
+         should overlap significantly.
+
+    Args:
+        df (pd.DataFrame): Dataset (Transformed).
+        output_dir (str): Output directory.
+        file_name (str): Output filename (e.g., 'global_dist_log10').
+        class_col (str): Grouping variable.
+        xlabel (str): Label for the X-axis (e.g., 'Log10 Intensity').
+        add_gaussian (bool): If True, overlaps the theoretical Gaussian curve (dashed).
+    """
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    if plot_title is None:
+        plot_title = "Global Distribution Analysis"
+
+    # 1. Prepare Data: Melt from Wide (Samples x Features) to Long (One huge column of intensities)
+    # We drop non-numeric columns except Class
+    numeric_df = df.copy()
+
+    # Melt the dataframe to have a single 'Intensity' column for all features
+    # This creates a very long dataframe, but it's necessary for the global histogram
+    melted_df = numeric_df.melt(id_vars=[class_col], var_name='Feature', value_name='Intensity')
+
+    # Remove NaNs if any (some transformations might produce NaNs on 0 if not handled, though your functions handle it)
+    melted_df = melted_df.dropna(subset=['Intensity'])
+
+    # 2. Setup Plotting
+    n_classes = df[class_col].nunique()
+    current_palette = DISCRETE_COLORS[:n_classes]
+    unique_classes = df[class_col].unique()
+    color_map = dict(zip(unique_classes, current_palette))
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # 3. Plot Histogram with Empirical Density (KDE)
+    # Using 'stat="density"' ensures the area under the curve sums to 1, comparable to the Gaussian
+    sns.histplot(data=melted_df, x='Intensity', hue=class_col,
+                 palette=current_palette,
+                 kde=True,  # Real Data Curve (Solid)
+                 element="step",  # 'step' is cleaner for overlapping histograms than 'bars'
+                 stat="density",
+                 common_norm=False,  # Normalize each class independently
+                 alpha=0.2,  # Light fill
+                 linewidth=1.0,
+                 ax=ax)
+
+    # 4. (Optional) Overlay Theoretical Gaussian Curve
+    if add_gaussian:
+        # Get plot limits to generate the x-axis for the Gaussian curve
+        x_min, x_max = ax.get_xlim()
+        x_axis = np.linspace(x_min, x_max, 500)
+
+        for cls in unique_classes:
+            # Extract pooled data for this class
+            cls_data = melted_df[melted_df[class_col] == cls]['Intensity']
+
+            if len(cls_data) > 1:
+                # Fit Normal Distribution (Calculate Global Mean and Std Dev)
+                mu, std = norm.fit(cls_data)
+
+                # Generate PDF (Probability Density Function)
+                p = norm.pdf(x_axis, mu, std)
+
+                # Plot Dashed Line in the same color as the class
+                # We use path_effects to make the dashed line stand out against the histogram
+                ax.plot(x_axis, p, linestyle='--', linewidth=2.0,
+                        color=color_map[cls], alpha=0.9,
+                        label=f'{cls} Theoretical Normal')
+
+    ax.set_title(f"{plot_title}", fontweight='bold')
+    ax.set_xlabel(f"{xlabel} (All Features Pooled)", fontsize=12)
+    ax.set_ylabel("Density", fontsize=12)
+    ax.grid(True, linestyle=':', alpha=0.5)
+
+    legend_handles = []
+    for cls in unique_classes:
+        legend_handles.append(mpatches.Patch(color=color_map[cls], label=cls))
+    legend_handles.append(Line2D([0], [0], color='black', linestyle='-', linewidth=1.5, label='Empirical (KDE)'))
+    if add_gaussian:
+        legend_handles.append(
+            Line2D([0], [0], color='black', linestyle='--', linewidth=1.5, label='Theoretical Normal'))
+    ax.legend(handles=legend_handles, loc='best', title="Legend")
+
+    plt.tight_layout()
+
+    # 6. Save
+    full_path = os.path.join(output_dir, f"{file_name}.{SAVE_FORMAT}")
+    plt.savefig(full_path, format=SAVE_FORMAT, bbox_inches='tight')
+    plt.close(fig)
+    print(f"   Saved Global Density Plot: {full_path}")
 
 def plot_feature_histograms(df, features, output_dir, file_prefix="hist", class_col='Class', xlabel='Intensity',
                             features_per_page=6, add_gaussian=True):

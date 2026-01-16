@@ -47,6 +47,7 @@ def main():
 
     os.makedirs(OUT_PATH, exist_ok=True)
 
+
     # -------------------------------
     #     START QUALITY ASSESSMENT
     # -------------------------------
@@ -107,7 +108,6 @@ def main():
     # -------------------------------
     #     START PRE-PROCESSING
     # -------------------------------
-
     pre_process_base_dir = os.path.join(OUT_PATH, "pre_processing")
     pre_process_dirs = [
         pre_process_base_dir,
@@ -119,52 +119,110 @@ def main():
         os.path.join(pre_process_base_dir, "pos", "normalization"),
         os.path.join(pre_process_base_dir, "pos", "transformation"),
         os.path.join(pre_process_base_dir, "pos", "scaling"),
+        os.path.join(pre_process_base_dir, "neg", "pca"),
+        os.path.join(pre_process_base_dir, "pos", "pca"),
     ]
+
     for d in pre_process_dirs:
         os.makedirs(d, exist_ok=True)
 
-    # NORMALIZATION NEG
 
-    #WITHOUT NORMALIZATION
-    plot_sample_distributions(df_neg, output_dir=pre_process_dirs[2], file_name="no_norm", class_col="Class", samples_per_page=197)
+    #NORMALIZATION
+    normalization_methods = {
+        "no_norm": lambda x: x.copy(),
+        "tic": normalization_tic,
+        "median": normalization_median,
+        "mean": normalization_mean,
+        "max": normalization_max,
+        "range": normalization_range,
+        "pqn": normalization_pqn,
+        "quantile": normalization_quantile
+    }
+    datasets_config = {
+        "neg": {"data": df_neg, "out_dir": pre_process_dirs[2]},
+        "pos": {"data": df_pos, "out_dir": pre_process_dirs[6]}
+    }
+    comparison_tables = {}
+    for mode, config in datasets_config.items():
+        df_raw = config["data"]
+        output_dir = config["out_dir"]
+        results_list = []
+        for method_name, norm_func in normalization_methods.items():
+            df_normalized = norm_func(df_raw).copy()
+            plot_title = "" if method_name != "no_norm" else None
+            plot_sample_distributions(
+                df_normalized,
+                output_dir=output_dir,
+                file_name=method_name,
+                class_col="Class",
+                samples_per_page=197,
+                plot_title=plot_title
+            )
+            df_ctrl = df_normalized[df_normalized["Class"] == "CTRL"].copy()
+            stats_ctrl = compute_feature_statistics(df_ctrl)
+            cv_ctrl = stats_ctrl["cv_percent"].median()
 
-    plot_sample_distributions(normalization_tic(df_neg), output_dir=pre_process_dirs[2], file_name="tic", class_col="Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_median(df_neg), output_dir=pre_process_dirs[2], file_name="median", class_col="Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_mean(df_neg), output_dir=pre_process_dirs[2], file_name="mean", class_col="Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_max(df_neg), output_dir=pre_process_dirs[2], file_name="max", class_col="Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_range(df_neg), output_dir=pre_process_dirs[2], file_name="range", class_col="Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_pqn(df_neg), output_dir=pre_process_dirs[2], file_name="pqn", class_col="Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_quantile(df_neg), output_dir=pre_process_dirs[2], file_name="quantile", class_col="Class", samples_per_page=197, plot_title='')
+            df_chd = df_normalized[df_normalized["Class"] == "CHD"].copy()
+            stats_chd = compute_feature_statistics(df_chd)
+            cv_chd = stats_chd["cv_percent"].median()
 
-    # NORMALIZATION POS
+            results_list.append({
+                "Normalization": method_name,
+                "Median CV CTRL %": round(cv_ctrl, 2),
+                "Median CV CHD %": round(cv_chd, 2),
+                "Average CV %": round((cv_ctrl + cv_chd) / 2, 2)
+            })
 
-    # WITHOUT NORMALIZATION
-    plot_sample_distributions(df_pos, output_dir=pre_process_dirs[6], file_name= "no_norm", class_col= "Class", samples_per_page=197)
+        df_comparison = pd.DataFrame(results_list).sort_values(by="Average CV %")
+        comparison_tables[mode] = df_comparison
 
-    plot_sample_distributions(normalization_tic(df_pos), output_dir=pre_process_dirs[6], file_name= "tic", class_col= "Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_median(df_pos), output_dir=pre_process_dirs[6], file_name= "median", class_col= "Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_mean(df_pos), output_dir=pre_process_dirs[6], file_name= "mean", class_col= "Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_max(df_pos), output_dir=pre_process_dirs[6], file_name= "max", class_col= "Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_range(df_pos), output_dir=pre_process_dirs[6], file_name= "range", class_col= "Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_pqn(df_pos), output_dir=pre_process_dirs[6], file_name= "pqn", class_col= "Class", samples_per_page=197, plot_title='')
-    plot_sample_distributions(normalization_quantile(df_pos), output_dir=pre_process_dirs[6], file_name= "quantile", class_col= "Class", samples_per_page=197, plot_title='')
+    df_comparison_neg = comparison_tables["neg"]
+    df_comparison_pos = comparison_tables["pos"]
+    out_path_neg = os.path.join(pre_process_base_dir, "neg", "normalization", "normalization_comparison.csv")
+    df_comparison_neg.to_csv(out_path_neg, index=False)
+    out_path_pos = os.path.join(pre_process_base_dir, "pos", "normalization", "normalization_comparison.csv")
+    df_comparison_pos.to_csv(out_path_pos, index=False)
 
-    '''
-    #TRANSFORMATION
-    transformation_log10()
-    transformation_log2()
-    transformation_log_e()
-    transformation_sqrt()
-    transformation_cuberoot()
+    #TRANSFORMATIONS
+    transformations = {
+        "no_transf": (lambda x: x, "Raw Intensity"),
+        "log_10": (transformation_log10, "Log10 Intensity"),
+        "log_2": (transformation_log2, "Log2 Intensity"),
+        "log_e": (transformation_log_e, "Log_e Intensity"),
+        "log_sqrt": (transformation_sqrt, "Log_sqrt Intensity"),
+        "log_cuberoot": (transformation_cuberoot, "Log_cuberoot Intensity")
+    }
+
+    datasets_config = [
+        (df_neg, pre_process_dirs[3]),
+        (df_pos, pre_process_dirs[7])
+    ]
+
+    for df_source, out_dir in datasets_config:
+        for file_name, (func, label) in transformations.items():
+            plot_global_density(
+                df=func(df_source),
+                output_dir=out_dir,
+                file_name=file_name,
+                class_col='Class',
+                xlabel=label,
+                add_gaussian=True,
+            )
 
     #SCALING
-    scaling_autoscaling()
+    plot_features_overview(df_neg, output_dir = pre_process_dirs[4], file_name="no_autoscaling", class_col='Class', features_per_page=52,plot_title=None)
+    plot_features_overview(scaling_autoscaling(df_neg), output_dir = pre_process_dirs[4], file_name="with_autoscaling", class_col='Class', features_per_page=52,plot_title='')
 
-    '''
+    plot_features_overview(df_pos, output_dir = pre_process_dirs[8], file_name="no_autoscaling", class_col='Class', features_per_page=98,plot_title=None)
+    plot_features_overview(scaling_autoscaling(df_pos), output_dir = pre_process_dirs[8], file_name="with_autoscaling", class_col='Class', features_per_page=98,plot_title='')
+
+
 
     # -------------------------------
     #     END PRE-PROCESSING
     # -------------------------------
+
+    '''
 
     plots_dir = os.path.join(STEP2_DIR, "plots")
 
@@ -245,7 +303,7 @@ def main():
 
     biplot(df_neg_clean_2, "Negative anomaly cleaned 2", plots_dir)
 
-
+'''
 
 if __name__ == "__main__":
     '''

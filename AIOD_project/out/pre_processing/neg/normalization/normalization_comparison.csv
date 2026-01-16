@@ -1,0 +1,9 @@
+Normalization,Median CV CTRL %,Median CV CHD %,Average CV %
+quantile,45.46,55.1,50.28
+pqn,44.94,58.06,51.5
+tic,45.91,59.66,52.79
+mean,45.91,59.66,52.79
+median,45.48,63.94,54.71
+max,51.28,63.22,57.25
+range,51.29,63.23,57.26
+no_norm,49.11,67.4,58.26

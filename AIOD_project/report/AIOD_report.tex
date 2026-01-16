@@ -155,6 +155,8 @@
 
 \fancyfoot[R]{\thepage}
 
+\usepackage{booktabs}
+
 
 % Your document starts here!
 \begin{document}
@@ -293,15 +295,13 @@ The following tables give an overview on the dataset composition, for both ESI+ 
 		\end{center}
 	\end{table}
 
-
 \subsection{Quality Assessment and Data Cleaning}
 
-This preliminary phase is crucial to validate the technical quality of the experiment before proceeding with biological interpretation. The objectives of this assessment were twofold: (i) to verify the instrumental stability over the analytical run, and (ii) to evaluate the technical reproducibility of the measurements.
+This preliminary phase is crucial to validate the technical quality of the experiment before proceeding with biological interpretation.
 
 To this end, we monitored the behavior of Quality Control (QC) samples (pooled aliquots injected periodically) and technical replicates (samples analyzed in duplicate, denoted with suffixes \_00 and \_01).
 The evaluation was performed using Principal Component Analysis (PCA) applied separately to the raw data of Negative (ESI-) and Positive (ESI+) ionization modes. Autoscaling was applied prior to PCA to ensure all metabolites contributed equally to the model, regardless of their absolute intensity.
 
-\subsubsection{PCA on Raw Data: Unsupervised Evaluation}
 PCA was employed as an unsupervised exploratory technique to visualize the intrinsic structure of the data variance. To facilitate the inspection of instrumental stability and technical reproducibility, specific sub-plots were generated from the same global PCA model to isolate QC samples and technical replicates. The results for the Negative and Positive ionization modes are presented in Figure \ref{fig:qa_neg} and Figure \ref{fig:qa_pos}, respectively.
 
 \paragraph{Variance and Model Structure}
@@ -375,7 +375,6 @@ Reproducibility was assessed by projecting the technical replicates onto the PCA
     \label{fig:qa_pos}
 \end{figure*}
 
-\subsubsection{Dataset Refinement for Downstream Analysis}
 Having confirmed the technical robustness of the experiment, specific data cleaning steps were implemented to prepare the dataset for biological modeling.
 
 \paragraph{Removal of Quality Control Samples}
@@ -384,7 +383,69 @@ QC samples were removed from the final dataset as they have fulfilled their purp
 \paragraph{Removal of Technical Duplicates}
 To ensure the statistical independence of observations, technical duplicates were handled by retaining only one measurement per biological subject (samples with suffix \_00). Including both replicates would violate the assumption of independence required by most statistical tests, artificially inflating the sample size and underestimating the intra-class variance. As duplicates were not available for all samples, averaging was avoided to prevent inconsistency in the data structure. Therefore, the removal of the second replicate (\_01) ensures a homogeneous dataset where each sample represents a unique biological entity.
 
-\subsection{Strategie di Pre-processing}
+\subsection{Data Pre-Processing}
+
+\subsubsection{Data Normalization}
+
+The LC-MS untargeted analysis of biological fluids is inherently subject to systematic variations unrelated to the biological problem, such as differences in sample dilution (e.g., hydration status of the subjects) and fluctuations in ionization efficiency. As evidenced by the raw data distribution (Fig. \ref{fig:norm_neg}a and Fig. \ref{fig:norm_pos}a), a significant variability in the median intensity across samples was observed, necessitating a normalization step to render the samples comparable.
+
+We evaluated multiple normalization strategies, ranging from global intensity corrections (TIC, Mean, Median) to distribution-based methods (Quantile) and robust probabilistic approaches (Probabilistic Quotient Normalization - PQN). The selection of the optimal method was driven by a dual criterion: (i) qualitative inspection of sample distributions via boxplots, and (ii) quantitative assessment of the Coefficient of Variation (CV\%) calculated on the technical replicates and across the biological groups.
+
+Figures \ref{fig:norm_neg} and \ref{fig:norm_pos} illustrate the effect of selected normalization algorithms on the Negative (ESI-) and Positive (ESI+) datasets, respectively.
+While the raw data showed pronounced "batch-like" or dilution-related fluctuations, all normalization methods improved the alignment of sample medians. Specifically:
+\begin{itemize}
+    \item \textbf{Total Ion Current (TIC):} Provided a standard correction based on the total signal sum, effectively reducing global differences but potentially sensitive to high-intensity artifacts.
+    \item \textbf{Quantile Normalization:} Resulted in perfectly aligned distributions (Fig. \ref{fig:norm_neg}c, \ref{fig:norm_pos}c). However, visual inspection suggests this approach may be overly aggressive, forcing all samples to conform to an identical distribution and potentially suppressing genuine biological heterogeneity.
+    \item \textbf{Probabilistic Quotient Normalization (PQN):} Demonstrated a robust alignment of medians and interquartile ranges (Fig. \ref{fig:norm_neg}d, \ref{fig:norm_pos}d) without imposing the artificial uniformity observed with Quantile normalization.
+\end{itemize}
+
+To objectively quantify the reduction in technical variance, the median Coefficient of Variation (CV\%) was calculated for all features across the Control (CTRL) and Disease (CHD) groups. The results are summarized in Table \ref{tab:cv_neg} and Table \ref{tab:cv_pos}.
+
+In both ionization modes, the absence of normalization yielded the highest variability (Avg CV $\approx$ 58\% for ESI- and 68\% for ESI+).
+Consistent with the visual inspection, \textbf{Quantile normalization} achieved the lowest numerical CV values (Avg CV $\approx$ 50\% and 57\%, respectively). However, minimal variance is not solely indicative of data quality; it may also reflect overfitting and loss of biological signal.
+\textbf{PQN} consistently ranked among the top performing methods, achieving a substantial reduction in variance (Avg CV $\approx$ 51.5\% for ESI- and 59.7\% for ESI+) comparable to Quantile and Median normalization, while theoretically preserving the relative abundance ratios of metabolites better than global sum methods.
+
+Based on the combined evidence, \textbf{PQN (Probabilistic Quotient Normalization)} was selected as the optimal strategy for this study. It provides the best trade-off between the reduction of systematic error (comparable to the most aggressive methods) and the preservation of biological variance required for the subsequent biomarker discovery phase.
+
+% --- TABLE CV NEGATIVE (Sorted by Performance) ---
+\begin{table}[!hbt]
+\centering
+\caption{Comparison of Normalization Methods by Coefficient of Variation (CV\%) - ESI Negative Dataset.}
+\label{tab:cv_neg}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Normalization} & \textbf{Median CV} & \textbf{Median CV} & \textbf{Average} \\
+\textbf{Method} & \textbf{CTRL (\%)} & \textbf{CHD (\%)} & \textbf{CV (\%)} \\
+\midrule
+Quantile & 45.46 & 55.10 & 50.28 \\
+\textbf{PQN} & \textbf{44.94} & \textbf{58.06} & \textbf{51.50} \\
+Mean / TIC & 45.91 & 59.66 & 52.79 \\
+Median & 45.48 & 63.94 & 54.71 \\
+Range / Max & 51.28 & 63.22 & 57.25 \\
+None (Raw) & 49.11 & 67.40 & 58.26 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% --- TABLE CV POSITIVE (Sorted by Performance) ---
+\begin{table}[!hbt]
+\centering
+\caption{Comparison of Normalization Methods by Coefficient of Variation (CV\%) - ESI Positive Dataset.}
+\label{tab:cv_pos}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Normalization} & \textbf{Median CV} & \textbf{Median CV} & \textbf{Average} \\
+\textbf{Method} & \textbf{CTRL (\%)} & \textbf{CHD (\%)} & \textbf{CV (\%)} \\
+\midrule
+Quantile & 53.35 & 61.62 & 57.48 \\
+Median & 54.48 & 60.69 & 57.58 \\
+Range / Max & 53.84 & 64.46 & 59.15 \\
+\textbf{PQN} & \textbf{56.12} & \textbf{63.38} & \textbf{59.75} \\
+Mean / TIC & 54.44 & 65.09 & 59.77 \\
+None (Raw) & 58.43 & 77.84 & 68.14 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % --- FIGURE ESI NEGATIVE NORMALIZATION ---
 \begin{figure}[!hbt]
@@ -420,7 +481,7 @@ To ensure the statistical independence of observations, technical duplicates wer
     \label{fig:norm_neg}
 \end{figure}
 
-\newpage % Opzionale: per separare le figure se necessario, rimuovi se preferisci averle vicine
+\newpage
 
 % --- FIGURE ESI POSITIVE NORMALIZATION ---
 \begin{figure}[!hbt]
@@ -453,6 +514,98 @@ To ensure the statistical independence of observations, technical duplicates wer
     (c) Quantile normalization results showing aggressive distribution alignment.
     (d) PQN results, selected as the optimal compromise for downstream analysis.}
     \label{fig:norm_pos}
+\end{figure}
+
+\subsubsection{Data Transformation}
+
+Following the assessment of normalization strategies, the distribution of the intensity values was evaluated to satisfy the assumptions of normality required by multivariate statistical methods (e.g., PCA, PLS-DA) and parametric univariate tests (e.g., t-test).
+LC-MS metabolomics data typically exhibit a right-skewed distribution, where the majority of signals have low intensity, while a few highly abundant metabolites stretch the dynamic range, potentially dominating the variance.
+
+We evaluated different variance-stabilizing transformations, including power transformations (Square Root, Cube Root) and logarithmic transformations (Log2, Natural Logarithm, Log10).
+Visual inspection of the global density plots revealed that power transformations were insufficient to correct the skewness of the distributions (data not shown). Conversely, all logarithmic transformations effectively compressed the high-intensity values and expanded the low-intensity range, resulting in a distribution approximating a Gaussian curve.
+
+Since Log2, Ln, and Log10 produced equivalent distributional shapes differing only in scale, \textbf{Log10 transformation} was selected as the standard method for this study. This transformation is widely accepted in mass spectrometry as it renders orders of magnitude easily interpretable while effectively symmetrizing the data distribution.
+
+Figure \ref{fig:transf_neg} and Figure \ref{fig:transf_pos} illustrate the comparative analysis between the non-transformed data and the Log10-transformed data for the ESI- and ESI+ datasets, respectively. In the transformed data, the empirical density (solid line) shows a significant overlap with the theoretical Gaussian distribution (dashed line), confirming the efficacy of the transformation.
+
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{2pt}
+    \begin{tabular}{cc}
+        \includegraphics[width=0.48\columnwidth]{../out/pre_processing/neg/transformation/no_transf.pdf} &
+        \includegraphics[width=0.48\columnwidth]{../out/pre_processing/neg/transformation/log_10.pdf} \\
+        \footnotesize (a) Original Distribution (Skewed) & \footnotesize (b) After Log10 Transformation
+    \end{tabular}
+    \caption{\textbf{Effect of Log10 Transformation on ESI- Dataset.}
+    Global density plots pooling all feature intensities.
+    (a) The original data distribution is highly right-skewed, deviating significantly from the theoretical normal distribution (dashed line).
+    (b) Log10 transformation successfully centers the distribution, achieving a Gaussian-like shape suitable for multivariate analysis.}
+    \label{fig:transf_neg}
+\end{figure}
+
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{2pt}
+    \begin{tabular}{cc}
+        \includegraphics[width=0.48\columnwidth]{../out/pre_processing/pos/transformation/no_transf.pdf} &
+        \includegraphics[width=0.48\columnwidth]{../out/pre_processing/pos/transformation/log_10.pdf} \\
+        \footnotesize (a) Original Distribution (Skewed) & \footnotesize (b) After Log10 Transformation
+    \end{tabular}
+    \caption{\textbf{Effect of Log10 Transformation on ESI+ Dataset.}
+    (a) The raw positive mode data exhibits a pronounced right-skewness.
+    (b) Log10 transformation corrects the skewness, aligning the empirical density (solid line) with the theoretical Gaussian curve (dashed line).}
+    \label{fig:transf_pos}
+\end{figure}
+
+\subsubsection{Data Scaling}
+
+The final step of the pre-processing pipeline involved data scaling. In metabolomics, metabolite intensities can span several orders of magnitude. Without proper scaling, variables with high abundance and large variance would naturally dominate multivariate models based on variance maximization (e.g., PCA), biasing the results and potentially masking significant biological variations present in low-abundance metabolites.
+
+To address this issue, **Autoscaling** (Unit Variance Scaling) was applied to the normalized and transformed data. This method involves mean-centering each variable and dividing it by its standard deviation. As a result, all metabolites are scaled to have a mean of zero and a standard deviation of one, ensuring that each feature contributes equally to the statistical model regardless of its absolute concentration.
+
+Figure \ref{fig:scale_neg} and Figure \ref{fig:scale_pos} demonstrate the effect of autoscaling on the feature distributions for ESI- and ESI+ datasets, respectively. Before scaling (Panel a), the variables exhibit disparate ranges of intensity. After autoscaling (Panel b), all features are comparable, centered around zero with standardized variance, making the dataset suitable for unsupervised and supervised modeling.
+
+% --- FIGURE ESI NEGATIVE SCALING ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{c}
+        % (a) No Scaling
+        \includegraphics[width=0.9\columnwidth]{../out/pre_processing/neg/scaling/no_autoscaling_page1.pdf} \\
+        \footnotesize (a) Before Scaling (Variable Intensities) \\
+        \vspace{0.2cm}
+
+        % (b) With Autoscaling
+        \includegraphics[width=0.9\columnwidth]{../out/pre_processing/neg/scaling/with_autoscaling_page1.pdf} \\
+        \footnotesize (b) After Autoscaling (Unit Variance)
+    \end{tabular}
+    \caption{\textbf{Effect of Autoscaling on ESI- Features.}
+    Boxplots representing the distribution of individual metabolites (features).
+    (a) Original features show highly variable ranges and variances.
+    (b) After autoscaling, all features are mean-centered with unit variance, ensuring equal weight in multivariate analysis.}
+    \label{fig:scale_neg}
+\end{figure}
+
+% --- FIGURE ESI POSITIVE SCALING ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{c}
+        % (a) No Scaling
+        \includegraphics[width=0.9\columnwidth]{../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf} \\
+        \footnotesize (a) Before Scaling (Variable Intensities) \\
+        \vspace{0.2cm}
+
+        % (b) With Autoscaling
+        \includegraphics[width=0.9\columnwidth]{../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf} \\
+        \footnotesize (b) After Autoscaling (Unit Variance)
+    \end{tabular}
+    \caption{\textbf{Effect of Autoscaling on ESI+ Features.}
+    (a) The disparate scales of metabolite intensities in the positive mode.
+    (b) The homogenized feature space achieved through autoscaling.}
+    \label{fig:scale_pos}
 \end{figure}
 
 \subsection{Anomaly Detection}
