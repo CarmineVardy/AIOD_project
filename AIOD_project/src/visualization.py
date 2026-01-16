@@ -254,7 +254,7 @@ def plot_overlay_dotplots(df, features, output_dir, file_prefix="dotplot", class
         print(f"   Saved: {save_path}")
 
 
-def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", class_col='Class', samples_per_page=20):
+def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", class_col='Class', samples_per_page=20, plot_title="Sample Intensity Distributions"):
     """
     Generates Box Plots visualizing the global intensity distribution of EACH SAMPLE.
 
@@ -275,7 +275,8 @@ def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", cl
 
     # 1. Identify Numeric Features (Metabolites)
     # We exclude the Class column and any other non-numeric info
-    numeric_df = df.select_dtypes(include=[np.number])
+    # Using the variable class_col ensures flexibility if the column name changes
+    numeric_df = df.drop(columns=[class_col])
 
     # We need the class column aligned with numeric data for coloring
     # Ensure indices match
@@ -283,7 +284,7 @@ def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", cl
 
     # 2. Setup Coloring
     unique_classes = df[class_col].unique()
-    # Fix Warning: Slice palette
+    # Handle palette slicing based on the number of classes
     current_palette = DISCRETE_COLORS[:len(unique_classes)]
 
     # 3. Pagination Logic (Iterate by Samples/Rows)
@@ -320,25 +321,41 @@ def plot_sample_distributions(df, output_dir, file_name="samples_qc_boxplot", cl
                                         value_name='Intensity')
 
         # Plotting
-        fig, ax = plt.subplots(figsize=(12, 6))
+        fig, ax = plt.subplots(figsize=(12, 4))
 
+        # We set hue_order to ensure consistent coloring even if a page is missing a class
+        # We also define medianprops to make the median line white and visible against dark boxes
         sns.boxplot(data=df_melted, x='__SampleID__', y='Intensity',
-                    hue='__Class__',  # Color the sample box by its class
+                    hue='__Class__',
+                    hue_order=unique_classes,
                     palette=current_palette,
-                    showfliers=False,  # Hide outliers (too many dots for a QC plot)
-                    linewidth=1.0, width=0.6, ax=ax)
+                    showfliers=False,  # Hide outliers to maintain plot clarity
+                    linewidth=0.5, width=0.8,
+                    medianprops={'color': 'white', 'linewidth': 1.0, 'path_effects': [pe.withStroke(linewidth=2.0, foreground='black')]},
+                    ax=ax)
 
         # Visual Polish
-        ax.set_title(f"Sample Intensity Distributions (Page {page + 1}/{num_pages})", fontweight='bold')
+        page_info = f" (Plot {page + 1}/{num_pages})" if num_pages > 1 else ""
+        ax.set_title(f"{plot_title}{page_info}", fontweight='bold')
         ax.set_xlabel("Sample ID")
         ax.set_ylabel("Intensity Distribution (All Metabolites)")
 
-        # Rotate X labels (Sample Names) for readability
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=90, ha='center', fontsize=9)
+        #ax.tick_params(axis='x', rotation=90, labelsize=9)
+        step = 20
+        tick_positions = range(0, len(current_batch_ids), step)
+        tick_labels = range(start_idx, start_idx + len(current_batch_ids), step)
+        ax.set_xticks(tick_positions)
+        ax.set_xticklabels(tick_labels)
+        ax.set_xlabel("Sample Index")
 
-        # Legend
-        if ax.get_legend():
-            ax.get_legend().set_title("Group")
+        # Legend (including median)
+        handles, labels = ax.get_legend_handles_labels()
+        median_proxy = Line2D([0], [0], color='white', linewidth=1.0,
+                              path_effects=[pe.withStroke(linewidth=2.0, foreground='black')],
+                              label='Median')
+        handles.append(median_proxy)
+        labels.append("Median")
+        ax.legend(handles=handles, labels=labels, title="Group", loc='best')
 
         ax.grid(True, axis='y', linestyle='--', alpha=0.3)
 
@@ -595,8 +612,13 @@ def plot_class_distribution_pie(df, output_dir, file_name="class_balance_pie", c
     )
 
     # Style the percentage text inside the slices
-    # We make it white if the slice is dark, or black if light, but white usually works well with Viridis/Plasma
-    plt.setp(autotexts, size=11, weight="bold", color="white", path_effects=[])    
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontsize(11)
+        autotext.set_fontweight('bold')
+
+        autotext.set_path_effects([pe.withStroke(linewidth=2.0, foreground='black')])
+
     # 4. Detailed Legend
     # We add the absolute count (n) to the legend for completeness
     legend_labels = [f"{label} (n={count})" for label, count in zip(class_counts.index, class_counts)]

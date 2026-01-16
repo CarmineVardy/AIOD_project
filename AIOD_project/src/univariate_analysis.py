@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pandas as pd
 from scipy import stats
 from statsmodels.stats.multitest import multipletests

@@ -294,12 +294,166 @@ The following tables give an overview on the dataset composition, for both ESI+ 
 	\end{table}
 
 
-\subsection{Quality Assessment \& Data Cleaning}
-Descrizione dei QC e dei Replicati Tecnici.
-\textbf{Nota:} Spiegare chiaramente che QC e duplicati sono stati utilizzati per una valutazione iniziale della stabilità ma rimossi dal dataset finale di modeling (es. numero esiguo, impossibilità di mediare).
+\subsection{Quality Assessment and Data Cleaning}
 
-\subsection{Strategie di Pre-processing (Iterativo)}
-Elenco delle tecniche testate: Normalizzazione, Trasformazione Logaritmica, Scaling (Autoscaling).
+This preliminary phase is crucial to validate the technical quality of the experiment before proceeding with biological interpretation. The objectives of this assessment were twofold: (i) to verify the instrumental stability over the analytical run, and (ii) to evaluate the technical reproducibility of the measurements.
+
+To this end, we monitored the behavior of Quality Control (QC) samples (pooled aliquots injected periodically) and technical replicates (samples analyzed in duplicate, denoted with suffixes \_00 and \_01).
+The evaluation was performed using Principal Component Analysis (PCA) applied separately to the raw data of Negative (ESI-) and Positive (ESI+) ionization modes. Autoscaling was applied prior to PCA to ensure all metabolites contributed equally to the model, regardless of their absolute intensity.
+
+\subsubsection{PCA on Raw Data: Unsupervised Evaluation}
+PCA was employed as an unsupervised exploratory technique to visualize the intrinsic structure of the data variance. To facilitate the inspection of instrumental stability and technical reproducibility, specific sub-plots were generated from the same global PCA model to isolate QC samples and technical replicates. The results for the Negative and Positive ionization modes are presented in Figure \ref{fig:qa_neg} and Figure \ref{fig:qa_pos}, respectively.
+
+\paragraph{Variance and Model Structure}
+The Scree Plots (Fig. \ref{fig:qa_neg}c, \ref{fig:qa_pos}c) display the percentage of variance explained by each Principal Component (PC). The Loadings Plots (Fig. \ref{fig:qa_neg}b, \ref{fig:qa_pos}b) and Profiles (Fig. \ref{fig:qa_neg}d-e, \ref{fig:qa_pos}d-e) provide an overview of the features driving the separation.
+
+\paragraph{Instrumental Stability (QC Analysis)}
+The stability of the LC-MS system was evaluated by isolating the QC samples in the PCA space. As shown in the QC-specific score plots (Fig. \ref{fig:qa_neg}f, \ref{fig:qa_pos}f), only the QC samples are visualized to assess their compactness.
+In the **Negative Ionization mode (ESI-)**, the QCs form a tight, well-defined cluster, indicating high instrumental stability.
+In the **Positive Ionization mode (ESI+)**, the QCs show a slightly higher dispersion. This behavior is attributed to the inherent characteristics of Hydrophilic Interaction Liquid Chromatography (HILIC). The HILIC separation mechanism relies on a water-enriched layer on the stationary phase, making the partitioning equilibrium more sensitive to minor fluctuations in column conditioning compared to reversed-phase chromatography. However, despite this inherent dispersion, the QC cluster remains distinct from the biological variability.
+
+\paragraph{Technical Reproducibility (Replicates Analysis)}
+Reproducibility was assessed by projecting the technical replicates onto the PCA space (Fig. \ref{fig:qa_neg}g, \ref{fig:qa_pos}g). In these plots, non-replicated samples are hidden to highlight the distance between paired measurements (\_00 and \_01). In both ionization modes, the pairs of replicates are projected in close proximity, often overlapping, confirming that the analytical workflow yields consistent results for the same biological sample.
+
+% FIGURE ESI NEGATIVE
+\begin{figure*}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{ccc}
+        % Row 1: Main Score and Loading (Large)
+        \multicolumn{3}{c}{
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/neg/pca_score_plot_PC1vsPC2.pdf} \hfill
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/neg/pca_loading_plot_PC1vsPC2.pdf}
+        } \\
+        \multicolumn{3}{c}{\footnotesize (a) Global Score Plot (All Samples) \hspace{4cm} (b) Global Loading Plot} \\
+
+        % Row 2: Scree and Profiles (Smaller)
+        \includegraphics[width=0.32\textwidth]{../out/quality_assessment/pca/neg/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/quality_assessment/pca/neg/loading_profile_PC1.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/quality_assessment/pca/neg/loading_profile_PC2.pdf} \\
+        \footnotesize (c) Scree Plot & \footnotesize (d) Loading Profile PC1 & \footnotesize (e) Loading Profile PC2 \\
+
+        % Row 3: QC Focus and Replicates Focus (Medium/Large)
+        \multicolumn{3}{c}{
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/neg/pca_score_plot_for_qc_PC1vsPC2.pdf} \hfill
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/neg/pca_score_plot_for_replicates_PC1vsPC2.pdf}
+        } \\
+        \multicolumn{3}{c}{\footnotesize (f) Instrumental Stability (QC only) \hspace{4cm} (g) Reproducibility (Replicates only)} \\
+    \end{tabular}
+    \caption{\textbf{Quality Assessment for ESI- Dataset.} (a) Global PCA Score plot showing the distribution of all classes (CHD, CTRL, QC). (b) Loading plot showing feature contributions. (c-e) Variance analysis and loading profiles. (f) Zoom on QC samples: the tight cluster confirms high stability. (g) Zoom on technical replicates: paired samples show high overlap, confirming reproducibility.}
+    \label{fig:qa_neg}
+\end{figure*}
+
+% FIGURE ESI POSITIVE
+\begin{figure*}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{ccc}
+        % Row 1: Main Score and Loading
+        \multicolumn{3}{c}{
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/pos/pca_score_plot_PC1vsPC2.pdf} \hfill
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/pos/pca_loading_plot_PC1vsPC2.pdf}
+        } \\
+        \multicolumn{3}{c}{\footnotesize (a) Global Score Plot (All Samples) \hspace{4cm} (b) Global Loading Plot} \\
+
+        % Row 2: Scree and Profiles
+        \includegraphics[width=0.32\textwidth]{../out/quality_assessment/pca/pos/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/quality_assessment/pca/pos/loading_profile_PC1.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/quality_assessment/pca/pos/loading_profile_PC2.pdf} \\
+        \footnotesize (c) Scree Plot & \footnotesize (d) Loading Profile PC1 & \footnotesize (e) Loading Profile PC2 \\
+
+        % Row 3: QC Focus and Replicates Focus
+        \multicolumn{3}{c}{
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/pos/pca_score_plot_for_qc_PC1vsPC2.pdf} \hfill
+            \includegraphics[width=0.48\textwidth]{../out/quality_assessment/pca/pos/pca_score_plot_for_replicates_PC1vsPC2.pdf}
+        } \\
+        \multicolumn{3}{c}{\footnotesize (f) Instrumental Stability (QC only) \hspace{4cm} (g) Reproducibility (Replicates only)} \\
+    \end{tabular}
+    \caption{\textbf{Quality Assessment for ESI+ Dataset.} (a-b) Global PCA model overview. (c-e) Variance and Loadings. (f) Stability check: QCs show a wider dispersion compared to negative mode, consistent with HILIC sensitivity, but remain distinct from biological variance. (g) Reproducibility check showing paired replicates.}
+    \label{fig:qa_pos}
+\end{figure*}
+
+\subsubsection{Dataset Refinement for Downstream Analysis}
+Having confirmed the technical robustness of the experiment, specific data cleaning steps were implemented to prepare the dataset for biological modeling.
+
+\paragraph{Removal of Quality Control Samples}
+QC samples were removed from the final dataset as they have fulfilled their purpose of monitoring instrumental stability. Retaining QCs in downstream supervised analysis (e.g., PLS-DA) would introduce an artificial class that does not reflect a biological phenotype. Furthermore, due to their chemical homogeneity, QCs would form a dense cluster accounting for a large portion of the total variance, potentially masking the subtler biological differences between CHD and CTRL groups.
+
+\paragraph{Removal of Technical Duplicates}
+To ensure the statistical independence of observations, technical duplicates were handled by retaining only one measurement per biological subject (samples with suffix \_00). Including both replicates would violate the assumption of independence required by most statistical tests, artificially inflating the sample size and underestimating the intra-class variance. As duplicates were not available for all samples, averaging was avoided to prevent inconsistency in the data structure. Therefore, the removal of the second replicate (\_01) ensures a homogeneous dataset where each sample represents a unique biological entity.
+
+\subsection{Strategie di Pre-processing}
+
+% --- FIGURE ESI NEGATIVE NORMALIZATION ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{c}
+        % (a) No Normalization
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/neg/normalization/no_norm_page1.pdf} \\
+        \footnotesize (a) Raw Data (No Normalization) \\
+        \vspace{0.2cm} % Spazio verticale tra i grafici
+
+        % (b) TIC
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/neg/normalization/tic_page1.pdf} \\
+        \footnotesize (b) Total Ion Current (TIC) Normalization \\
+        \vspace{0.2cm}
+
+        % (c) Quantile
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/neg/normalization/quantile_page1.pdf} \\
+        \footnotesize (c) Quantile Normalization \\
+        \vspace{0.2cm}
+
+        % (d) PQN
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/neg/normalization/pqn_page1.pdf} \\
+        \footnotesize (d) Probabilistic Quotient Normalization (PQN)
+    \end{tabular}
+    \caption{\textbf{Comparison of Normalization Strategies for ESI- Dataset.}
+    Boxplots representing the global intensity distribution of all samples.
+    (a) Raw data showing significant systematic variation (e.g., dilution effects).
+    (b) TIC normalization, acting on the total sum.
+    (c) Quantile normalization, forcing identical distributions potentially suppressing biological signal.
+    (d) PQN, the selected method, which effectively reduces technical variance while preserving biological information.}
+    \label{fig:norm_neg}
+\end{figure}
+
+\newpage % Opzionale: per separare le figure se necessario, rimuovi se preferisci averle vicine
+
+% --- FIGURE ESI POSITIVE NORMALIZATION ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{c}
+        % (a) No Normalization
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/pos/normalization/no_norm_page1.pdf} \\
+        \footnotesize (a) Raw Data (No Normalization) \\
+        \vspace{0.2cm}
+
+        % (b) TIC
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/pos/normalization/tic_page1.pdf} \\
+        \footnotesize (b) Total Ion Current (TIC) Normalization \\
+        \vspace{0.2cm}
+
+        % (c) Quantile
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/pos/normalization/quantile_page1.pdf} \\
+        \footnotesize (c) Quantile Normalization \\
+        \vspace{0.2cm}
+
+        % (d) PQN
+        \includegraphics[width=0.7\columnwidth]{../out/pre_processing/pos/normalization/pqn_page1.pdf} \\
+        \footnotesize (d) Probabilistic Quotient Normalization (PQN)
+    \end{tabular}
+    \caption{\textbf{Comparison of Normalization Strategies for ESI+ Dataset.}
+    (a) Raw data distribution.
+    (b) TIC normalization results.
+    (c) Quantile normalization results showing aggressive distribution alignment.
+    (d) PQN results, selected as the optimal compromise for downstream analysis.}
+    \label{fig:norm_pos}
+\end{figure}
 
 \subsection{Anomaly Detection}
 Descrizione del metodo usato per identificare e rimuovere gli outlier (fondamentale per la pulizia del dato).
@@ -373,20 +527,6 @@ Sintesi del miglior workflow identificato. Considerazioni sull'interpretabilità
 		\end{center}
 	\end{table}
 
-	% If you have questions about how to write mathematical formulas in LaTeX, please read a LaTeX book or the 'Not So Short Introduction to LaTeX': tobi.oetiker.ch/lshort/lshort.pdf
-
-	% This is how you include a eps figure in your document. LaTeX only accepts EPS or TIFF files.
-	\begin{figure}[!hbt]
-		% Center the figure.
-		\begin{center}
-		% Include the eps file, scale it such that it's width equals the column width. You can also put width=8cm for example...
-		\includegraphics[width=0.5\columnwidth]{../images/BIPLOT_2024_Metabolomica_Neg.png}
-		% Create a subtitle for the figure.
-		\caption{Simulation results on the AWGN channel. Average throughput $k/n$ vs $E_s/N_0$.}
-		% Define the label of the figure. It's good to use 'fig:title', so you know that the label belongs to a figure.
-		\label{fig:tf_plot}
-		\end{center}
-	\end{figure}
 
 % Your document ends here!
 \end{document}

@@ -22,16 +22,8 @@ def generate_dataset_report(df, dataset_name):
         pd.DataFrame: A dataframe with columns ['Metric', 'Value'] containing the summary stats.
     """
 
-    # Separation of Target and Features
-    # We assume 'Class' is the target column.
-    if 'Class' in df.columns:
-        classes = df['Class']
-        # Select only numeric columns for data integrity checks
-        numeric_data = df.drop(columns=['Class'])
-    else:
-        # Fallback if Class column is missing (though it shouldn't be based on project structure)
-        classes = pd.Series(["Unknown"] * len(df), index=df.index)
-        numeric_data = df.select_dtypes(include=[np.number])
+    classes = df['Class']
+    numeric_data = df.drop(columns=['Class'])
 
     sample_names = df.index
     feature_names = numeric_data.columns
