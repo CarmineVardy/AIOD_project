@@ -632,31 +632,32 @@ Definizione degli approcci: Low-Level (concatenazione semplice) vs High-Level (o
 \subsection{Technology stack}
 
 \subsubsection{NumPy}
-
+An essential Python package for scientific computing that provides support for large and multi-dimensional arrays and matrices.
+It serves as a backbone for the linear algebra calculations and computations, such as Frobenius norms for data fusion and the generation of coordinate matrices for visualization grids.
 
 \subsubsection{Pandas}
-
+Library for data analysis and manipulation, offering a suitable solution of DataFrames. It was broadly utilized to load and handle raw CSV files in a  more suited version to the various design phases, including analysis and processing.
 
 \subsubsection{Scikit-learn}
-
+A comprehensive machine learning library broadly used for the data analysis and modelling. In this project it was used as a central piece of the data processing and preparation, including dimensionality reduction via PCA, scaling, outlier detection algorithms, and training predictive models, along with evaluating their performance.
 
 \subsubsection{Statsmodels}
-
+Python module providing statistical models functionalities, useful for conducting statistical tests. It was used in the univariate analysis, to  guarantee a statistical validity of the identified biomarkers, by correcting for multiple hypothesis testing errors using the Benjamini-Hochberg False Discovery Rate (FDR) procedure.
 
 \subsubsection{SciPy}
-
+It is a scientific computing ecosystem library, adopted for statistical and probability functions. It provides the underlying algorithms for performing univariate hypothesis tests, such as Student’s t-test, fitting theoretical normal distributions to data and calculating critical F-distribution values to establish decision boundaries in classification models.
 
 \subsubsection{Matplotlib}
-
+A complete Python library used for the creation of tailored and faultless publication-quality visualizations. It was extensively adopted in this project to generate the graphics in order to visually estimate the quality and performance of all the tested algorithms, while allowing for fine-grained control over aesthetic elements.
 
 \subsubsection{Seaborn}
-
+A statistical data visualization library based on Matplotlib, manily used for the cration of more informative and specifc graphs. It was used to generate clustered and regression plots that, equivalently to Matplotlib, automatically handling color mapping and legend generation to effectively communicate distribution patterns and class separations.
 
 \subsubsection{tqdm}
-
+A Python library used for creating a visual hint and monitoring the process with a practical loading bar.
 
 \subsubsection{os}
-
+A standard library module that provides a portable way of using operating system-dependent functionality, essential in this project to handle all the file management system operations.
 
 \section{Results and Discussion}
 
