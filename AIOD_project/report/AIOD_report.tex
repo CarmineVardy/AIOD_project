@@ -183,117 +183,124 @@
 \thispagestyle{fancy}
 
 \begin{abstract}
-    The short abstract (50-80 words) is intended to give the reader an overview of the work.
+	The project is mainly focused on using LC-MS plasma metabolomics to address the identification of non-invasive maternal biomarkers for Congenital Heart Disease (CHD). The core was optimizing a robust workflow, by systematically evaluating pre-processing strategies, to prepare the dataset for prdictive models, in pursuance of the research of metabolic alteration associated with fetal CHD risk.
+	
 \end{abstract}
 
 \section{Introduction}
 
-\subsection{Background Clinico}
-Breve panoramica sulla patologia (CHD) e importanza di trovare nuovi biomarcatori non invasivi.
+\subsection{Clinical background}
+The Congenital Heart Disease (CHD) corresponds to the most prelevant class of congenital anomalies, representing in pediatric morbidity and mortality a significant burden. Current prenatal diagnostic methods are mostly operator-depandant and may be faulty during early stages of gestation.
+Therefore, the importance in finding a non-invasive biomarker material which can facilitate early risks assesments, is critical in view of improving screening accuracy.
+The analysis of maternal plasma, can result and offer an interesting window into the complex biochemical environment of the growing fetus, in revealing of the metabolic disregulation associated with CHD pathogenesis which can exceeds solely genetic factors.
 
-\subsection{La Metabolomica Untargeted}
-Perché la LC-MS è la scelta giusta qui (visione olistica del fenotipo).
+\subsection{Untargeted metabolomic}
+A powerful analytical approach for phenotype characterization is the untargeted metabolomic, able to acquire the downstream end-products of genomic, transcriptomic, and proteomic processes. Oppesd to target assays that quantify a limited list of pre-defined compounds, the main intent of untargeted Liquid Chromatography-Mass Spectrometry (LC-MS) is to ensure an exhaustive profile of small molecules with biological sample in a hypothesis-free manner.
+From an holistic perspective, complex pathologies such as CHD, where some more specific metabolic pathways may not be fully understood, this technique can result in becaming a considerable advantage. By obtaining data in both positive (ESI+) and negative (ESI-) ionization modes, there is the capability of an unbiased detection of a diverse range of chemical classes and providing a detailed snapshot of the maternal metabolic phenotype (metabotype).
 
-\subsection{Problematiche Aperte}
-Qui introduci il "problema" del tuo progetto: la complessità dei dati, la necessità di integrare due modi di ionizzazione (ESI+/ESI-) e la scelta del miglior metodo di preprocessing (non esiste una "ricetta unica").
+\subsection{Open problematics}
+The high dimensionality and complexity of biological variance of the output of the LC-MS data places a significant computational challenge for the analysis. The primary notable issue is the absence of a gold standard for data pre-processing, critically influence the validity of downstream biological conclusions. Sometimes however, this absence can result in a more advantageous scenario, allowing for more accurate and tailored data preparation in view of the problem at hand.
+Systematic technical variations, such as sample dilution effects or instrumental fluctuations, has to be revised without removing genuine biological heterogeneity. Furthermore, the datset composition and structure necessitate effective strategies, remining remains a complex analytical hurdle, addrssed in this project.
 
-\subsection{Scopo del Lavoro}
-Valutare e ottimizzare un workflow chemiometrico (dal preprocessing alla Data Fusion) per distinguere soggetti Sani vs Patologici e identificare le feature biologicamente rilevanti.
+\subsection{Project goal}
+The primary objective of this work is to delineate, evaluate and optimize a comprehensive chemiometric analysis workflow of the metabolomic plasma, in the context of CHD.
+One of the project intent was systematically asses and comparing the impact of different pre-processing strategies, to determine the best strategy for minimizing technical variance while preserving biological signal.
+Additionally, the application of Data Fusion techniques was utilized to integrate ESI+ and ESI- modalities, thereby exploiting their complementarity.
+Ultimately, the machine learning models were emloyed to determine and discriminate between healthy and pathological pregnancies and to identify statistically significant metabolic features that may serve as potential clinical biomarkers.
 
 \section{Materials and Methods}
 
-\subsection{Descrizione del Dataset}
-The dataset is composed of metabolomic data acquired by LC–MS in both positive  (ESI+)  and  negative  (ESI-)  ionisation  mode.
-
+\subsection{Dataset description}
+The dataset is composed of plasma metabolomic data derived from a cohort of pregnant women and acquired using Liquid Chromatography-Mass Spectrometry (LC-MS). The analysis was performed in both positive  (ESI+)  and  negative  (ESI-)  ionisation  mode, to guarantee a suffcient metabolic coverage.
+The dataset is divided into two distinct classes: CTRL samples related to mother of healty children and CHD for Congenital Heart Disease pathologic cases.
+The high-dimensionality data blocks are composed with metabolites on each row and indiviual bioligal samples on the columns.
 There are no missing values and zeros, due to an value inputation phase already done focused on the replacement with one-fifth of the minimum value recorded in the dataset for that molecule.
 \cite{CHD}
 
 The following tables give an overview on the dataset composition, for both ESI+ and ESI- with the corresponding values:
 
-	\begin{table}[H]
-		\begin{center}
-			\caption{ESI- Dataset Distribution and Characteristics}
-			\label{tab:esi-dataset_details}
-			\begin{tabular}{|l|c|}
-				\hline
-				\textbf{DESCRIPTION} & \textbf{VALUE} \\
-				\hline
-				Total Samples & 219 \\
-				\hline
-				Total Features (Metabolites) & 52 \\
-				\hline
-				Class Count: CTRL & 107 \\
-				\hline
-				Class Count: CHD & 104 \\
-				\hline
-				Class Count: QC & 8 \\
-				\hline
-				Samples with suffix '\_00' & 28 \\
-				\hline
-				Samples with suffix '\_01' (Tech Replicate) & 14 \\
-				\hline
-				Samples without suffix & 177 \\
-				\hline
-				Estimated Unique Biological Samples & 205 \\
-				\hline
-				CTRL - Biological Samples & 100 \\
-				\hline
-				CTRL - Technical Replicates & 7 \\
-				\hline
-				CHD - Biological Samples & 97 \\
-				\hline
-				CHD - Technical Replicates & 7 \\
-				\hline
-				QC - Total Samples & 8 \\
-				\hline
-				Negative Values Present & No \\
-				\hline
-			\end{tabular}
-		\end{center}
-	\end{table}
-	
-	
-	\begin{table}[H]
-		\begin{center}
-			\caption{ESI+ Dataset Distribution and Characteristics}
-			\label{tab:esi+dataset_details}
-			\begin{tabular}{|l|c|}
-				\hline
-				\textbf{DESCRIPTION} & \textbf{VALUE} \\
-				\hline
-				Total Samples & 219 \\
-				\hline
-				Total Features (Metabolites) & 98 \\
-				\hline
-				Class Count: CTRL & 107 \\
-				\hline
-				Class Count: CHD & 104 \\
-				\hline
-				Class Count: QC & 8 \\
-				\hline
-				Samples with suffix '\_00' & 28 \\
-				\hline
-				Samples with suffix '\_01' (Tech Replicate) & 14 \\
-				\hline
-				Samples without suffix & 177 \\
-				\hline
-				Estimated Unique Biological Samples & 205 \\
-				\hline
-				CTRL - Biological Samples & 100 \\
-				\hline
-				CTRL - Technical Replicates & 7 \\
-				\hline
-				CHD - Biological Samples & 97 \\
-				\hline
-				CHD - Technical Replicates & 7 \\
-				\hline
-				QC - Total Samples & 8 \\
-				\hline
-				Negative Values Present & No \\
-				\hline
-			\end{tabular}
-		\end{center}
-	\end{table}
+\begin{table}[H]
+	\begin{minipage}[t]{0.5\textwidth}
+		\centering
+		\caption{ESI- Dataset Distribution and Characteristics}
+		\label{tab:esi-dataset_details}
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{DESCRIPTION} & \textbf{VALUE} \\
+			\hline
+			Total Samples & 219 \\
+			\hline
+			Total Features (Metabolites) & 52 \\
+			\hline
+			Class Count: CTRL & 107 \\
+			\hline
+			Class Count: CHD & 104 \\
+			\hline
+			Class Count: QC & 8 \\
+			\hline
+			Samples with suffix '\_00' & 28 \\
+			\hline
+			Samples with suffix '\_01' (Tech Replicate) & 14 \\
+			\hline
+			Samples without suffix & 177 \\
+			\hline
+			Estimated Unique Biological Samples & 205 \\
+			\hline
+			CTRL - Biological Samples & 100 \\
+			\hline
+			CTRL - Technical Replicates & 7 \\
+			\hline
+			CHD - Biological Samples & 97 \\
+			\hline
+			CHD - Technical Replicates & 7 \\
+			\hline
+			QC - Total Samples & 8 \\
+			\hline
+			Negative Values Present & No \\
+			\hline
+		\end{tabular}
+	\end{minipage}%
+	\begin{minipage}[t]{0.5\textwidth}
+		\centering
+		\caption{ESI+ Dataset Distribution and Characteristics}
+		\label{tab:esi+dataset_details}
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{DESCRIPTION} & \textbf{VALUE} \\
+			\hline
+			Total Samples & 219 \\
+			\hline
+			Total Features (Metabolites) & 98 \\
+			\hline
+			Class Count: CTRL & 107 \\
+			\hline
+			Class Count: CHD & 104 \\
+			\hline
+			Class Count: QC & 8 \\
+			\hline
+			Samples with suffix '\_00' & 28 \\
+			\hline
+			Samples with suffix '\_01' (Tech Replicate) & 14 \\
+			\hline
+			Samples without suffix & 177 \\
+			\hline
+			Estimated Unique Biological Samples & 205 \\
+			\hline
+			CTRL - Biological Samples & 100 \\
+			\hline
+			CTRL - Technical Replicates & 7 \\
+			\hline
+			CHD - Biological Samples & 97 \\
+			\hline
+			CHD - Technical Replicates & 7 \\
+			\hline
+			QC - Total Samples & 8 \\
+			\hline
+			Negative Values Present & No \\
+			\hline
+		\end{tabular}
+	\end{minipage}
+\end{table}
 
 \subsection{Quality Assessment and Data Cleaning}
 
