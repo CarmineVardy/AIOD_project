@@ -210,9 +210,14 @@ Ultimately, the machine learning models were emloyed to determine and discrimina
 
 \subsection{Dataset description}
 The dataset is composed of plasma metabolomic data derived from a cohort of pregnant women and acquired using Liquid Chromatography-Mass Spectrometry (LC-MS). The analysis was performed in both positive  (ESI+)  and  negative  (ESI-)  ionisation  mode, to guarantee a suffcient metabolic coverage.
-The dataset is divided into two distinct classes: CTRL samples related to mother of healty children and CHD for Congenital Heart Disease pathologic cases.
+The dataset is divided into different distinct classes: 
+\begin{itemize}[decl]
+	\item CTRL (Control) samples related to mother of healty children
+	\item CHD for Congenital Heart Disease pathologic cases
+	\item QC (Quality Control) samples for each ionization mode, which consist of pooled fractions injected periodically to monitor instrumental stability and ensure analytical reproducibility
+\end{itemize}
 The high-dimensionality data blocks are composed with metabolites on each row and indiviual bioligal samples on the columns.
-There are no missing values and zeros, due to an value inputation phase already done focused on the replacement with one-fifth of the minimum value recorded in the dataset for that molecule.
+There are no missing values and zeros, due to a value inputation phase already done focused on the replacement with one-fifth of the minimum value recorded in the dataset for that molecule.
 \cite{CHD}
 
 The following tables give an overview on the dataset composition, for both ESI+ and ESI- with the corresponding values:
