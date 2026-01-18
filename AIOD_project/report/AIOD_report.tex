@@ -529,7 +529,7 @@
 		\subsubsection{Data Transformation}
 		
 		Following the normalization strategies assessment, the distribution of the intensity values was evaluated to satisfy the assumptions of normality required by multivariate statistical methods (e.g., PCA, PLS-DA) and parametric univariate tests (e.g., t-test).
-		LC-MS metabolomics data typically exhibit a right-skewed distribution, where the majority of signals have low intensity, while a few highly abundant metabolites stretch the dynamic range, potentially dominating the variance.
+		LC-MS metabolomics data typically exhibit a right-skewed distribution, where the majority of signals have low intensity, while a few highly abundant metabolites stretch the dynamic range, potentially dominating the variance \cite{LCMS_skewed}.
 		
 		It this project there were evaluated different variance-stabilizing transformations, including power transformations (Square Root, Cube Root) and logarithmic transformations (Log2, Natural Logarithm, Log10).
 		Visual inspection of the global density plots revealed that power transformations were insufficient to correct the distribution's skewness. Conversely, all logarithmic transformations effectively compressed the high-intensity values and expanded the low-intensity range, resulting in a distribution approximating a Gaussian curve.
@@ -710,7 +710,7 @@ The \textbf{Score Plots (a-c)} show the distribution of samples in the integrate
 
 The \textbf{Super Loadings Plots (d-f)} provide insight into the specific features driving these components. Interestingly, while the Positive block dominates the global variance on PC1 (as seen in the Scree Plot), the top contributing features (highest loading values) identified in the plots belong primarily to the \textbf{Negative Block (ESI-)}.
 \begin{itemize}
-    \item \textbf{PC1 vs PC2 (d):} The loading space is characterized by high-ranking negative mode metabolites, including fatty acids like Oleic Acid and Palmitic Acid, and polar compounds such as Uric Acid. This suggests that while the Positive block provides the "bulk" of the information, specific Negative block markers are highly specific and hold the strongest weights in defining the sample separation along these axes.
+    \item \textbf{PC1 vs PC2 (d):} The loading space is characterized by high-ranking negative mode metabolites, including fatty acids like Oleic Acid and Palmitic Acid, and polar compounds such as Uric Acid. This suggests that while the Positive block provides the "bulk" of the information, specific Negative block markers are highly specific and hold the strongest weights in defining the sample separation along these axes \cite{acid}.
     \item \textbf{PC3 contributions:} The third component is similarly heavily influenced by specific markers from the Negative dataset, such as Arachidonic Acid and amino acid derivatives (e.g., L-Phenylalanine), further confirming the crucial role of ESI- features in characterizing the fine structure of the data.
 \end{itemize}
 This integrated analysis demonstrates that Low-Level Fusion successfully combined the broad variance coverage of the ESI+ mode with the high feature specificity of the ESI- mode.
@@ -771,10 +771,10 @@ To complement the statistical metrics, three unsupervised Machine Learning algor
 \end{enumerate}
 
 \paragraph{Visualization of Decision Boundaries}
-To visually interpret the behavior of the ML algorithms, the decision boundaries were projected onto the first two Principal Components (Figure \ref{fig:outlier_ctrl} and Figure \ref{fig:outlier_chd}). These plots illustrate the different topological assumptions of the methods: iForest and OC-SVM define a global envelope around the core distribution, while LOF adapts to the local density variations.
+To visually interpret the behavior of the ML algorithms, the decision boundaries were projected onto the first two Principal Components (Figure \ref{fig:outlier_ctrl} and Figure \ref{fig:outlier_chd}). From this plots it is possible to appreciate and identify the different topological assumptions of the methods: \textbf{iForest} and \textbf{OC-SVM} define a global envelope around the core distribution, while \textbf{LOF} adapts to the local density variations.
 
 % --- FIGURE OUTLIER DETECTION CTRL ---
-\begin{figure}[!hbt]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{../out/anomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf}
     \caption{\textbf{Algorithmic Decision Boundaries for Control Group (CTRL).}
@@ -783,7 +783,7 @@ To visually interpret the behavior of the ML algorithms, the decision boundaries
 \end{figure}
 
 % --- FIGURE OUTLIER DETECTION CHD ---
-\begin{figure}[!hbt]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{../out/anomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf}
     \caption{\textbf{Algorithmic Decision Boundaries for Disease Group (CHD).}
@@ -794,7 +794,7 @@ To visually interpret the behavior of the ML algorithms, the decision boundaries
 \paragraph{Consensus Evaluation and Sample Filtering}
 Since the primary objective of omics studies is to identify robust biomarkers, the exclusion of samples must be carefully balanced to avoid reducing statistical power while ensuring data quality. A consensus approach was adopted, integrating the multivariate metrics ($T^2$ vs $Q$) with the alerts generated by the Machine Learning algorithms and a visual inspection of the intensity distributions.
 
-The \textbf{Distance Plots} (Figure \ref{fig:dist_plots}) provide a comprehensive view of the outlier candidates. Notably, the majority of flagged samples exhibited high \textbf{Q-Residuals} (y-axis), indicating a significant deviation from the correlation structure of the model (Model Mismatch), likely due to technical artifacts or qualitative inconsistencies in sample composition. Conversely, no extreme biological outliers (high $T^2$) were detected in the Control group, whereas the CHD group showed specific deviant behaviors.
+The \textbf{Distance Plots} (Figure \ref{fig:dist_plots}) provide a exhaustive view of the outlier candidates. Notably, the majority of flagged samples exhibited high \textbf{Q-Residuals} (y-axis), indicating a significant deviation from the correlation structure of the model, also known as Model Mismatch, likely due to technical artifacts or qualitative inconsistencies in sample composition. Conversely, no extreme biological outliers (high $T^2$) were detected in the Control group, whereas the CHD group showed specific deviant behaviors.
 
 To validate these statistical alerts, the raw intensity distributions of the candidate samples were inspected via \textbf{Boxplots} (Figure \ref{fig:box_ctrl} and Figure \ref{fig:box_chd}). This step was decisive for borderline cases.
 \begin{itemize}
@@ -918,13 +918,13 @@ A standard library module that provides a portable way of using operating system
 
 \section{Results and Discussion}
 
-\subsection{Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}
+\subsection{Model performances on single datasest (ESI+ / ESI-)}
 Confronto delle metriche (Accuratezza, Specificità, Sensibilità) tra PLS-DA, SVM, RF, LR. Quale modello performa meglio sui dati positivi? E sui negativi?
 
-\subsection{Interpretabilità e Potenziali Biomarcatori}
+\subsection{Interpretability and potential biomarkers}
 Analisi delle Feature Importances e Analisi Univariata (Volcano Plot). Identificazione/interpretazione biologica dei top-metaboliti.
 
-\subsection{Univariate analysis sui biomarcatori}
+\subsection{Biomarkers univariate analysis}
 Metodi statistici/algoritmici utilizzati per ridurre la dimensionalità e rimuovere il rumore prima del modeling.
 
 \section{Conclusions}
@@ -937,6 +937,12 @@ Sintesi del miglior workflow identificato. Considerazioni sull'interpretabilità
 	%Each item starts with a \bibitem{reference} command and the details thereafter.
 	\bibitem{CHD} % Transaction paper
 	Mires, Stuart, et al. "Plasma metabolomic and lipidomic profiles accurately classify mothers of children with congenital heart disease: an observational study." Metabolomics 20.4 (2024): 70.
+	
+	\bibitem{LCMS_skewed}
+	De Livera Alysha, M., et al. "Normalizing and Integrating Metabolomics Data." (2012).
+	
+	\bibitem{acid}
+	Psychogios, Nikolaos, et al. "The human serum metabolome." PloS one 6.2 (2011): e16957.
 
 \end{thebibliography}
 
