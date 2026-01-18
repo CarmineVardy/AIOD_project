@@ -608,14 +608,261 @@ Figure \ref{fig:scale_neg} and Figure \ref{fig:scale_pos} demonstrate the effect
     \label{fig:scale_pos}
 \end{figure}
 
+%DA DOVE INIZIA LA NUOVA PARTE
+\subsubsection{Global Assessment}
+
+To validate the efficacy of the entire pre-processing pipeline (PQN normalization, Log10 transformation, and Autoscaling), a comparative Principal Component Analysis (PCA) was performed on the dataset before and after data pretreatment. This step is essential to confirm that the applied corrections have successfully removed systematic bias and magnitude-dependent effects without distorting the biological signal.
+
+Figure \ref{fig:pca_assess_neg} illustrates the dramatic shift in data structure for the **Negative (ESI-) dataset**.
+In the \textbf{Raw Data} (Panels a-c), the variance is dominated by high-intensity compounds. The Loading Plot (c) shows that a restricted number of fatty acids (e.g., Palmitoleic acid, Oleic acid) possess extremely high loading values, effectively driving the separation solely based on their abundance magnitude rather than biological class differences. Consequently, the Score Plot (b) shows a clustering pattern heavily influenced by these dominant features.
+
+In the \textbf{Pre-processed Data} (Panels d-f), the variance is more evenly distributed across components (Scree Plot d), reflecting the effect of autoscaling which gives equal weight to all metabolites. The Score Plot (e) reveals a more homogeneous distribution of samples centered at the origin. Crucially, the Loading Plot (f) now highlights a diverse range of metabolites (e.g., Indolelactic acid) contributing to the model, ensuring that the subsequent multivariate analysis searches for biomarkers across the entire dynamic range of the metabolome.
+
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{ccc}
+        % ROW 1: RAW DATA (Without Preprocessing)
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1vsPC2.pdf} \\
+        \footnotesize (a) Raw Scree Plot & \footnotesize (b) Raw Score Plot & \footnotesize (c) Raw Loading Plot \\
+        \vspace{0.2cm} & & \\
+
+        % ROW 2: PROCESSED DATA (With Preprocessing)
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf} \\
+        \footnotesize (d) Proc. Scree Plot & \footnotesize (e) Proc. Score Plot & \footnotesize (f) Proc. Loading Plot \\
+    \end{tabular}
+    \caption{\textbf{Impact of Pre-processing on ESI- Data Structure.}
+    \textbf{Top Row (a-c):} PCA on raw data. The model is dominated by high-abundance features (fatty acids) explaining a large portion of variance (26\% on PC1), masking subtle biological signals.
+    \textbf{Bottom Row (d-f):} PCA on pre-processed data (PQN + Log10 + Autoscaling). The variance is democratized, and the influence of dominant metabolites is rescaled, revealing a more complex biological structure suitable for biomarker discovery.}
+    \label{fig:pca_assess_neg}
+\end{figure}
+
+A similiar trend was observed for the **Positive (ESI+) dataset** (Figure \ref{fig:pca_assess_pos}).
+In the raw state (Panels a-c), the variance was heavily skewed by high-abundance lipid species, specifically medium-chain acylcarnitines (e.g., C8-Carnitine, Decanoylcarnitine). The Loading Plot (c) clearly indicates that the separation along PC1 was driven almost exclusively by the magnitude of these compounds.
+Following the application of the optimized pre-processing pipeline (Panels d-f), the variance distribution was normalized. The Loading Plot (f) shows a re-balancing of feature importance: while acylcarnitines remain relevant, other metabolite classes (e.g., indolic compounds like trans-3-Indoleacrylic acid) now contribute significantly to the model components. This confirms that the pre-processing successfully revealed the latent biological information previously masked by the dominant lipid signals.
+
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{ccc}
+        % ROW 1: RAW DATA (Without Preprocessing)
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1vsPC2.pdf} \\
+        \footnotesize (a) Raw Scree Plot & \footnotesize (b) Raw Score Plot & \footnotesize (c) Raw Loading Plot \\
+        \vspace{0.2cm} & & \\
+
+        % ROW 2: PROCESSED DATA (With Preprocessing)
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\columnwidth]{../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf} \\
+        \footnotesize (d) Proc. Scree Plot & \footnotesize (e) Proc. Score Plot & \footnotesize (f) Proc. Loading Plot \\
+    \end{tabular}
+    \caption{\textbf{Impact of Pre-processing on ESI+ Data Structure.}
+    \textbf{Top Row (a-c):} PCA on raw data. The model is biased by high-intensity acylcarnitines.
+    \textbf{Bottom Row (d-f):} PCA on pre-processed data. The influence of dominant lipids is rescaled, allowing for a more comprehensive representation of the metabolome, including amino acid derivatives and indoles.}
+    \label{fig:pca_assess_pos}
+\end{figure}
+
+Having independently optimized the data quality for both ionization modes, the separate processing workflows were concluded.
+To exploit the complementary nature of the ESI+ and ESI- profiles and capture comprehensive metabolic signatures, the subsequent phase involves the integration of the two datasets. Specifically, a **Low-Level Data Fusion** strategy will be applied prior to outlier detection. This approach allows for the identification of potential anomalies not only within a single analytical domain but also arising from inconsistencies between the two ionization modes, ensuring a robust dataset for the final classification modeling.
+
+\subsection{Low-Level Data Fusion}
+
+To obtain a holistic view of the metabolic phenotype and exploit the complementary nature of the two ionization modes, a **Low-Level Data Fusion** strategy was implemented. This approach involves the concatenation of the pre-processed datasets into a single super-matrix, allowing for the simultaneous analysis of interactions between all variables.
+
+\subsubsection{Fusion Strategy and Block Scaling}
+Prior to concatenation, a critical **Block Scaling** step was performed to ensure fairness between the two analytical blocks (ESI- and ESI+). Although both datasets were individually autoscaled, differences in the number of variables ($P$) and the intrinsic numerical redundancy could lead to one block dominating the multivariate model.
+To prevent this, each block $X_k$ was scaled by its Frobenius norm ($||X_k||_F$), defined as the square root of the sum of the squared elements:
+\begin{equation}
+    X_{k, scaled} = \frac{X_k}{\sqrt{\sum_{i,j} x_{k,ij}^2}}
+\end{equation}
+This operation normalizes the total variance (energy) of each matrix, ensuring that both ionization modes contribute equitably to the fused model. Subsequently, the blocks were concatenated horizontally to form the super-matrix $X_{fus} = [X_{neg} | X_{pos}]$, preserving the sample alignment.
+
+\subsubsection{SUM-PCA: Exploratory Analysis of Fused Data}
+Principal Component Analysis applied to the fused super-matrix (defined as **SUM-PCA**) was utilized to decompose the global variance into Super Scores (representing the consensus sample trajectory) and Super Loadings (representing the contribution of features from both blocks).
+
+The results of the SUM-PCA are presented in Figure \ref{fig:sum_pca}.
+The **Scree Plot (g)** reveals the variance contribution of each block to the principal components. A clear complementarity is observed: PC1 (13.8\%) is predominantly driven by Block 2 (ESI+), indicating that the positive dataset accounts for the majority of the global variation. In contrast, PC2 (7.7\%) and PC3 (7.2\%) show a substantial recovery of contribution from Block 1 (ESI-), balancing the model.
+
+The **Score Plots (a-c)** show the distribution of samples in the integrated latent space, suggesting a trend of biological distinction driven by the combined metabolic profile.
+
+The **Super Loadings Plots (d-f)** provide insight into the specific features driving these components. Interestingly, while the Positive block dominates the global variance on PC1 (as seen in the Scree Plot), the top contributing features (highest loading values) identified in the plots belong primarily to the **Negative Block (ESI-)**.
+\begin{itemize}
+    \item \textbf{PC1 vs PC2 (d):} The loading space is characterized by high-ranking negative mode metabolites, including fatty acids like Oleic Acid and Palmitic Acid, and polar compounds such as Uric Acid. This suggests that while the Positive block provides the "bulk" of the information, specific Negative block markers are highly specific and hold the strongest weights in defining the sample separation along these axes.
+    \item \textbf{PC3 contributions:} Similarly, the third component is heavily influenced by specific markers from the Negative dataset, such as Arachidonic Acid and amino acid derivatives (e.g., L-Phenylalanine), further confirming the crucial role of ESI- features in characterizing the fine structure of the data.
+\end{itemize}
+This integrated analysis demonstrates that Low-Level Fusion successfully combined the broad variance coverage of the ESI+ mode with the high feature specificity of the ESI- mode.
+
+% --- FIGURE SUM-PCA (7 PLOTS) ---
+\begin{figure*}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{ccc}
+        % ROW 1: SCORE PLOTS
+        \includegraphics[width=0.32\textwidth]{../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC3.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/data_fusion/sum_pca/sum_pca_score_plot_PC2vsPC3.pdf} \\
+        \footnotesize (a) Super Scores PC1 vs PC2 & \footnotesize (b) Super Scores PC1 vs PC3 & \footnotesize (c) Super Scores PC2 vs PC3 \\
+        \vspace{0.2cm} & & \\
+
+        % ROW 2: LOADING PLOTS
+        \includegraphics[width=0.32\textwidth]{../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC3.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2vsPC3.pdf} \\
+        \footnotesize (d) Super Loadings PC1 vs PC2 & \footnotesize (e) Super Loadings PC1 vs PC3 & \footnotesize (f) Super Loadings PC2 vs PC3 \\
+        \vspace{0.2cm} & & \\
+
+        % ROW 3: SCREE PLOT (Centered)
+        \multicolumn{3}{c}{\includegraphics[width=0.45\textwidth]{../out/data_fusion/sum_pca/sum_pca_scree_blocks.pdf}} \\
+        \multicolumn{3}{c}{\footnotesize (g) Variance Contribution per Block (Scree Plot)}
+    \end{tabular}
+    \caption{\textbf{SUM-PCA Results on Low-Level Fused Data.}
+    (a-c) Super Score plots showing sample distribution in the integrated space.
+    (d-f) Super Loading plots. Notably, despite the high global variance of the Positive block, the top ranking contributors (labeled features) are primarily from the \textbf{ESI- Block} (e.g., Palmitic Acid, Uric Acid), highlighting their specific relevance.
+    (g) Scree plot highlighting the variance contribution: PC1 is dominated by Block 2 (Pos), while subsequent components show increased contribution from Block 1 (Neg).}
+    \label{fig:sum_pca}
+\end{figure*}
+
 \subsection{Anomaly Detection}
+
+Following data fusion, a rigorous anomaly detection phase was conducted to identify samples presenting extreme deviant behaviors or technical artifacts. This step was performed on the **Low-Level Fused dataset** to capture potential inconsistencies arising not only within a single ionization mode but also from the interaction between the two platforms (e.g., a sample appearing normal in ESI- but aberrant in ESI+).
+
+Crucially, the detection was performed **independently for each class** (CTRL and CHD). This stratified approach ensures that the definition of "normality" respects the specific biological topology of each group, preventing the algorithm from flagging a genuine pathological variation as a technical outlier.
+
+A multi-methodological consensus strategy was adopted, combining multivariate statistics and machine learning algorithms to evaluate the samples from different topological perspectives (distance, density, and isolation).
+
+\paragraph{Multivariate Statistical Profiling}
+First, Principal Component Analysis (PCA) was used to define the boundaries of the model space. Two complementary metrics were calculated for each sample:
+\begin{itemize}
+    \item \textbf{Hotelling’s $T^2$:} Measures the distance of a sample from the center of the model within the orthogonal subspace defined by the Principal Components (PCs). It identifies "extreme" samples that follow the model but possess exaggerated leverage.
+    \item \textbf{Q-Residuals (Squared Prediction Error):} Measures the distance of a sample from the model plane (i.e., the error between the raw data and the PCA reconstruction). It identifies samples with a chemical composition inconsistent with the correlation structure of the majority.
+\end{itemize}
+To ensure mathematical robustness, the number of PCs used for the $T^2$ calculation was dynamically selected to explain 90\% of the variance, respecting the degrees of freedom constraints.
+
+\paragraph{Machine Learning-Based Detection}
+To complement the statistical metrics, three unsupervised Machine Learning algorithms were deployed. The input space for these models was carefully selected to mitigate the "Curse of Dimensionality":
+\begin{enumerate}
+    \item \textbf{Isolation Forest (iForest):} Applied directly to the **Raw Fused Data**. Since iForest relies on random partitioning rather than distance calculations, it is intrinsically robust to high-dimensional spaces. It identifies anomalies as points that are "few and different," requiring fewer random splits to be isolated from the rest of the data.
+    \item \textbf{One-Class SVM (OC-SVM):} Applied to the **PCA Scores (95\% variance)**. This algorithm maps the data into a high-dimensional feature space using an RBF kernel to find the smallest hypersphere enclosing the "normal" observations ($\nu=0.05$). The use of PCA scores ensures the model focuses on biological variance rather than noise.
+    \item \textbf{Local Outlier Factor (LOF):} Applied to the **PCA Scores (95\% variance)**. Unlike the global approach of iForest and OC-SVM, LOF evaluates the local density of a sample compared to its $k$-nearest neighbors ($k=20$). It is particularly effective at identifying samples located in sparse regions or at the edges of the class cluster.
+\end{enumerate}
+
+\paragraph{Visualization of Decision Boundaries}
+To visually interpret the behavior of the ML algorithms, the decision boundaries were projected onto the first two Principal Components (Figure \ref{fig:outlier_ctrl} and Figure \ref{fig:outlier_chd}). These plots illustrate the different topological assumptions of the methods: iForest and OC-SVM define a global envelope around the core distribution, while LOF adapts to the local density variations.
+
+% --- FIGURE OUTLIER DETECTION CTRL ---
+\begin{figure*}[!hbt]
+    \centering
+    \includegraphics[width=\textwidth]{../out/anomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf}
+    \caption{\textbf{Algorithmic Decision Boundaries for Control Group (CTRL).}
+    2D projection of the decision boundaries generated by One-Class SVM, Isolation Forest, and Local Outlier Factor on the Control dataset. The colored regions and contours illustrate the area considered "normal" by each algorithm. Samples falling outside these boundaries (marked with 'X') are flagged as potential outliers. Note that actual detection was performed in the high-dimensional space (or raw space for iForest) to preserve information; this 2D representation is for visualization of the topological approach only.}
+    \label{fig:outlier_ctrl}
+\end{figure*}
+
+% --- FIGURE OUTLIER DETECTION CHD ---
+\begin{figure*}[!hbt]
+    \centering
+    \includegraphics[width=\textwidth]{../out/anomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf}
+    \caption{\textbf{Algorithmic Decision Boundaries for Disease Group (CHD).}
+    Visualization of anomaly detection results for the CHD class. The algorithms successfully identify samples that deviate from the main distribution cluster. The consensus among these methods, combined with the statistical metrics ($T^2$ and $Q$), forms the basis for the final exclusion criteria.}
+    \label{fig:outlier_chd}
+\end{figure*}
+
+\paragraph{Consensus Evaluation and Sample Filtering}
+Since the primary objective of omics studies is to identify robust biomarkers, the exclusion of samples must be carefully balanced to avoid reducing statistical power while ensuring data quality. A consensus approach was adopted, integrating the multivariate metrics ($T^2$ vs $Q$) with the alerts generated by the Machine Learning algorithms and a visual inspection of the intensity distributions.
+
+The **Distance Plots** (Figure \ref{fig:dist_plots}) provide a comprehensive view of the outlier candidates. Notably, the majority of flagged samples exhibited high **Q-Residuals** (y-axis), indicating a significant deviation from the correlation structure of the model (Model Mismatch), likely due to technical artifacts or qualitative inconsistencies in sample composition. Conversely, no extreme biological outliers (high $T^2$) were detected in the Control group, whereas the CHD group showed specific deviant behaviors.
+
+To validate these statistical alerts, the raw intensity distributions of the candidate samples were inspected via **Boxplots** (Figure \ref{fig:box_ctrl} and Figure \ref{fig:box_chd}). This step was decisive for borderline cases.
+\begin{itemize}
+    \item **Confirmed Exclusions:** Samples \textit{CTRL09\_00}, \textit{CTRL93\_00}, and \textit{CTRL41} were removed due to severe violation of the Q-residuals limit. Similarly, \textit{CTRL60}, \textit{CTRL02\_00}, and \textit{CTRL53} were excluded as their statistical anomaly was corroborated by visible distributional artifacts in the boxplots. In the pathological group, \textit{P06\_00}, \textit{P42}, and \textit{P59} were removed for high Q-residuals. Sample \textit{P93} was excluded as a unique "biological outlier," being unanimously flagged by all Machine Learning algorithms (iForest, SVM, LOF) and located at the extreme of the model space ($T^2$).
+    \item **Saved Samples:** Sample \textit{CTRL13}, despite having a Q-residual value near the threshold, was retained. Its raw intensity profile appeared consistent with the healthy population distribution, suggesting that the statistical deviation was not sufficient to justify data loss.
+\end{itemize}
+
+In total, **10 samples** (approx. 5\% of the dataset) were removed: \textit{CTRL02\_00, CTRL09\_00, CTRL41, CTRL53, CTRL60, CTRL93\_00} from the Control group, and \textit{P06\_00, P42, P59, P93} from the CHD group.
+
+% --- FIGURE DISTANCE PLOTS (T2 vs Q) ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \begin{tabular}{cc}
+        \includegraphics[width=0.48\textwidth]{../out/anomaly_detection/distance_plots/CTRL.pdf} &
+        \includegraphics[width=0.48\textwidth]{../out/anomaly_detection/distance_plots/CHD.pdf} \\
+        \footnotesize (a) Control Group & \footnotesize (b) CHD Group
+    \end{tabular}
+    \caption{\textbf{Distance Plots ($T^2$ vs $Q$-Residuals).}
+    Gold standard visualization for outlier diagnosis. Samples flagged by at least two Machine Learning algorithms are highlighted in red.
+    (a) Controls show anomalies primarily in the Q-residual space (vertical axis), indicating technical mismatch.
+    (b) CHD samples show a more complex pattern, with sample P93 appearing as a distinct outlier consistent with ML detection.}
+    \label{fig:dist_plots}
+\end{figure}
+
+% --- FIGURE BOXPLOTS CTRL ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{c}
+        \includegraphics[width=0.9\columnwidth]{../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf} \\
+        \footnotesize (a) CTRL Samples - Part 1 \\
+        \vspace{0.2cm}
+        \includegraphics[width=0.9\columnwidth]{../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page2.pdf} \\
+        \footnotesize (b) CTRL Samples - Part 2
+    \end{tabular}
+    \caption{\textbf{Intensity Distributions of Control Samples.}
+    Visual inspection used to validate statistical outliers. Deviant distributions confirmed the exclusion of samples like CTRL02\_00.}
+    \label{fig:box_ctrl}
+\end{figure}
+
+% --- FIGURE BOXPLOTS CHD ---
+\begin{figure}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{c}
+        \includegraphics[width=0.9\columnwidth]{../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page1.pdf} \\
+        \footnotesize (a) CHD Samples - Part 1 \\
+        \vspace{0.2cm}
+        \includegraphics[width=0.9\columnwidth]{../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page2.pdf} \\
+        \footnotesize (b) CHD Samples - Part 2
+    \end{tabular}
+    \caption{\textbf{Intensity Distributions of CHD Samples.}
+    Used to verify the consistency of pathological samples before removal.}
+    \label{fig:box_chd}
+\end{figure}
+
+\paragraph{Final Dataset Re-Processing and Validation}
+Following the removal of the identified outliers, the dataset was re-processed from the ground up. This step is critical: removing samples alters the global parameters (mean, standard deviation, Frobenius norm) used for Normalization, Autoscaling, and Block Scaling. Therefore, to ensure mathematical rigor, the remaining samples were re-normalized and re-scaled independently in their respective blocks (ESI- and ESI+) before being fused again.
+
+A final PCA was performed on the cleaned and re-fused dataset (Figure \ref{fig:pca_clean}) to verify the data structure. The Score Plot (b) shows a more homogeneous distribution without the compressing effect of extreme outliers. The Scree Plot (a) confirms a balanced variance distribution, and the Loading Plot (c) highlights that the separation is now driven by relevant biological features (e.g., C8-Carnitine, Indole derivatives) rather than technical artifacts. This curated dataset constitutes the input for the subsequent Data Splitting and Classification phases.
+
+% --- FIGURE FINAL PCA (Clean Dataset) ---
+\begin{figure*}[!hbt]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}{ccc}
+        \includegraphics[width=0.32\textwidth]{../out/anomaly_detection/pca_without_out/pca_scree_plot.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/anomaly_detection/pca_without_out/pca_score_plot_PC1vsPC2.pdf} &
+        \includegraphics[width=0.32\textwidth]{../out/anomaly_detection/pca_without_out/pca_loading_plot_PC1vsPC2.pdf} \\
+        \footnotesize (a) Final Scree Plot & \footnotesize (b) Final Score Plot & \footnotesize (c) Final Loading Plot
+    \end{tabular}
+    \caption{\textbf{PCA of the Curated Fused Dataset (Post-Outlier Removal).}
+    (a) Variance is well-distributed. (b) Samples are homogeneously distributed in the score space, with no extreme outliers distorting the axes. (c) Loadings confirm the contribution of relevant biological markers (e.g., Acylcarnitines, Indoles) to the data variance.}
+    \label{fig:pca_clean}
+\end{figure*}
+
+\subsection{Dataset Splitting}
 Descrizione del metodo usato per identificare e rimuovere gli outlier (fondamentale per la pulizia del dato).
 
-\subsection{Feature Selection}
-Metodi statistici/algoritmici utilizzati per ridurre la dimensionalità e rimuovere il rumore prima del modeling.
-
-\subsection{Strategie di Data Fusion}
-Definizione degli approcci: Low-Level (concatenazione semplice) vs High-Level (o altri approcci). L'obiettivo è sfruttare la complementarità ESI+/ESI-.
 
 \subsection{Analisi Statistica e Machine Learning}
 \begin{itemize}
@@ -629,18 +876,14 @@ Breve paragrafo sulle librerie Python utilizzate (Pandas, Scikit-learn, ecc.) pe
 
 \section{Results and Discussion}
 
-\subsection{Valutazione dell'Analisi Esplorativa (PCA)}
-Visualizzazione dei dati ESI+ e ESI- separati. Valutazione degli Outlier (prima e dopo la rimozione). Confronto delle tecniche di scaling (es. efficacia dell'autoscaling).
-
 \subsection{Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}
 Confronto delle metriche (Accuratezza, Specificità, Sensibilità) tra PLS-DA, SVM, RF, LR. Quale modello performa meglio sui dati positivi? E sui negativi?
 
-\subsection{Risultati della Data Fusion}
-La fusione dei dati ha migliorato la classificazione rispetto ai dataset singoli?
-
-\subsection{Interpretabilità e Biomarcatori (Feature Importance)}
+\subsection{Interpretabilità e Potenziali Biomarcatori}
 Analisi delle Feature Importances e Analisi Univariata (Volcano Plot). Identificazione/interpretazione biologica dei top-metaboliti.
 
+\subsection{Univariate analysis sui biomarcatori}
+Metodi statistici/algoritmici utilizzati per ridurre la dimensionalità e rimuovere il rumore prima del modeling.
 
 \section{Conclusions}
 Sintesi del miglior workflow identificato. Considerazioni sull'interpretabilità biologica e limiti dello studio (es. numero di campioni, assenza di validazione esterna).

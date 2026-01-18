@@ -15,15 +15,22 @@
 \contentsline {subsubsection}{\numberline {2.3.1}Data Normalization}{4}{}%
 \contentsline {subsubsection}{\numberline {2.3.2}Data Transformation}{7}{}%
 \contentsline {subsubsection}{\numberline {2.3.3}Data Scaling}{9}{}%
-\contentsline {subsection}{\numberline {2.4}Anomaly Detection}{9}{}%
-\contentsline {subsection}{\numberline {2.5}Feature Selection}{9}{}%
-\contentsline {subsection}{\numberline {2.6}Strategie di Data Fusion}{10}{}%
-\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{10}{}%
-\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{10}{}%
-\contentsline {section}{\numberline {3}Results and Discussion}{10}{}%
-\contentsline {subsection}{\numberline {3.1}Valutazione dell'Analisi Esplorativa (PCA)}{10}{}%
-\contentsline {subsection}{\numberline {3.2}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{10}{}%
-\contentsline {subsection}{\numberline {3.3}Risultati della Data Fusion}{11}{}%
-\contentsline {subsection}{\numberline {3.4}Interpretabilità e Biomarcatori (Feature Importance)}{11}{}%
-\contentsline {section}{\numberline {4}Conclusions}{11}{}%
-\contentsline {section}{References}{11}{}%
+\contentsline {subsubsection}{\numberline {2.3.4}Global Assessment}{9}{}%
+\contentsline {subsection}{\numberline {2.4}Low-Level Data Fusion}{11}{}%
+\contentsline {subsubsection}{\numberline {2.4.1}Fusion Strategy and Block Scaling}{11}{}%
+\contentsline {subsubsection}{\numberline {2.4.2}SUM-PCA: Exploratory Analysis of Fused Data}{11}{}%
+\contentsline {subsection}{\numberline {2.5}Anomaly Detection}{13}{}%
+\contentsline {paragraph}{\numberline {2.5.0a}Multivariate Statistical Profiling}{14}{}%
+\contentsline {paragraph}{\numberline {2.5.0b}Machine Learning-Based Detection}{14}{}%
+\contentsline {paragraph}{\numberline {2.5.0c}Visualization of Decision Boundaries}{14}{}%
+\contentsline {paragraph}{\numberline {2.5.0d}Consensus Evaluation and Sample Filtering}{14}{}%
+\contentsline {paragraph}{\numberline {2.5.0e}Final Dataset Re-Processing and Validation}{16}{}%
+\contentsline {subsection}{\numberline {2.6}Dataset Splitting}{16}{}%
+\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{16}{}%
+\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{16}{}%
+\contentsline {section}{\numberline {3}Results and Discussion}{17}{}%
+\contentsline {subsection}{\numberline {3.1}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{17}{}%
+\contentsline {subsection}{\numberline {3.2}Interpretabilità e Potenziali Biomarcatori}{18}{}%
+\contentsline {subsection}{\numberline {3.3}Univariate analysis sui biomarcatori}{18}{}%
+\contentsline {section}{\numberline {4}Conclusions}{18}{}%
+\contentsline {section}{References}{18}{}%
