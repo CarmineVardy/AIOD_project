@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pandas as pd
 from matplotlib.patches import Ellipse
 from sklearn.cross_decomposition import PLSRegression
@@ -7,34 +8,6 @@ from sklearn.model_selection import StratifiedKFold, permutation_test_score
 from sklearn.preprocessing import LabelEncoder
 
 from src.config_visualization import *
-
-
-def _calculate_vips(model):
-    """
-    Helper function to calculate Variable Importance in Projection (VIP) scores
-    from a trained sklearn PLSRegression model.
-
-    Formula reference:
-    VIP_j = sqrt( p * sum( SSY_k * (w_jk / ||w_k||)^2 ) / sum(SSY) )
-    """
-    t = model.x_scores_
-    w = model.x_weights_
-    q = model.y_loadings_
-
-    p, h = w.shape
-
-    vips = np.zeros((p,))
-
-    # Sum of squares of explained variance of Y for each component
-    s = np.diag(t.T @ t @ q.T @ q).reshape(h)
-    total_s = np.sum(s)
-
-    for i in range(p):
-        weight = np.array([(w[i, j] / np.linalg.norm(w[:, j])) ** 2 for j in range(h)])
-        vips[i] = np.sqrt(p * (s.T @ weight) / total_s)
-
-    return vips
-
 
 def run_pls_da(X_train, y_train, X_test, n_components=2, threshold=0.5):
     """
@@ -91,30 +64,63 @@ def run_pls_da(X_train, y_train, X_test, n_components=2, threshold=0.5):
         'feature_importance_ranking': {}
     }
 
-    if isinstance(X_train, pd.DataFrame):
-        feature_names = X_train.columns
-        # Map VIPs to names
-        vip_dict = dict(zip(feature_names, vip_scores))
-        # Sort by VIP (descending) -> Top Biomarkers
-        sorted_vips = dict(sorted(vip_dict.items(), key=lambda item: item[1], reverse=True))
-        feature_info['feature_importance_ranking'] = sorted_vips
-    else:
-        feature_info['feature_importance_ranking'] = dict(enumerate(vip_scores))
+    feature_names = X_train.columns
+    # Map VIPs to names
+    vip_dict = dict(zip(feature_names, vip_scores))
+    # Sort by VIP (descending) -> Top Biomarkers
+    sorted_vips = dict(sorted(vip_dict.items(), key=lambda item: item[1], reverse=True))
+    feature_info['feature_importance_ranking'] = sorted_vips
 
     # 6. Store Model Results for Visualization
     # We need the scores of the TRAINING set to plot the model structure
     # Scikit-learn stores them in x_scores_ and y_scores_
     model_results = {
         'model': pls,
-        'train_x_scores': pd.DataFrame(pls.x_scores_, index=X_train.index,
-                                       columns=[f'LV{i + 1}' for i in range(n_components)]),
+        'train_x_scores': pd.DataFrame(pls.x_scores_, index=X_train.index, columns=[f'LV{i + 1}' for i in range(n_components)]),
         'train_y_enc': y_train_enc,  # Needed for coloring the score plot
         'class_names': le.classes_,  # Needed for legend
         'feature_names': X_train.columns if isinstance(X_train, pd.DataFrame) else range(X_train.shape[1])
     }
 
     # Return structure matches other models, plus the model_results for plotting
-    return y_pred, y_pred_continuous, feature_info, model_results
+    return y_pred, feature_info, model_results
+
+
+
+
+
+
+
+
+
+
+
+
+def _calculate_vips(model):
+    """
+    Helper function to calculate Variable Importance in Projection (VIP) scores
+    from a trained sklearn PLSRegression model.
+
+    Formula reference:
+    VIP_j = sqrt( p * sum( SSY_k * (w_jk / ||w_k||)^2 ) / sum(SSY) )
+    """
+    t = model.x_scores_
+    w = model.x_weights_
+    q = model.y_loadings_
+
+    p, h = w.shape
+
+    vips = np.zeros((p,))
+
+    # Sum of squares of explained variance of Y for each component
+    s = np.diag(t.T @ t @ q.T @ q).reshape(h)
+    total_s = np.sum(s)
+
+    for i in range(p):
+        weight = np.array([(w[i, j] / np.linalg.norm(w[:, j])) ** 2 for j in range(h)])
+        vips[i] = np.sqrt(p * (s.T @ weight) / total_s)
+
+    return vips
 
 def optimize_pls_components(X, y, max_components=10, cv_splits=5):
     """
