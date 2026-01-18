@@ -399,10 +399,10 @@
 		
 		The LC-MS untargeted analysis of biological fluids is inherently subject to systematic variations unrelated to the biological problem, such as differences in sample dilution (e.g., hydration status of the subjects) and fluctuations in ionization efficiency. As evidenced by the raw data distribution (Fig. \ref{fig:norm_neg}a and Fig. \ref{fig:norm_pos}a), a significant variability in the median intensity across samples was observed, necessitating a normalization step to render the samples comparable.
 		
-		We evaluated multiple normalization strategies, ranging from global intensity corrections (TIC, Mean, Median) to distribution-based methods (Quantile) and robust probabilistic approaches (Probabilistic Quotient Normalization - PQN). The selection of the optimal method was driven by a dual criterion: (i) qualitative inspection of sample distributions via boxplots, and (ii) quantitative assessment of the Coefficient of Variation (CV\%) calculated on the technical replicates and across the biological groups.
+		We evaluated multiple normalization strategies, ranging from global intensity corrections (TIC, Mean, Median) to distribution-based method (Quantile) and robust probabilistic approaches (Probabilistic Quotient Normalization - PQN). The selection of the optimal method was driven by a dual criterion: (i) qualitative inspection of sample distributions via boxplots, and (ii) quantitative assessment of the Coefficient of Variation (CV\%) calculated on the technical replicates and across the biological groups.
 		
 		Figures \ref{fig:norm_neg} and \ref{fig:norm_pos} illustrate the effect of selected normalization algorithms on the Negative (ESI-) and Positive (ESI+) datasets, respectively.
-		While the raw data showed pronounced "batch-like" or dilution-related fluctuations, all normalization methods improved the alignment of sample medians. Specifically:
+		While the raw data showed a pronounced "batch-like" or dilution-related fluctuations, all normalization methods improved the alignment of sample medians. Specifically:
 		\begin{itemize}
 			\item \textbf{Total Ion Current (TIC):} Provided a standard correction based on the total signal sum, effectively reducing global differences but potentially sensitive to high-intensity artifacts.
 			\item \textbf{Quantile Normalization:} Resulted in perfectly aligned distributions (Fig. \ref{fig:norm_neg}c, \ref{fig:norm_pos}c). However, visual inspection suggests this approach may be overly aggressive, forcing all samples to conform to an identical distribution and potentially suppressing genuine biological heterogeneity.
@@ -411,7 +411,7 @@
 		
 		To objectively quantify the reduction in technical variance, the median Coefficient of Variation (CV\%) was calculated for all features across the Control (CTRL) and Disease (CHD) groups. The results are summarized in Table \ref{tab:cv_neg} and Table \ref{tab:cv_pos}.
 		
-		In both ionization modes, the absence of normalization yielded the highest variability (Avg CV $\approx$ 58\% for ESI- and 68\% for ESI+).
+		In both ionization modes, normalization absence yielded the highest variability (Avg CV $\approx$ 58\% for ESI- and 68\% for ESI+).
 		Consistent with the visual inspection, \textbf{Quantile normalization} achieved the lowest numerical CV values (Avg CV $\approx$ 50\% and 57\%, respectively). However, minimal variance is not solely indicative of data quality; it may also reflect overfitting and loss of biological signal.
 		\textbf{PQN} consistently ranked among the top performing methods, achieving a substantial reduction in variance (Avg CV $\approx$ 51.5\% for ESI- and 59.7\% for ESI+) comparable to Quantile and Median normalization, while theoretically preserving the relative abundance ratios of metabolites better than global sum methods.
 		
@@ -528,11 +528,11 @@
 		
 		\subsubsection{Data Transformation}
 		
-		Following the assessment of normalization strategies, the distribution of the intensity values was evaluated to satisfy the assumptions of normality required by multivariate statistical methods (e.g., PCA, PLS-DA) and parametric univariate tests (e.g., t-test).
+		Following the normalization strategies assessment, the distribution of the intensity values was evaluated to satisfy the assumptions of normality required by multivariate statistical methods (e.g., PCA, PLS-DA) and parametric univariate tests (e.g., t-test).
 		LC-MS metabolomics data typically exhibit a right-skewed distribution, where the majority of signals have low intensity, while a few highly abundant metabolites stretch the dynamic range, potentially dominating the variance.
 		
-		We evaluated different variance-stabilizing transformations, including power transformations (Square Root, Cube Root) and logarithmic transformations (Log2, Natural Logarithm, Log10).
-		Visual inspection of the global density plots revealed that power transformations were insufficient to correct the skewness of the distributions (data not shown). Conversely, all logarithmic transformations effectively compressed the high-intensity values and expanded the low-intensity range, resulting in a distribution approximating a Gaussian curve.
+		It this project there were evaluated different variance-stabilizing transformations, including power transformations (Square Root, Cube Root) and logarithmic transformations (Log2, Natural Logarithm, Log10).
+		Visual inspection of the global density plots revealed that power transformations were insufficient to correct the distribution's skewness. Conversely, all logarithmic transformations effectively compressed the high-intensity values and expanded the low-intensity range, resulting in a distribution approximating a Gaussian curve.
 		
 		Since Log2, Ln, and Log10 produced equivalent distributional shapes differing only in scale, \textbf{Log10 transformation} was selected as the standard method for this study. This transformation is widely accepted in mass spectrometry as it renders orders of magnitude easily interpretable while effectively symmetrizing the data distribution.
 		
@@ -573,7 +573,7 @@
 		
 		To address this issue, \textbf{Autoscaling} (Unit Variance Scaling) was applied to the normalized and transformed data. This method involves mean-centering each variable and dividing it by its standard deviation. As a result, all metabolites are scaled to have a mean of zero and a standard deviation of one, ensuring that each feature contributes equally to the statistical model regardless of its absolute concentration.
 		
-		Figure \ref{fig:scale_neg} and Figure \ref{fig:scale_pos} demonstrate the effect of autoscaling on the feature distributions for ESI- and ESI+ datasets, respectively. Before scaling (Panel a), the variables exhibit disparate ranges of intensity. After autoscaling (Panel b), all features are comparable, centered around zero with standardized variance, making the dataset suitable for unsupervised and supervised modeling.
+		Figure \ref{fig:scale_neg} and Figure \ref{fig:scale_pos} demonstrate the effect of autoscaling on the feature distributions for ESI- and ESI+ datasets, respectively. Before scaling (Panel a), the variables exhibit disparate ranges of intensity. After autoscaling (Panel b), it is possible to cpare all features, centered around zero with standardized variance, making the dataset suitable for unsupervised and supervised modeling.
 		
 		% --- FIGURE ESI NEGATIVE SCALING ---
 		\begin{figure}[H]
@@ -621,12 +621,17 @@
 
 \subsubsection{Global Assessment}
 
-To validate the efficacy of the entire pre-processing pipeline (PQN normalization, Log10 transformation, and Autoscaling), a comparative Principal Component Analysis (PCA) was performed on the dataset before and after data pretreatment. This step is essential to confirm that the applied corrections have successfully removed systematic bias and magnitude-dependent effects without distorting the biological signal.
+To validate the efficacy of the entire pre-processing pipeline
+\begin{itemize}
+	\item PQN normalization
+	\item Log10 transformation
+	\item Autoscaling
+\end{itemize}, a comparative Principal Component Analysis (PCA) was performed on the dataset before and after data pre-treatment. This step is essential to confirm that the applied corrections have successfully removed systematic bias and magnitude-dependent effects without distorting the biological signal.
 
 Figure \ref{fig:pca_assess_neg} illustrates the dramatic shift in data structure for the \textbf{Negative (ESI-) dataset}.
-In the \textbf{Raw Data} (Panels a-c), the variance is dominated by high-intensity compounds. The Loading Plot (c) shows that a restricted number of fatty acids (e.g., Palmitoleic acid, Oleic acid) possess extremely high loading values, effectively driving the separation solely based on their abundance magnitude rather than biological class differences. Consequently, the Score Plot (b) shows a clustering pattern heavily influenced by these dominant features.
+In the \textbf{Raw Data} (Panels a-c), the variance is dominated by high-intensity compounds. The Loading Plot (c) shows that a restricted number of fatty acids (e.g., Palmitoleic acid, Oleic acid) possess extremely high loading values, driving more effectively the separation solely based on their abundance magnitude rather than biological class differences. Consequently, the Score Plot (b) shows a clustering pattern heavily influenced by these dominant features.
 
-In the \textbf{Pre-processed Data} (Panels d-f), the variance is more evenly distributed across components (Scree Plot d), reflecting the effect of autoscaling which gives equal weight to all metabolites. The Score Plot (e) reveals a more homogeneous distribution of samples centered at the origin. Crucially, the Loading Plot (f) now highlights a diverse range of metabolites (e.g., Indolelactic acid) contributing to the model, ensuring that the subsequent multivariate analysis searches for biomarkers across the entire dynamic range of the metabolome.
+In the \textbf{Pre-processed Data} (Panels d-f), the variance is more evenly distributed across components (Scree Plot d), reflecting the effect impressed by the autoscaling processing, which gives equal weight to all metabolites. The Score Plot (e) reveals a more homogeneous distribution of samples centered at the origin. Crucially, the Loading Plot (f) now highlights a diverse range of metabolites (e.g., Indolelactic acid) contributing to the model, ensuring that the subsequent multivariate analysis searches for biomarkers across the entire dynamic range of the metabolome.
 
 \begin{figure}[H]
     \centering
@@ -680,12 +685,12 @@ Following the application of the optimized pre-processing pipeline (Panels d-f),
     \label{fig:pca_assess_pos}
 \end{figure}
 
-Having independently optimized the data quality for both ionization modes, the separate processing workflows were concluded.
-To exploit the complementary nature of the ESI+ and ESI- profiles and capture comprehensive metabolic signatures, the subsequent phase involves the integration of the two datasets. Specifically, a \textbf{Low-Level Data Fusion} strategy will be applied prior to outlier detection. This approach allows for the identification of potential anomalies not only within a single analytical domain but also arising from inconsistencies between the two ionization modes, ensuring a robust dataset for the final classification modeling.
+Having an independently data quality optimization for both ionization modes, the separate processing workflows were concluded.
+To exploit the complementary nature of the ESI+ and ESI- profiles and capture comprehensive metabolic signatures, the next phase involves the integration of the two datasets. Specifically, a \textbf{Low-Level Data Fusion} strategy was be applied prior to outlier detection. This approach other than ensuring a more robust dataset for the final classification modeling, allows for the identification of potential anomalies, not only within a single analytical domain, but also arising from inconsistencies between the two ionization modes.
 
 \subsection{Low-Level Data Fusion}
 
-To obtain a holistic view of the metabolic phenotype and exploit the complementary nature of the two ionization modes, a \textbf{Low-Level Data Fusion} strategy was implemented. This approach involves the concatenation of the pre-processed datasets into a single super-matrix, allowing for the simultaneous analysis of interactions between all variables.
+The \textbf{Low-Level Data Fusion} strategy was implemented in order to obtain a comprehensive metabolic phenotype view and exploit the complementary nature of the two ionization modes. This approach involves the concatenation of the pre-processed datasets into a single super-matrix, allowing for the simultaneous analysis of interactions between all variables.
 
 \subsubsection{Fusion Strategy and Block Scaling}
 Prior to concatenation, a critical \textbf{Block Scaling} step was performed to ensure fairness between the two analytical blocks (ESI- and ESI+). Although both datasets were individually autoscaled, differences in the number of variables ($P$) and the intrinsic numerical redundancy could lead to one block dominating the multivariate model.
@@ -706,7 +711,7 @@ The \textbf{Score Plots (a-c)} show the distribution of samples in the integrate
 The \textbf{Super Loadings Plots (d-f)} provide insight into the specific features driving these components. Interestingly, while the Positive block dominates the global variance on PC1 (as seen in the Scree Plot), the top contributing features (highest loading values) identified in the plots belong primarily to the \textbf{Negative Block (ESI-)}.
 \begin{itemize}
     \item \textbf{PC1 vs PC2 (d):} The loading space is characterized by high-ranking negative mode metabolites, including fatty acids like Oleic Acid and Palmitic Acid, and polar compounds such as Uric Acid. This suggests that while the Positive block provides the "bulk" of the information, specific Negative block markers are highly specific and hold the strongest weights in defining the sample separation along these axes.
-    \item \textbf{PC3 contributions:} Similarly, the third component is heavily influenced by specific markers from the Negative dataset, such as Arachidonic Acid and amino acid derivatives (e.g., L-Phenylalanine), further confirming the crucial role of ESI- features in characterizing the fine structure of the data.
+    \item \textbf{PC3 contributions:} The third component is similarly heavily influenced by specific markers from the Negative dataset, such as Arachidonic Acid and amino acid derivatives (e.g., L-Phenylalanine), further confirming the crucial role of ESI- features in characterizing the fine structure of the data.
 \end{itemize}
 This integrated analysis demonstrates that Low-Level Fusion successfully combined the broad variance coverage of the ESI+ mode with the high feature specificity of the ESI- mode.
 
@@ -743,9 +748,9 @@ This integrated analysis demonstrates that Low-Level Fusion successfully combine
 
 \subsection{Anomaly Detection}
 
-Following data fusion, a rigorous anomaly detection phase was conducted to identify samples presenting extreme deviant behaviors or technical artifacts. This step was performed on the \textbf{Low-Level Fused dataset} to capture potential inconsistencies arising not only within a single ionization mode but also from the interaction between the two platforms (e.g., a sample appearing normal in ESI- but aberrant in ESI+).
+Following data fusion, a rigorous anomaly detection phase was conducted to identify samples presenting extreme deviant behaviors or technical artifacts. This step was performed on the \textbf{Low-Level Fused dataset} to capture potential inconsistencies arising either from a single ionization mode and from the interaction between the two platforms (e.g., a sample appearing normal in ESI- but aberrant in ESI+).
 
-Crucially, the detection was performed \textbf{independently for each class} (CTRL and CHD). This stratified approach ensures that the definition of "normality" respects the specific biological topology of each group, preventing the algorithm from flagging a genuine pathological variation as a technical outlier.
+Crucially, the detection was performed \textbf{independently for each class} (CTRL and CHD). This stratified approach ensures the definition of a normal situation which respects the specific biological topology of each group and preventing the algorithm from flagging a genuine pathological variation as a technical outlier.
 
 A multi-methodological consensus strategy was adopted, combining multivariate statistics and machine learning algorithms to evaluate the samples from different topological perspectives (distance, density, and isolation).
 
@@ -760,7 +765,7 @@ To ensure mathematical robustness, the number of PCs used for the $T^2$ calculat
 \paragraph{Machine Learning-Based Detection}
 To complement the statistical metrics, three unsupervised Machine Learning algorithms were deployed. The input space for these models was carefully selected to mitigate the "Curse of Dimensionality":
 \begin{enumerate}
-    \item \textbf{Isolation Forest (iForest):} Applied directly to the **Raw Fused Data**. Since iForest relies on random partitioning rather than distance calculations, it is intrinsically robust to high-dimensional spaces. It identifies anomalies as points that are "few and different," requiring fewer random splits to be isolated from the rest of the data.
+    \item \textbf{Isolation Forest (iForest):} Applied directly to the \textbf{Raw Fused Data}. Since iForest relies on random partitioning rather than distance calculations, it is intrinsically robust to high-dimensional spaces. It identifies anomalies as points that are "few and different," requiring fewer random splits to be isolated from the rest of the data.
     \item \textbf{One-Class SVM (OC-SVM):} Applied to the \textbf{PCA Scores (95\% variance)}. This algorithm maps the data into a high-dimensional feature space using an RBF kernel to find the smallest hypersphere enclosing the "normal" observations ($\nu=0.05$). The use of PCA scores ensures the model focuses on biological variance rather than noise.
     \item \textbf{Local Outlier Factor (LOF):} Applied to the \textbf{PCA Scores (95\% variance)}. Unlike the global approach of iForest and OC-SVM, LOF evaluates the local density of a sample compared to its $k$-nearest neighbors ($k=20$). It is particularly effective at identifying samples located in sparse regions or at the edges of the class cluster.
 \end{enumerate}
