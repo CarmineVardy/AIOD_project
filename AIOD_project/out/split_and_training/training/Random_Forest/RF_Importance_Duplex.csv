@@ -1,0 +1,151 @@
+Feature,Mean_Gini_Importance
+Myristamide_Block2,0.15267169209953854
+Linoleamide_Block1,0.10532689251818038
+glu-ser_Block2,0.06714758335552708
+L-Cystine_Block2,0.05436572305786517
+L-Cysteinylglycine disulfide_Block2,0.044524635990337326
+Glycyl-4-hydroxyproline_Block2,0.030837023262638402
+Cysteine-glutathione disulfide_Block2,0.025686243706273107
+Palmitic Acid_Block1,0.02396886868449957
+N-Glycosyl-L-asparagine_Block2,0.020555121188935797
+Oleic Acid_Block1,0.019626105499821606
+L-Histidine_Block2,0.018166882799872358
+Acetylarginine_Block2,0.017331567697471316
+Acetyl-L-carnitine_Block2,0.014754623754087032
+neuraminic acid_Block2,0.014664064049761068
+Oleoylcarnitine_Block2,0.013763828200954245
+glu-thr_Block2,0.012052841506597049
+5-Hydroxy-DL-tryptophan_Block1,0.010880436146155059
+Υ-L-Glutamyl-L-glutamic acid_Block2,0.009182160569045033
+5-Hydroxyindole-3-acetic acid_Block2,0.009015848956346762
+L-gamma-Glutamyl-L-valine_Block2,0.008128845618151826
+L-Valine_Block2,0.007998526767383444
+DL-Lactic Acid_Block1,0.007996948130171714
+Caproylglycine_Block1,0.00788374000439735
+Hypoxanthin_Block1,0.00784523553057719
+Glu-Gly_Block2,0.007661010621250107
+Cortisone_Block1,0.007515991234096037
+Urocanic acid_Block1,0.007373219740638596
+trans-3-Indoleacrylic acid_Block2,0.007210697003216074
+epsilon-(gamma-Glutamyl)-lysine_Block2,0.006779812860419592
+"N3,N4-Dimethyl-L-arginine_Block2",0.0064230235674476365
+4-Hydroxybutyric acid (GHB)_Block1,0.006108341481008334
+Arachidonic acid_Block1,0.00601653082687635
+D-(+)-Proline_Block2,0.0054888305839426
+Palmitoleic acid_Block1,0.005402034443871443
+Isocitric acid_Block1,0.005361749396267704
+Pipecolic acid_Block2,0.005038821107705984
+Adenosine 5'-monophosphate_Block2,0.004974908479897059
+palmitoleoyl ethanolamide_Block1,0.00491128408494115
+DL-Tryptophan_Block1,0.004496058470561759
+dl-3-Indolelactic acid_Block1,0.004208919024208484
+trans-4-Hydroxy-L-proline_Block2,0.003859998192257655
+C12-Carnitine_Block2,0.0036356642653490104
+Panthenol_Block2,0.003500946243790371
+Pentahomoserine_Block2,0.0034586945896748415
+β-Estradiol_Block1,0.0033513967560465686
+N-Acetylneuraminic acid_Block2,0.0033161941974702625
+b-Ala-Lys_Block2,0.0031833271741840176
+Val-lys_Block2,0.003105938609758764
+"3beta,7alpha-Dihydroxy-5-cholestenoate_Block1",0.003037688929341487
+3-oxopalmitic acid_Block1,0.003009266003872835
+3-Hydroxyvaleric acid_Block1,0.0029999627550174024
+L-(-)-Threonine_Block1,0.0028469069704128614
+3-hydroxyoctanoylcarnitine_Block2,0.0028079449060696223
+Bilirubin_Block1,0.002675334992352988
+Glutarylcarnitine_Block2,0.0026265616012963277
+D(+)-Phenyllactic acid_Block1,0.002619918678459303
+Glutamylalanine_Block2,0.002552378386446918
+Cortisol_Block2,0.002478472707492038
+Taurine_Block2,0.002474628385423451
+7-Methylguanine_Block2,0.0024294672356525823
+Myristoleic acid_Block1,0.0024139115074386878
+trans-2-Dodecenoylcarnitine_Block2,0.00240683473969049
+Ac-Ala-OH_Block1,0.002381129003596917
+L-Glutamic acid_Block2,0.0023710000599396134
+DL-Arginine_Block2,0.002363436460875539
+Aceglutamide_Block2,0.002297627750432737
+L(-)-Carnitine_Block2,0.002285988700330704
+9-Decenoylcarnitine_Block2,0.00224797883480641
+Decanoylcarnitine_Block2,0.002216020624541954
+1-Methylhistidine_Block2,0.002213492972276942
+D-Tyrosine_Block1,0.0022067149548530723
+5a-Dihydrotestosterone sulfate_Block1,0.0021782603686150985
+Myrmicacin_Block2,0.0020819992167888444
+3-Indoxyl sulphate_Block1,0.002076436199675448
+"N1,N12-Diacetylspermine_Block2",0.0020346120551084485
+3-Methylglutarylcarnitine_Block2,0.002032794269089036
+Betaine_Block2,0.002029738448919669
+Deoxyguanosine diphosphate (dGDP)_Block1,0.0020296600119290597
+"1-(beta-D-Ribofuranosyl)-1,4-dihydronicotinamide_Block2",0.0019767318306013275
+C8-Carnitine_Block2,0.0019594868273547523
+Creatine_Block2,0.001954521358161716
+Homocitrulline_Block2,0.0019331320619680981
+Tetramethylurea_Block2,0.0019318550354836541
+Glycodeoxycholic acid_Block2,0.0019089229439239856
+Valylvaline_Block2,0.0018880334188896585
+4-Pyridoxic acid_Block2,0.0018751970297243448
+Aspartylglucosamine_Block1,0.001865089255912802
+Platelet-activating factor_Block2,0.0018639118500885447
+g-Guanidinobutyrate_Block2,0.001846577596196827
+N-2-Acetyl-L-ornithine_Block1,0.0017813024328708162
+DL-Lysine_Block2,0.0017421887088593126
+Stachydrine_Block2,0.0017361766820367798
+L-(+)-Citrulline_Block2,0.0017300891723517568
+Taurohyocholic acid_Block1,0.0017278280798000635
+"9,10-Dihydroxystearic acid_Block2",0.001703746672233713
+Ala-Leu_Block2,0.001694582977587794
+Propionylcarnitine_Block2,0.001640451498500579
+Aminoadipic acid_Block1,0.001634085467732796
+ethyl argininate_Block2,0.0016194899411481139
+L-Methionine sulfoxide_Block2,0.0015890624630941243
+Hydroxyhexanoycarnitine_Block2,0.0015758742596783273
+DL-Glutamine_Block2,0.0015106631506468609
+L-Pyroglutamic Acid_Block2,0.0015021727254365589
+N6-METHYLLYSINE_Block2,0.0014898905074136716
+tyr-thr_Block1,0.0014730300164018364
+"N6,N6-Dimethyllysine_Block2",0.0014666726010774882
+L-gamma-Glutamyl-L-leucine_Block2,0.0014606220726716447
+cis-5-Tetradecenoylcarnitine_Block2,0.0014517838198338936
+L-(-)-methionine_Block2,0.0014517020234581604
+D-Sphingosine 1-phosphate_Block2,0.0014421349254486186
+5-hydroxyisouric acid_Block1,0.0014226283750797151
+N-Acetylleucylleucine_Block2,0.0014169041070445244
+Creatinine_Block2,0.001416649129213864
+gamma-Glu-gln_Block2,0.001408837195098017
+16alpha-hydroxydehydroepiandrosterone 3-sulfate_Block1,0.001397506035733598
+Dihydrothymine_Block2,0.0013921107865960064
+Homo-L-arginine_Block2,0.0013918782876262616
+Gly-His_Block1,0.0013858379335203706
+L-(+)-Alanine_Block1,0.0013720095999716412
+"1,7-Dimethyluric acid_Block1",0.0013656758947412982
+Glycochenodeoxycholic acid_Block1,0.0013641293823717447
+Androsterone sulfate_Block1,0.0013539691407004177
+Leucylproline_Block2,0.0013497108945183833
+N-Tridecanoylglycine_Block2,0.0013479651313950392
+N-Phenylacetylglutamine_Block1,0.001340953683217733
+Hexanoylcarnitine_Block2,0.0013344589487172811
+"3a,7a-Dihydroxycholanoic acid_Block1",0.0013031476038364322
+Palmitoylcarnitine_Block2,0.0012996044822247916
+L-Serine_Block2,0.0012915039489295572
+L-Aspartic acid_Block2,0.0012880849884171282
+Pseudouridine_Block1,0.0012816325119237256
+(R)-3-hydroxybutyrylcarnitine_Block2,0.001207677035869009
+Testosterone sulfate_Block1,0.0011870412257152566
+Glucosylgalactosyl hydroxylysine_Block2,0.0011534683801462508
+Taurodeoxycholic acid_Block2,0.0011529272952361955
+L-Phenylalanine_Block1,0.0011173327557916957
+Glycocholic acid_Block1,0.0011057577613399888
+Taurochenodeoxycholic Acid_Block1,0.0010904371380175575
+2-methylbutyrylcarnitine_Block2,0.001084956826214505
+DL-Homoserine_Block2,0.0010644572739408778
+Sphingosine (d18:1)_Block2,0.0010171144390076687
+Deoxycholic Acid_Block1,0.0010101327841796105
+Acetylcholine_Block2,0.0009542842048746508
+D-(+)-Glucose_Block1,0.0009360063396243633
+3-Hydroxydodecanoic acid_Block2,0.0008443864848889216
+"5beta-Cholestane-3alpha,7alpha,12alpha,23,25-pentol_Block2",0.000816681067077571
+Trihydroxycoprostanoic acid_Block2,0.0005489510694033955
+Malondialdehyde_Block1,0.0005317739902088528
+Uric Acid_Block1,0.0005216835293363046
+L-Isoleucine_Block2,0.0005177231514458854

@@ -1,36 +1,47 @@
 \contentsline {section}{\numberline {1}Introduction}{2}{}%
-\contentsline {subsection}{\numberline {1.1}Background Clinico}{2}{}%
-\contentsline {subsection}{\numberline {1.2}La Metabolomica Untargeted}{2}{}%
-\contentsline {subsection}{\numberline {1.3}Problematiche Aperte}{2}{}%
-\contentsline {subsection}{\numberline {1.4}Scopo del Lavoro}{2}{}%
+\contentsline {subsection}{\numberline {1.1}Clinical background}{2}{}%
+\contentsline {subsection}{\numberline {1.2}Untargeted metabolomic}{2}{}%
+\contentsline {subsection}{\numberline {1.3}Open problematics}{2}{}%
+\contentsline {subsection}{\numberline {1.4}Project goal}{2}{}%
 \contentsline {section}{\numberline {2}Materials and Methods}{2}{}%
-\contentsline {subsection}{\numberline {2.1}Descrizione del Dataset}{2}{}%
+\contentsline {subsection}{\numberline {2.1}Dataset description}{2}{}%
 \contentsline {subsection}{\numberline {2.2}Quality Assessment and Data Cleaning}{3}{}%
 \contentsline {paragraph}{\numberline {2.2.0a}Variance and Model Structure}{3}{}%
 \contentsline {paragraph}{\numberline {2.2.0b}Instrumental Stability (QC Analysis)}{3}{}%
 \contentsline {paragraph}{\numberline {2.2.0c}Technical Reproducibility (Replicates Analysis)}{3}{}%
-\contentsline {paragraph}{\numberline {2.2.0d}Removal of Quality Control Samples}{3}{}%
-\contentsline {paragraph}{\numberline {2.2.0e}Removal of Technical Duplicates}{3}{}%
-\contentsline {subsection}{\numberline {2.3}Data Pre-Processing}{4}{}%
-\contentsline {subsubsection}{\numberline {2.3.1}Data Normalization}{4}{}%
-\contentsline {subsubsection}{\numberline {2.3.2}Data Transformation}{7}{}%
+\contentsline {paragraph}{\numberline {2.2.0d}Removal of Quality Control Samples}{5}{}%
+\contentsline {paragraph}{\numberline {2.2.0e}Removal of Technical Duplicates}{5}{}%
+\contentsline {subsection}{\numberline {2.3}Data Pre-Processing}{6}{}%
+\contentsline {subsubsection}{\numberline {2.3.1}Data Normalization}{6}{}%
+\contentsline {subsubsection}{\numberline {2.3.2}Data Transformation}{8}{}%
 \contentsline {subsubsection}{\numberline {2.3.3}Data Scaling}{9}{}%
-\contentsline {subsubsection}{\numberline {2.3.4}Global Assessment}{9}{}%
-\contentsline {subsection}{\numberline {2.4}Low-Level Data Fusion}{11}{}%
-\contentsline {subsubsection}{\numberline {2.4.1}Fusion Strategy and Block Scaling}{11}{}%
-\contentsline {subsubsection}{\numberline {2.4.2}SUM-PCA: Exploratory Analysis of Fused Data}{11}{}%
+\contentsline {subsubsection}{\numberline {2.3.4}Global Assessment}{11}{}%
+\contentsline {subsection}{\numberline {2.4}Low-Level Data Fusion}{12}{}%
+\contentsline {paragraph}{\numberline {2.4.0a}Fusion Strategy and Block Scaling}{12}{}%
+\contentsline {paragraph}{\numberline {2.4.0b}SUM-PCA: Exploratory Analysis of Fused Data}{13}{}%
 \contentsline {subsection}{\numberline {2.5}Anomaly Detection}{13}{}%
 \contentsline {paragraph}{\numberline {2.5.0a}Multivariate Statistical Profiling}{14}{}%
 \contentsline {paragraph}{\numberline {2.5.0b}Machine Learning-Based Detection}{14}{}%
-\contentsline {paragraph}{\numberline {2.5.0c}Visualization of Decision Boundaries}{14}{}%
-\contentsline {paragraph}{\numberline {2.5.0d}Consensus Evaluation and Sample Filtering}{14}{}%
-\contentsline {paragraph}{\numberline {2.5.0e}Final Dataset Re-Processing and Validation}{16}{}%
-\contentsline {subsection}{\numberline {2.6}Dataset Splitting}{16}{}%
-\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{16}{}%
-\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{16}{}%
-\contentsline {section}{\numberline {3}Results and Discussion}{17}{}%
-\contentsline {subsection}{\numberline {3.1}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{17}{}%
-\contentsline {subsection}{\numberline {3.2}Interpretabilità e Potenziali Biomarcatori}{18}{}%
-\contentsline {subsection}{\numberline {3.3}Univariate analysis sui biomarcatori}{18}{}%
-\contentsline {section}{\numberline {4}Conclusions}{18}{}%
-\contentsline {section}{References}{18}{}%
+\contentsline {paragraph}{\numberline {2.5.0c}Visualization of Decision Boundaries}{15}{}%
+\contentsline {paragraph}{\numberline {2.5.0d}Consensus Evaluation and Sample Filtering}{15}{}%
+\contentsline {paragraph}{\numberline {2.5.0e}Final Dataset Re-Processing and Validation}{18}{}%
+\contentsline {subsection}{\numberline {2.6}Dataset Splitting and Prevention of Data Leakage}{19}{}%
+\contentsline {paragraph}{\numberline {2.6.0a}Anti-Leakage Workflow}{19}{}%
+\contentsline {paragraph}{\numberline {2.6.0b}Splitting Methodologies}{19}{}%
+\contentsline {paragraph}{\numberline {2.6.0c}Evaluation of Splits}{19}{}%
+\contentsline {subsection}{\numberline {2.7}Statistical and Machine Learning analysis}{19}{}%
+\contentsline {paragraph}{\numberline {2.7.0a}Algorithmic Implementation}{20}{}%
+\contentsline {paragraph}{\numberline {2.7.0b}Model Validation}{20}{}%
+\contentsline {paragraph}{\numberline {2.7.0c}Performance Visualization (Fold 1)}{20}{}%
+\contentsline {paragraph}{\numberline {2.7.0d}Consensus Variable Selection}{20}{}%
+\contentsline {subsection}{\numberline {2.8}Software and Technological Stack}{20}{}%
+\contentsline {paragraph}{\numberline {2.8.0a}Data Management and Computation}{20}{}%
+\contentsline {paragraph}{\numberline {2.8.0b}Machine Learning and Statistical Analysis}{21}{}%
+\contentsline {paragraph}{\numberline {2.8.0c}Scientific Visualization}{21}{}%
+\contentsline {section}{\numberline {3}Results and Discussion}{21}{}%
+\contentsline {subsection}{\numberline {3.1}Univariate Statistical Validation}{22}{}%
+\contentsline {subsection}{\numberline {3.2}Multivariate Confirmation of the Reduced Panel}{22}{}%
+\contentsline {subsection}{\numberline {3.3}Distributional Analysis}{22}{}%
+\contentsline {subsection}{\numberline {3.4}Predictive Power Assessment}{22}{}%
+\contentsline {section}{\numberline {4}Conclusions}{23}{}%
+\contentsline {section}{References}{24}{}%

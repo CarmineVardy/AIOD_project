@@ -1,17 +1,22 @@
+"""
+Analysis Module.
+
+This module provides functions for:
+1. Dataset Characterization: Summary reports on dimensions, class balance, and missing values.
+2. Feature Statistics: Calculation of descriptive stats (Mean, Median, CV, Skewness, Kurtosis).
+3. Univariate Analysis: Hypothesis testing (T-test/Mann-Whitney) and Fold Change calculation with FDR correction.
+"""
+
 import numpy as np
 import pandas as pd
+from scipy import stats
 from scipy.stats import sem
+from statsmodels.stats.multitest import multipletests
 
 
 def generate_dataset_report(df, dataset_name):
     """
-    Analyzes the dataset structure and returns a summary report as a DataFrame.
-
-    The report includes:
-    - General overview (dimensions).
-    - Class distribution.
-    - Nomenclature analysis (Biological vs Technical replicates based on suffixes).
-    - Data integrity checks (Missing values, Negative values).
+    Analyzes the dataset structure and returns a summary report.
 
     Args:
         df (pd.DataFrame): Input dataframe. Index must contain sample names,
@@ -19,49 +24,40 @@ def generate_dataset_report(df, dataset_name):
         dataset_name (str): Name of the dataset to label the report.
 
     Returns:
-        pd.DataFrame: A dataframe with columns ['Metric', 'Value'] containing the summary stats.
+        pd.DataFrame: A dataframe with columns ['Metric', 'Value'] containing summary stats.
     """
-
     classes = df['Class']
     numeric_data = df.drop(columns=['Class'])
-
     sample_names = df.index
     feature_names = numeric_data.columns
 
-    # --- LIST TO COLLECT METRICS ---
     report_data = []
 
-    # 1. OVERVIEW
-    n_features = len(feature_names)
-    n_samples_total = len(sample_names)
-
+    # 1. Overview
     report_data.append({'Metric': 'Dataset Name', 'Value': dataset_name})
-    report_data.append({'Metric': 'Total Features (Metabolites)', 'Value': n_features})
-    report_data.append({'Metric': 'Total Samples', 'Value': n_samples_total})
+    report_data.append({'Metric': 'Total Features (Metabolites)', 'Value': len(feature_names)})
+    report_data.append({'Metric': 'Total Samples', 'Value': len(sample_names)})
 
-    # 2. CLASS DISTRIBUTION (Raw Counts)
-    class_counts = classes.value_counts()
-    for cls, count in class_counts.items():
+    # 2. Class Distribution
+    for cls, count in classes.value_counts().items():
         report_data.append({'Metric': f'Class Count: {cls}', 'Value': count})
 
-    # 3. NOMENCLATURE ANALYSIS & 4. DETAILED BREAKDOWN
-    # Logic to distinguish between Primary samples (e.g., '_00') and Technical Replicates ('_01')
+    # 3. Nomenclature Analysis (Biological vs Technical Replicates)
     samples_str = sample_names.astype(str)
 
-    # Counters
+    # Initialize counters
     ctrl_primary = 0
     ctrl_replicate = 0
     chd_primary = 0
     chd_replicate = 0
     qc_count = 0
 
-    # General suffix counters
     with_suffix_00 = 0
     with_suffix_01 = 0
     without_suffix = 0
 
     for name, label in zip(samples_str, classes):
-        # General Suffix Stats
+        # Suffix categorization
         if '_00' in name:
             with_suffix_00 += 1
         elif '_01' in name:
@@ -69,10 +65,10 @@ def generate_dataset_report(df, dataset_name):
         else:
             without_suffix += 1
 
-        # Detailed Class + Replicate Logic
+        # Class-specific replicate logic
         if label == 'QC':
             qc_count += 1
-            continue  # QC usually doesn't have the _00/_01 biological distinction in this context
+            continue
 
         is_replicate = '_01' in name
 
@@ -89,133 +85,161 @@ def generate_dataset_report(df, dataset_name):
 
     total_biological = with_suffix_00 + without_suffix
 
-    # Appending Nomenclature Stats
     report_data.append({'Metric': "Samples with suffix '_00'", 'Value': with_suffix_00})
     report_data.append({'Metric': "Samples with suffix '_01' (Tech Rep)", 'Value': with_suffix_01})
     report_data.append({'Metric': "Samples without standard suffix", 'Value': without_suffix})
     report_data.append({'Metric': "Est. Unique Biological Samples", 'Value': total_biological})
 
-    # Appending Detailed Breakdown
     report_data.append({'Metric': 'CTRL - Biological Samples', 'Value': ctrl_primary})
     report_data.append({'Metric': 'CTRL - Technical Replicates', 'Value': ctrl_replicate})
     report_data.append({'Metric': 'CHD - Biological Samples', 'Value': chd_primary})
     report_data.append({'Metric': 'CHD - Technical Replicates', 'Value': chd_replicate})
     report_data.append({'Metric': 'QC - Total Samples', 'Value': qc_count})
 
-    # 5. DATA INTEGRITY
-    total_cells = n_features * n_samples_total
-    # Check for missing values (NaN)
+    # 4. Data Integrity
+    total_cells = numeric_data.size
     missing_values = numeric_data.isnull().sum().sum()
-    missing_percentage = (missing_values / total_cells) * 100 if total_cells > 0 else 0
-    # Check for negative values (impossible for peak areas/intensities)
+    missing_percentage = (missing_values / total_cells * 100) if total_cells > 0 else 0
     has_negative = (numeric_data < 0).any().any()
 
     report_data.append({'Metric': 'Missing Values (Count)', 'Value': missing_values})
     report_data.append({'Metric': 'Missing Values (%)', 'Value': f"{missing_percentage:.2f}%"})
     report_data.append({'Metric': 'Negative Values Present', 'Value': "YES" if has_negative else "NO"})
 
-    # --- RETURN DATAFRAME ---
     return pd.DataFrame(report_data)
+
 
 def compute_feature_statistics(df):
     """
-    Calculates comprehensive descriptive statistics for each feature (metabolite) in the dataset.
-
-    Theoretical Background:
-    - Central Tendency: Mean (sensitive to outliers), Median (robust).
-    - Variability (Central): Std, Variance, MAD (Mean Absolute Deviation).
-    - Variability (Interval): Range (Max-Min), IQR (Interquartile Range - robust).
-    - Relative Variability: CV (Coefficient of Variation) - crucial for Omics QC.
-    - Shape: Skewness (asymmetry), Kurtosis (tailedness).
+    Calculates comprehensive descriptive statistics for each feature (metabolite).
+    Includes measures of central tendency, variability (CV, MAD, IQR), and shape.
 
     Args:
-        df (pd.DataFrame): Input dataframe where rows are samples and columns are features.
-                           Data should be numerical (intensities or concentrations).
+        df (pd.DataFrame): Input dataframe (Samples x Features).
 
     Returns:
         pd.DataFrame: A dataframe where index corresponds to feature names and columns
                       to the calculated statistics.
     """
-    # Separate numeric data (local reassignment, original df is safe)
-    df = df.drop(columns=['Class'])
+    df_numeric = df.drop(columns=['Class'])
 
-    # 1. Initialize the statistics DataFrame
-    # We use the transpose of describe() as a starting point (gives count, mean, std, min, 25%, 50%, 75%, max)
-    stats = df.describe().T
+    # Initialize with basic stats
+    stats_df = df_numeric.describe().T
 
-    # 2. Add Variability Measures
+    # Variability Measures
+    stats_df['variance'] = df_numeric.var()
+    # Mean Absolute Deviation (MAD): robust alternative to std
+    stats_df['mad'] = df_numeric.apply(lambda x: (x - x.mean()).abs().mean())
+    stats_df['range'] = stats_df['max'] - stats_df['min']
+    stats_df['iqr'] = stats_df['75%'] - stats_df['25%']
 
-    # Variance (Square of Std)
-    stats['variance'] = df.var()
+    # Coefficient of Variation (CV %): critical for QC
+    stats_df['cv_percent'] = (stats_df['std'] / stats_df['mean'].replace(0, np.nan)) * 100
 
-    # Mean Absolute Deviation (MAD)
-    # Measure of the average absolute distance between each data point and the mean.
-    # More robust to outliers than variance because it doesn't square the differences.
-    # Note: pandas .mad() is deprecated, so we implement it manually: mean(|x - mean|)
-    stats['mad'] = df.apply(lambda x: (x - x.mean()).abs().mean())
+    return stats_df
 
-    # Range (Max - Min)
-    stats['range'] = stats['max'] - stats['min']
-
-    # Interquartile Range (IQR)
-    # Distance between 75th percentile (Q3) and 25th percentile (Q1).
-    # Robust measure of variability.
-    stats['iqr'] = stats['75%'] - stats['25%']
-
-    # Coefficient of Variation (CV %)
-    # Ratio of standard deviation to the mean. Standardized measure of dispersion.
-    # Extremely important in metabolomics to assess feature stability (QC).
-    # We handle division by zero or very small means.
-    stats['cv_percent'] = (stats['std'] / stats['mean'].replace(0, np.nan)) * 100
-
-    # 3. Add Shape Measures
-
-    # Skewness
-    # Measure of asymmetry. 0 = symmetric, >0 = right tail, <0 = left tail.
-    stats['skewness'] = df.skew()
-
-    # Kurtosis
-    # Measure of "tailedness". High kurtosis = heavy tails/outliers.
-    stats['kurtosis'] = df.kurt()
-
-    # 4. Standard Error of the Mean (SEM)
-    # Measures how far the sample mean of the data is likely to be from the true population mean.
-    stats['sem'] = df.apply(sem)
-
-    return stats
 
 def compute_correlation_matrix(df, method='pearson'):
     """
-    Computes the correlation matrix to analyze Mutual Variability between features.
-
-    Theoretical Background:
-    - Covariance measures direction of linear relationship but is scale-dependent.
-    - Correlation (Pearson) is standardized Covariance (-1 to +1).
+    Computes the correlation matrix to analyze relationships between features.
 
     Args:
         df (pd.DataFrame): Input dataframe.
-        method (str): 'pearson' (linear), 'spearman' (rank-based, non-linear), or 'kendall'.
+        method (str): 'pearson' (linear), 'spearman', or 'kendall'.
 
     Returns:
-        pd.DataFrame: Square symmetric matrix of correlation coefficients.
+        pd.DataFrame: Symmetric correlation matrix.
     """
-    # Separate numeric data
-    df = df.drop(columns=['Class'])
-    # Returns the correlation matrix (p x p features)
-    return df.corr(method=method)
+    return df.drop(columns=['Class']).corr(method=method)
+
 
 def identify_low_variance_features(stats_df, threshold_cv=30.0):
     """
-    Helper function to identify features that might need to be removed based on CV.
+    Identifies features with high variability (CV > threshold) which might indicate instability.
 
     Args:
         stats_df (pd.DataFrame): Output from compute_feature_statistics.
-        threshold_cv (float): Cutoff for Coefficient of Variation in percentage.
+        threshold_cv (float): Cutoff for Coefficient of Variation (%).
 
     Returns:
-        list: Names of features with CV higher than the threshold (unstable)
-              or extremely low variance.
+        list: Names of unstable features.
     """
-    # Filter features where CV > threshold
-    unstable_features = stats_df[stats_df['cv_percent'] > threshold_cv].index.tolist()
-    return unstable_features
+    return stats_df[stats_df['cv_percent'] > threshold_cv].index.tolist()
+
+
+def perform_univariate_analysis(df, class_col='Class', test_type='ttest', equal_var=False, log2_transform_fc=True):
+    """
+    Performs univariate statistical analysis to compare two groups.
+    Includes Hypothesis Testing, Fold Change calculation, and FDR correction.
+
+    Args:
+        df (pd.DataFrame): Input dataframe. Must contain exactly 2 classes.
+        class_col (str): Column name for group labels.
+        test_type (str): 'ttest' (Welch's/Student's) or 'mannwhitney'.
+        equal_var (bool): If False, performs Welch's t-test (robust to unequal variances).
+        log2_transform_fc (bool): If True, returns Log2(Fold Change).
+
+    Returns:
+        pd.DataFrame: Results indexed by feature (p-values, FDR adjusted p-values, Fold Change).
+    """
+    classes = df[class_col].unique()
+    if len(classes) != 2:
+        raise ValueError(f"Univariate analysis requires exactly 2 classes. Found: {classes}")
+
+    # Sort to define Group 1 and Group 2 consistently (e.g., CHD vs CTRL)
+    group1_label, group2_label = sorted(classes)
+
+    group1_data = df[df[class_col] == group1_label].drop(columns=[class_col])
+    group2_data = df[df[class_col] == group2_label].drop(columns=[class_col])
+
+    feature_names = group1_data.columns
+    results = []
+
+    for feature in feature_names:
+        g1_values = group1_data[feature]
+        g2_values = group2_data[feature]
+
+        # 1. Statistical Test
+        if test_type == 'ttest':
+            stat, p_val = stats.ttest_ind(g1_values, g2_values, equal_var=equal_var, nan_policy='omit')
+        elif test_type == 'mannwhitney':
+            stat, p_val = stats.mannwhitneyu(g1_values, g2_values, alternative='two-sided', nan_policy='omit')
+        else:
+            raise ValueError("Invalid test_type. Choose 'ttest' or 'mannwhitney'.")
+
+        # 2. Fold Change Calculation
+        mean_g1 = g1_values.mean()
+        mean_g2 = g2_values.mean()
+
+        if mean_g2 == 0:
+            fc = np.nan
+        else:
+            fc = mean_g1 / mean_g2
+
+        if log2_transform_fc:
+            fc_val = np.log2(fc) if fc > 0 else np.nan
+            fc_col_name = 'log2_fc'
+        else:
+            fc_val = fc
+            fc_col_name = 'fold_change'
+
+        results.append({
+            'Feature': feature,
+            'p_value': p_val,
+            f'mean_{group1_label}': mean_g1,
+            f'mean_{group2_label}': mean_g2,
+            fc_col_name: fc_val
+        })
+
+    results_df = pd.DataFrame(results).set_index('Feature')
+
+    # 3. Multiple Testing Correction (Benjamini-Hochberg FDR)
+    mask_valid = results_df['p_value'].notna()
+    p_values_valid = results_df.loc[mask_valid, 'p_value']
+
+    reject, pvals_corrected, _, _ = multipletests(p_values_valid, alpha=0.05, method='fdr_bh')
+
+    results_df.loc[mask_valid, 'p_value_adj'] = pvals_corrected
+    results_df['significant'] = results_df['p_value_adj'] < 0.05
+
+    return results_df.sort_values(by='p_value')

@@ -5,7 +5,6 @@ import seaborn as sns
 # GLOBAL VISUALIZATION SETTINGS
 # ==============================================================================
 
-# 1. GRAPHICS FORMAT CONFIGURATION
 # Saving as PDF is preferred for high-resolution vector graphics in reports.
 SAVE_FORMAT = 'pdf'
 
@@ -29,7 +28,6 @@ plt.rcParams.update({
 # ==============================================================================
 
 # AVAILABLE PALETTES (Viridis family - Colorblind friendly & Perceptually Uniform)
-# Change the 'SELECTED_PALETTE' variable below to switch the theme for all plots.
 # Options:
 #   'viridis'  : The default. Blue -> Green -> Yellow. High contrast.
 #   'plasma'   : Blue -> Red -> Yellow. Higher contrast, very vibrant.
@@ -40,26 +38,15 @@ plt.rcParams.update({
 #   'rocket'   : Dark Purple -> Red -> White.
 #   'turbo'    : Rainbow alternative (use with caution, but better than Jet).
 
-SELECTED_PALETTE = 'rocket'  # <--- MODIFY THIS to test different variants
-
-def getPalette():
-    return self.SELECTED_PALETTE
+SELECTED_PALETTE = 'rocket'
 
 # Generate a list of discrete colors from the continuous colormap.
-# For binary classes (CTRL vs CHD), the first two or specific indices will be used.
 _cmap =  plt.get_cmap(SELECTED_PALETTE)
 contrast_indices = [0.0, 0.55, 0.95, 0.25, 0.75, 0.10, 0.65, 0.40, 0.85, 0.05, 0.50, 0.90, 0.20, 0.70, 0.30]
 DISCRETE_COLORS = [_cmap(i) for i in contrast_indices]
 
-#DISCRETE_COLORS = [_cmap(i) for i in np.linspace(0, 1, 10)]
-
-# Set Seaborn default palette to match
 sns.set_palette(DISCRETE_COLORS)
 
-# ==============================================================================
-# MARKERS FOR BLACK & WHITE COMPATIBILITY
-# ==============================================================================
-# To ensure accessibility when printed in grayscale, we map classes to specific markers.
 MARKERS = [
     'o',  # Circle
     's',  # Square

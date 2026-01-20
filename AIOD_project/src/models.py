@@ -1,183 +1,134 @@
+"""
+Predictive Modeling and Metrics Module.
+
+This module provides wrappers for training standard Machine Learning classifiers
+(Logistic Regression, SVM, Random Forest) in the context of Omics data.
+It includes specific logic for:
+1. Handling class imbalance (class_weight).
+2. Extracting feature importance/coefficients.
+3. Calculating comprehensive classification metrics (Sensitivity, Specificity, AUC).
+4. Evaluating the quality of data splits (Spatial coverage, Class balance).
+"""
+
+import numpy as np
 import pandas as pd
+from scipy.spatial.distance import cdist
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    confusion_matrix, recall_score, precision_score, accuracy_score,
+    balanced_accuracy_score, roc_auc_score
+)
 from sklearn.svm import SVC
 
 
-def run_logistic_regression(X_train, y_train, X_test, penalty='l2', C=1.0, solver='liblinear', class_weight=None, l1_ratio=None):
+def run_logistic_regression(X_train, y_train, X_test, penalty='l2', C=1.0, solver='liblinear', class_weight=None,
+                            l1_ratio=None):
     """
-    Trains a Logistic Regression model for classification and optional feature selection.
-
-    Theoretical Background:
-    - Probabilistic Nature: Uses the Sigmoid function to map output to [0, 1].
-      Formula: f(X) = e^(beta*X) / (1 + e^(beta*X)).
-    - Decision Boundary: Linear in terms of Log-Odds (Logit).
-    - Optimization: Uses Maximum Likelihood Estimation (MLE) unlike OLS in linear regression.
-    - High-Dimensionality (Omics context):
-      Standard LR fails when p >> n. Regularization is essential.
-      - L2 (Ridge): Shrinks coefficients (High Bias/Low Variance), good for correlation handling.
-      - L1 (Lasso): Shrinks coefficients to ZERO. Acts as Embedded Feature Selection (Sparse model).
-      - Elastic Net: Combination of L1 and L2.
+    Trains a Logistic Regression model.
+    Supports L1 (Lasso) regularization for embedded feature selection.
 
     Args:
         X_train (pd.DataFrame): Training features.
         y_train (pd.Series): Training labels.
         X_test (pd.DataFrame): Test features.
         penalty (str): 'l1', 'l2', 'elasticnet', or 'none'.
-                       Use 'l1' for Feature Selection (Lasso).
         C (float): Inverse of regularization strength.
-                   Smaller values specify stronger regularization (more sparsity in L1).
-        solver (str): Algorithm to use in the optimization problem.
-                      'liblinear' is good for small datasets and supports 'l1' and 'l2'.
-                      'saga' is required for 'elasticnet'.
+        solver (str): Algorithm for optimization ('liblinear', 'saga').
         class_weight (dict or 'balanced'): Handling class imbalance.
-        l1_ratio (float): The Elastic Net mixing parameter (0 <= l1_ratio <= 1).
-                          Only used if penalty='elasticnet'.
 
     Returns:
         tuple: (y_pred, y_prob, feature_info)
-            - y_pred: Predicted class labels.
-            - feature_info: A dictionary containing:
-                - 'coefficients': Raw beta values.
-                - 'selected_features': List of features with non-zero coefficients.
-                - 'excluded_features': List of features with zero coefficients (removed by L1).
     """
-
-    # Initialize Logistic Regression with provided hyperparameters
     model = LogisticRegression(
         penalty=penalty,
         C=C,
         solver=solver,
         class_weight=class_weight,
-        l1_ratio=l1_ratio,  # Used only if penalty='elasticnet'
-        max_iter=1000,  # Increased iterations to ensure convergence for high-dim data
+        l1_ratio=l1_ratio,
+        max_iter=1000,
         random_state=42
     )
 
-    # 1. Training Phase (MLE)
     model.fit(X_train, y_train)
 
-    # 2. Prediction Phase
     y_pred = model.predict(X_test)
+    pos_class_idx = np.where(model.classes_ == 'CHD')[0][0]
+    y_prob = model.predict_proba(X_test)[:, pos_class_idx]
 
-    # 3. Feature Selection Logic (Extraction of beta coefficients)
-    # model.coef_ is an array of shape (1, n_features) for binary classification
+    # Feature Importance Extraction
     coefs = model.coef_[0]
+    feature_names = X_train.columns
+    mask = coefs != 0
 
     feature_info = {
         'coefficients': coefs,
-        'selected_features': [],
-        'excluded_features': [],
-        'feature_importance_ranking': {}
+        'selected_features': feature_names[mask].tolist(),
+        'excluded_features': feature_names[~mask].tolist(),
+        'feature_importance_ranking': dict(
+            sorted(zip(feature_names, coefs), key=lambda item: abs(item[1]), reverse=True)
+        )
     }
 
-    # Identify which features were selected (non-zero coefficient) vs excluded (zero coefficient)
-    # This is particularly relevant when penalty='l1' (Lasso) is used.
-    feature_names = X_train.columns
+    return y_pred, y_prob, feature_info
 
-    # 1. Selection/Exclusion Lists
-    mask = coefs != 0
-    feature_info['selected_features'] = feature_names[mask].tolist()
-    feature_info['excluded_features'] = feature_names[~mask].tolist()
-
-    # 2. Importance Ranking (based on absolute value of coefficients)
-    # We rank by magnitude (strength of influence), but keep the sign in the value to understand direction (positive or negative correlation).
-    coef_dict = dict(zip(feature_names, coefs))
-    sorted_coefs = dict(sorted(coef_dict.items(), key=lambda item: abs(item[1]), reverse=True))
-    feature_info['feature_importance_ranking'] = sorted_coefs
-
-    return y_pred, feature_info
 
 def run_svm_model(X_train, y_train, X_test, kernel='linear', C=1.0, gamma='scale', class_weight=None):
     """
-    Trains a Support Vector Machine (SVM) classifier and predicts on the test set.
-
-    Theoretical Background:
-    - SVM belongs to "Kernel Based Methods".
-    - Objective: Find a hyperplane that maximizes the margin (Maximal Margin Classifier)
-      between classes. The samples on the margin are 'Support Vectors'.
-    - Soft Margin: Controlled by parameter 'C'. Allows some misclassification to handle
-      noisy data or non-separable classes (Bias-Variance trade-off).
-    - Kernel Trick: Maps data to higher-dimensional space to handle non-linear boundaries.
-      Common kernels: 'linear' (good for omics p >> n), 'rbf', 'poly'.
-
-    Args:
-        X_train (pd.DataFrame or np.array): Training features.
-        y_train (pd.Series or np.array): Training labels.
-        X_test (pd.DataFrame or np.array): Test features.
-        kernel (str): 'linear', 'rbf', 'poly', etc. Default is 'linear' as it is often
-                      robust for high-dimensional omics data.
-        C (float): Regularization parameter.
-                   - Small C: Wider margin, more violations allowed (High Bias, Low Variance).
-                   - Large C: Narrower margin, strict classification (Low Bias, High Variance).
-        gamma (str or float): Kernel coefficient for 'rbf', 'poly'.
-                              'scale' uses 1 / (n_features * X.var()).
-        class_weight (dict or 'balanced'): Set to 'balanced' to handle class imbalance
-                                           (common in medical datasets) by adjusting weights
-                                           inversely proportional to class frequencies.
-
-    Returns:
-        tuple: (y_pred, y_prob)
-            - y_pred: Predicted class labels for X_test.
-    """
-    # Initialize the Support Vector Classifier
-    model = SVC(
-        kernel=kernel,
-        C=C,
-        gamma=gamma,
-        class_weight=class_weight,
-        random_state=42  # Ensure reproducibility
-    )
-
-    # 1. Training Phase
-    # The algorithm solves the quadratic optimization problem to find the optimal hyperplane.
-    model.fit(X_train, y_train)
-
-    # 2. Prediction Phase
-    # Predict class labels based on the sign of the discriminant function D(x).
-    y_pred = model.predict(X_test)
-
-    return y_pred
-
-def run_random_forest(X_train, y_train, X_test, n_estimators=100, max_depth=None, class_weight=None):
-    """
-    Trains a Random Forest Classifier and extracts feature importance.
-
-    Theoretical Background:
-    - Ensemble Method: Uses Bagging (Bootstrap Aggregating) to reduce variance and overfitting
-      compared to single Decision Trees.
-    - Randomness:
-        1. Data Sampling: Each tree is trained on a bootstrap sample (with replacement).
-        2. Feature Sampling: At each split, only a random subset of features (usually sqrt(p))
-           is considered. This de-correlates the trees.
-    - Robustness: Highly suitable for omics data (High Dimensionality, p >> n).
-    - Interpretability: While the ensemble is a "black box" compared to a single tree,
-      it provides 'Feature Importance' based on the average reduction in impurity (e.g., Gini).
+    Trains a Support Vector Machine (SVM) classifier.
 
     Args:
         X_train (pd.DataFrame): Training features.
         y_train (pd.Series): Training labels.
         X_test (pd.DataFrame): Test features.
-        n_estimators (int): Number of trees in the forest.
-                            More trees = more robust (less variance), but higher computational cost.
-        max_depth (int): Maximum depth of the tree. None means nodes are expanded until all leaves
-                         are pure or contain less than min_samples_split samples.
-        class_weight (dict or 'balanced'): Weights associated with classes to handle imbalance.
-                                           'balanced' uses the values of y to automatically adjust
-                                           weights inversely proportional to class frequencies.
+        kernel (str): 'linear', 'rbf', 'poly'.
+        C (float): Regularization parameter.
+        gamma (str/float): Kernel coefficient.
 
     Returns:
-        tuple: (y_pred, feature_info)
-            - y_pred: Predicted class labels.
-            - feature_info: A dictionary containing:
-                - 'importances': Raw importance scores (sum to 1).
-                - 'feature_importance_ranking': Dictionary mapping feature names to their scores,
-                                                sorted descending.
+        tuple: (y_pred, y_prob, feature_info)
     """
+    model = SVC(
+        kernel=kernel,
+        C=C,
+        gamma=gamma,
+        probability=True,
+        class_weight=class_weight,
+        random_state=42
+    )
 
-    # Initialize Random Forest Classifier
-    # n_jobs=-1 allows using all processors to speed up training
-    # max_features='sqrt' is the standard for classification as per theory
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+    pos_class_idx = np.where(model.classes_ == 'CHD')[0][0]
+    y_prob = model.predict_proba(X_test)[:, pos_class_idx]
+
+    feature_info = {'coefficients': None, 'feature_importance_ranking': {}}
+
+    if kernel == 'linear':
+        coefs = model.coef_[0]
+        feature_info['coefficients'] = coefs
+        feature_info['feature_importance_ranking'] = dict(
+            sorted(zip(X_train.columns, coefs), key=lambda item: abs(item[1]), reverse=True)
+        )
+
+    return y_pred, y_prob, feature_info
+
+
+def run_random_forest(X_train, y_train, X_test, n_estimators=100, max_depth=None, class_weight=None):
+    """
+    Trains a Random Forest Classifier using Bagging and Feature Randomness.
+
+    Args:
+        X_train (pd.DataFrame): Training features.
+        y_train (pd.Series): Training labels.
+        X_test (pd.DataFrame): Test features.
+        n_estimators (int): Number of trees.
+        max_depth (int): Maximum depth of the tree.
+
+    Returns:
+        tuple: (y_pred, y_prob, feature_info)
+    """
     model = RandomForestClassifier(
         n_estimators=n_estimators,
         max_depth=max_depth,
@@ -187,26 +138,110 @@ def run_random_forest(X_train, y_train, X_test, n_estimators=100, max_depth=None
         n_jobs=-1
     )
 
-    # 1. Training Phase (Bagging)
     model.fit(X_train, y_train)
 
-    # 2. Prediction Phase (Majority Voting)
     y_pred = model.predict(X_test)
+    pos_class_idx = np.where(model.classes_ == 'CHD')[0][0]
+    y_prob = model.predict_proba(X_test)[:, pos_class_idx]
 
-    # 3. Feature Importance Extraction (Gini Impurity Reduction)
     importances = model.feature_importances_
-
     feature_info = {
         'importances': importances,
-        'feature_importance_ranking': {}
+        'feature_importance_ranking': dict(
+            sorted(zip(X_train.columns, importances), key=lambda item: item[1], reverse=True)
+        )
     }
 
-    # Map importances to feature names if available and sort them
-    feature_names = X_train.columns
-    # Create a dictionary of feature names and their importance
-    importance_dict = dict(zip(feature_names, importances))
-    # Sort by importance (descending)
-    sorted_importance = dict(sorted(importance_dict.items(), key=lambda item: item[1], reverse=True))
-    feature_info['feature_importance_ranking'] = sorted_importance
+    return y_pred, y_prob, feature_info
 
-    return y_pred, feature_info
+
+def compute_classification_metrics(y_true, y_pred, y_prob, pos_label='CHD', neg_label='CTRL',
+                                   model_name="Generic Model"):
+    """
+    Computes classification metrics including Accuracy, Sensitivity, Specificity, and AUC.
+    Enforces correct label mapping (Positive=CHD, Negative=CTRL).
+
+    Args:
+        y_true (array-like): Ground truth labels.
+        y_pred (array-like): Predicted labels.
+        y_prob (array-like): Probability of positive class.
+
+    Returns:
+        dict: Calculated metrics.
+    """
+    try:
+        tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[neg_label, pos_label]).ravel()
+    except ValueError:
+        tn, fp, fn, tp = 0, 0, 0, 0
+
+    sensitivity = recall_score(y_true, y_pred, pos_label=pos_label, zero_division=0)
+    specificity = tn / (tn + fp) if (tn + fp) > 0 else 0.0
+    precision = precision_score(y_true, y_pred, pos_label=pos_label, zero_division=0)
+    accuracy = accuracy_score(y_true, y_pred)
+    balanced_acc = balanced_accuracy_score(y_true, y_pred)
+
+    y_true_binary = (np.array(y_true) == pos_label).astype(int)
+    auc_value = roc_auc_score(y_true_binary, y_prob)
+
+    return {
+        "Model_Name": model_name,
+        "Accuracy": accuracy,
+        "Balanced_Accuracy": balanced_acc,
+        "AUC": auc_value,
+        "Classification_Error": 1.0 - accuracy,
+        "Sensitivity": sensitivity,
+        "Specificity": specificity,
+        "Precision": precision,
+        "TP": int(tp), "TN": int(tn), "FP": int(fp), "FN": int(fn)
+    }
+
+
+def evaluate_split_quality(X_train, X_test, y_train, y_test, split_name="Generic Split"):
+    """
+    Evaluates statistical and spatial characteristics of a train/test split.
+    Useful to detect class imbalance or distribution shifts.
+
+    Args:
+        X_train, X_test (pd.DataFrame): Feature matrices.
+        y_train, y_test (np.array): Target labels.
+
+    Returns:
+        dict: Metrics including Class Balance Discrepancy and Spatial Distance Ratio.
+    """
+    metrics = {"Split_Strategy": split_name}
+
+    # 1. Class Balance
+    train_counts = pd.Series(y_train).value_counts(normalize=True) * 100
+    test_counts = pd.Series(y_test).value_counts(normalize=True) * 100
+
+    balance_diff = (train_counts - test_counts).abs().sum()
+    metrics['Class_Balance_Discrepancy'] = balance_diff
+
+    all_classes = set(train_counts.index).union(set(test_counts.index))
+    for cls in all_classes:
+        metrics[f"Train_Prop_{cls}"] = train_counts.get(cls, 0.0)
+        metrics[f"Test_Prop_{cls}"] = test_counts.get(cls, 0.0)
+        metrics[f"Train_Count_{cls}"] = int(pd.Series(y_train).value_counts().get(cls, 0))
+        metrics[f"Test_Count_{cls}"] = int(pd.Series(y_test).value_counts().get(cls, 0))
+
+    # 2. Global Stats
+    metrics['Train_Global_Mean'] = X_train.values.mean()
+    metrics['Train_Global_Std'] = X_train.values.std()
+    metrics['Test_Global_Mean'] = X_test.values.mean()
+    metrics['Test_Global_Std'] = X_test.values.std()
+
+    # 3. Spatial Coverage (Centroid Distance)
+    X_all = pd.concat([X_train, X_test])
+    centroid = X_all.mean().values.reshape(1, -1)
+
+    dist_train = cdist(X_train, centroid, metric='euclidean').flatten()
+    dist_test = cdist(X_test, centroid, metric='euclidean').flatten()
+
+    avg_dist_train = np.mean(dist_train)
+    avg_dist_test = np.mean(dist_test)
+
+    metrics['Train_Avg_Spatial_Dist'] = avg_dist_train
+    metrics['Test_Avg_Spatial_Dist'] = avg_dist_test
+    metrics['Spatial_Dist_Ratio'] = avg_dist_test / avg_dist_train if avg_dist_train > 0 else 0
+
+    return metrics

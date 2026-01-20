@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.9)  18 JAN 2026 18:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.9)  19 JAN 2026 09:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -325,24 +325,29 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count296
 \l__pdf_internal_box=\box59
 )
+
+LaTeX Warning: Unused global option(s):
+    [report].
+
+
 (C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/AIOD_report.
 aux)
 \openout1 = `AIOD_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 162.
-LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 160.
+LaTeX Font Info:    ... okay on input line 160.
  (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count297
@@ -365,20 +370,20 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Info: Redefining \microtypecontext on input line 162.
-Package microtype Info: Applying patch `item' on input line 162.
-Package microtype Info: Applying patch `toc' on input line 162.
-Package microtype Info: Applying patch `eqnum' on input line 162.
-Package microtype Info: Applying patch `footnote' on input line 162.
-Package microtype Info: Applying patch `verbatim' on input line 162.
-LaTeX Info: Redefining \microtypesetup on input line 162.
+LaTeX Info: Redefining \microtypecontext on input line 160.
+Package microtype Info: Applying patch `item' on input line 160.
+Package microtype Info: Applying patch `toc' on input line 160.
+Package microtype Info: Applying patch `eqnum' on input line 160.
+Package microtype Info: Applying patch `footnote' on input line 160.
+Package microtype Info: Applying patch `verbatim' on input line 160.
+LaTeX Info: Redefining \microtypesetup on input line 160.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 162.
+LaTeX Info: Redefining \showhyphens on input line 160.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -406,123 +411,124 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 [1]
 
 [2]
-<../out/quality_assessment/pca/neg/pca_score_plot_PC1vsPC2.pdf, id=14, 859.0052
+<../out/quality_assessment/pca/neg/pca_score_plot_PC1vsPC2.pdf, id=15, 859.0052
 5pt x 570.89659pt>
 File: ../out/quality_assessment/pca/neg/pca_score_plot_PC1vsPC2.pdf Graphic fil
 e (type pdf)
 <use ../out/quality_assessment/pca/neg/pca_score_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/pca_score_plot_PC1vs
-PC2.pdf  used on input line 328.
+PC2.pdf  used on input line 338.
 (pdftex.def)             Requested size: 247.6778pt x 164.60625pt.
-<../out/quality_assessment/pca/neg/pca_loading_plot_PC1vsPC2.pdf, id=15, 860.04
+<../out/quality_assessment/pca/neg/pca_loading_plot_PC1vsPC2.pdf, id=16, 860.04
 564pt x 571.00638pt>
 File: ../out/quality_assessment/pca/neg/pca_loading_plot_PC1vsPC2.pdf Graphic f
 ile (type pdf)
 <use ../out/quality_assessment/pca/neg/pca_loading_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/pca_loading_plot_PC1
-vsPC2.pdf  used on input line 328.
+vsPC2.pdf  used on input line 338.
 (pdftex.def)             Requested size: 247.6778pt x 164.4375pt.
-<../out/quality_assessment/pca/neg/pca_scree_plot.pdf, id=16, 766.51996pt x 515
+<../out/quality_assessment/pca/neg/pca_scree_plot.pdf, id=17, 766.51996pt x 515
 .69035pt>
 File: ../out/quality_assessment/pca/neg/pca_scree_plot.pdf Graphic file (type p
 df)
 <use ../out/quality_assessment/pca/neg/pca_scree_plot.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/pca_scree_plot.pdf  
-used on input line 332.
+used on input line 342.
 (pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/quality_assessment/pca/neg/loading_profile_PC1.pdf, id=17, 859.95656pt 
+<../out/quality_assessment/pca/neg/loading_profile_PC1.pdf, id=18, 859.95656pt 
 x 570.89659pt>
 File: ../out/quality_assessment/pca/neg/loading_profile_PC1.pdf Graphic file (t
 ype pdf)
 <use ../out/quality_assessment/pca/neg/loading_profile_PC1.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/loading_profile_PC1.
-pdf  used on input line 333.
+pdf  used on input line 343.
 (pdftex.def)             Requested size: 165.12378pt x 109.61264pt.
-<../out/quality_assessment/pca/neg/loading_profile_PC2.pdf, id=18, 859.93585pt 
+<../out/quality_assessment/pca/neg/loading_profile_PC2.pdf, id=19, 859.93585pt 
 x 570.89659pt>
 File: ../out/quality_assessment/pca/neg/loading_profile_PC2.pdf Graphic file (t
 ype pdf)
 <use ../out/quality_assessment/pca/neg/loading_profile_PC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/loading_profile_PC2.
-pdf  used on input line 334.
+pdf  used on input line 344.
 (pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/quality_assessment/pca/neg/pca_score_plot_for_qc_PC1vsPC2.pdf, id=19, 8
+<../out/quality_assessment/pca/neg/pca_score_plot_for_qc_PC1vsPC2.pdf, id=20, 8
 59.00525pt x 570.89659pt>
 File: ../out/quality_assessment/pca/neg/pca_score_plot_for_qc_PC1vsPC2.pdf Grap
 hic file (type pdf)
 <use ../out/quality_assessment/pca/neg/pca_score_plot_for_qc_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/pca_score_plot_for_q
-c_PC1vsPC2.pdf  used on input line 341.
+c_PC1vsPC2.pdf  used on input line 351.
 (pdftex.def)             Requested size: 247.6778pt x 164.60625pt.
 <../out/quality_assessment/pca/neg/pca_score_plot_for_replicates_PC1vsPC2.pdf, 
-id=20, 859.00525pt x 570.89659pt>
+id=21, 859.00525pt x 570.89659pt>
 File: ../out/quality_assessment/pca/neg/pca_score_plot_for_replicates_PC1vsPC2.
 pdf Graphic file (type pdf)
 <use ../out/quality_assessment/pca/neg/pca_score_plot_for_replicates_PC1vsPC2.p
 df>
 Package pdftex.def Info: ../out/quality_assessment/pca/neg/pca_score_plot_for_r
-eplicates_PC1vsPC2.pdf  used on input line 341.
+eplicates_PC1vsPC2.pdf  used on input line 351.
 (pdftex.def)             Requested size: 247.6778pt x 164.60625pt.
-<../out/quality_assessment/pca/pos/pca_score_plot_PC1vsPC2.pdf, id=21, 859.9358
+
+
+[3]
+<../out/quality_assessment/pca/pos/pca_score_plot_PC1vsPC2.pdf, id=26, 859.9358
 5pt x 570.89659pt>
 File: ../out/quality_assessment/pca/pos/pca_score_plot_PC1vsPC2.pdf Graphic fil
 e (type pdf)
 <use ../out/quality_assessment/pca/pos/pca_score_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/pca_score_plot_PC1vs
-PC2.pdf  used on input line 358.
+PC2.pdf  used on input line 368.
 (pdftex.def)             Requested size: 247.6778pt x 164.42331pt.
-<../out/quality_assessment/pca/pos/pca_loading_plot_PC1vsPC2.pdf, id=22, 860.04
+<../out/quality_assessment/pca/pos/pca_loading_plot_PC1vsPC2.pdf, id=27, 860.04
 564pt x 571.00638pt>
 File: ../out/quality_assessment/pca/pos/pca_loading_plot_PC1vsPC2.pdf Graphic f
 ile (type pdf)
 <use ../out/quality_assessment/pca/pos/pca_loading_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/pca_loading_plot_PC1
-vsPC2.pdf  used on input line 358.
+vsPC2.pdf  used on input line 368.
 (pdftex.def)             Requested size: 247.6778pt x 164.4375pt.
-<../out/quality_assessment/pca/pos/pca_scree_plot.pdf, id=23, 766.51996pt x 515
+<../out/quality_assessment/pca/pos/pca_scree_plot.pdf, id=28, 766.51996pt x 515
 .69035pt>
 File: ../out/quality_assessment/pca/pos/pca_scree_plot.pdf Graphic file (type p
 df)
 <use ../out/quality_assessment/pca/pos/pca_scree_plot.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/pca_scree_plot.pdf  
-used on input line 362.
+used on input line 372.
 (pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/quality_assessment/pca/pos/loading_profile_PC1.pdf, id=24, 859.95656pt 
+<../out/quality_assessment/pca/pos/loading_profile_PC1.pdf, id=29, 859.95656pt 
 x 570.89659pt>
 File: ../out/quality_assessment/pca/pos/loading_profile_PC1.pdf Graphic file (t
 ype pdf)
 <use ../out/quality_assessment/pca/pos/loading_profile_PC1.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/loading_profile_PC1.
-pdf  used on input line 363.
+pdf  used on input line 373.
 (pdftex.def)             Requested size: 165.12378pt x 109.61264pt.
-<../out/quality_assessment/pca/pos/loading_profile_PC2.pdf, id=25, 859.95656pt 
+<../out/quality_assessment/pca/pos/loading_profile_PC2.pdf, id=30, 859.95656pt 
 x 570.89659pt>
 File: ../out/quality_assessment/pca/pos/loading_profile_PC2.pdf Graphic file (t
 ype pdf)
 <use ../out/quality_assessment/pca/pos/loading_profile_PC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/loading_profile_PC2.
-pdf  used on input line 364.
+pdf  used on input line 374.
 (pdftex.def)             Requested size: 165.12378pt x 109.61264pt.
-<../out/quality_assessment/pca/pos/pca_score_plot_for_qc_PC1vsPC2.pdf, id=26, 8
+<../out/quality_assessment/pca/pos/pca_score_plot_for_qc_PC1vsPC2.pdf, id=31, 8
 59.93585pt x 570.89659pt>
 File: ../out/quality_assessment/pca/pos/pca_score_plot_for_qc_PC1vsPC2.pdf Grap
 hic file (type pdf)
 <use ../out/quality_assessment/pca/pos/pca_score_plot_for_qc_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/pca_score_plot_for_q
-c_PC1vsPC2.pdf  used on input line 371.
+c_PC1vsPC2.pdf  used on input line 381.
 (pdftex.def)             Requested size: 247.6778pt x 164.42331pt.
 <../out/quality_assessment/pca/pos/pca_score_plot_for_replicates_PC1vsPC2.pdf, 
-id=27, 859.93585pt x 570.89659pt>
+id=32, 859.93585pt x 570.89659pt>
 File: ../out/quality_assessment/pca/pos/pca_score_plot_for_replicates_PC1vsPC2.
 pdf Graphic file (type pdf)
 <use ../out/quality_assessment/pca/pos/pca_score_plot_for_replicates_PC1vsPC2.p
 df>
 Package pdftex.def Info: ../out/quality_assessment/pca/pos/pca_score_plot_for_r
-eplicates_PC1vsPC2.pdf  used on input line 371.
+eplicates_PC1vsPC2.pdf  used on input line 381.
 (pdftex.def)             Requested size: 247.6778pt x 164.42331pt.
 
-
-[3]
 
 [4 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/qu
 ality_assessment/pca/neg/pca_score_plot_PC1vsPC2.pdf> <C:/Users/utente/Document
@@ -555,7 +561,7 @@ File: ../out/pre_processing/neg/normalization/no_norm_page1.pdf Graphic file (t
 ype pdf)
 <use ../out/pre_processing/neg/normalization/no_norm_page1.pdf>
 Package pdftex.def Info: ../out/pre_processing/neg/normalization/no_norm_page1.
-pdf  used on input line 457.
+pdf  used on input line 467.
 (pdftex.def)             Requested size: 361.19843pt x 118.38367pt.
 <../out/pre_processing/neg/normalization/tic_page1.pdf, id=259, 859.9233pt x 28
 1.8298pt>
@@ -563,7 +569,7 @@ File: ../out/pre_processing/neg/normalization/tic_page1.pdf Graphic file (type
 pdf)
 <use ../out/pre_processing/neg/normalization/tic_page1.pdf>
 Package pdftex.def Info: ../out/pre_processing/neg/normalization/tic_page1.pdf 
- used on input line 462.
+ used on input line 472.
 (pdftex.def)             Requested size: 361.19843pt x 118.3806pt.
 <../out/pre_processing/neg/normalization/quantile_page1.pdf, id=260, 859.91386p
 t x 281.8298pt>
@@ -571,7 +577,7 @@ File: ../out/pre_processing/neg/normalization/quantile_page1.pdf Graphic file (
 type pdf)
 <use ../out/pre_processing/neg/normalization/quantile_page1.pdf>
 Package pdftex.def Info: ../out/pre_processing/neg/normalization/quantile_page1
-.pdf  used on input line 467.
+.pdf  used on input line 477.
 (pdftex.def)             Requested size: 361.19843pt x 118.3806pt.
 <../out/pre_processing/neg/normalization/pqn_page1.pdf, id=261, 859.9233pt x 28
 1.8298pt>
@@ -579,44 +585,11 @@ File: ../out/pre_processing/neg/normalization/pqn_page1.pdf Graphic file (type
 pdf)
 <use ../out/pre_processing/neg/normalization/pqn_page1.pdf>
 Package pdftex.def Info: ../out/pre_processing/neg/normalization/pqn_page1.pdf 
- used on input line 472.
+ used on input line 482.
 (pdftex.def)             Requested size: 361.19843pt x 118.3806pt.
 
 
 [6]
-<../out/pre_processing/pos/normalization/no_norm_page1.pdf, id=267, 859.89316pt
- x 281.81664pt>
-File: ../out/pre_processing/pos/normalization/no_norm_page1.pdf Graphic file (t
-ype pdf)
-<use ../out/pre_processing/pos/normalization/no_norm_page1.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/normalization/no_norm_page1.
-pdf  used on input line 493.
-(pdftex.def)             Requested size: 361.19843pt x 118.37936pt.
-<../out/pre_processing/pos/normalization/tic_page1.pdf, id=268, 859.86993pt x 2
-81.8298pt>
-File: ../out/pre_processing/pos/normalization/tic_page1.pdf Graphic file (type 
-pdf)
-<use ../out/pre_processing/pos/normalization/tic_page1.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/normalization/tic_page1.pdf 
- used on input line 498.
-(pdftex.def)             Requested size: 361.19843pt x 118.3892pt.
-<../out/pre_processing/pos/normalization/quantile_page1.pdf, id=269, 859.90009p
-t x 281.8298pt>
-File: ../out/pre_processing/pos/normalization/quantile_page1.pdf Graphic file (
-type pdf)
-<use ../out/pre_processing/pos/normalization/quantile_page1.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/normalization/quantile_page1
-.pdf  used on input line 503.
-(pdftex.def)             Requested size: 361.19843pt x 118.3849pt.
-<../out/pre_processing/pos/normalization/pqn_page1.pdf, id=270, 859.86993pt x 2
-81.8298pt>
-File: ../out/pre_processing/pos/normalization/pqn_page1.pdf Graphic file (type 
-pdf)
-<use ../out/pre_processing/pos/normalization/pqn_page1.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/normalization/pqn_page1.pdf 
- used on input line 508.
-(pdftex.def)             Requested size: 361.19843pt x 118.3892pt.
-
 
 [7 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/pr
 e_processing/neg/normalization/no_norm_page1.pdf> <C:/Users/utente/Documents/Gi
@@ -625,22 +598,38 @@ ic_page1.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/repor
 t/../out/pre_processing/neg/normalization/quantile_page1.pdf> <C:/Users/utente/
 Documents/GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/neg/nor
 malization/pqn_page1.pdf>]
-<../out/pre_processing/neg/transformation/no_transf.pdf, id=313, 715.56898pt x 
-426.59561pt>
-File: ../out/pre_processing/neg/transformation/no_transf.pdf Graphic file (type
- pdf)
-<use ../out/pre_processing/neg/transformation/no_transf.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/transformation/no_transf.pdf
-  used on input line 535.
-(pdftex.def)             Requested size: 247.6778pt x 147.65082pt.
-<../out/pre_processing/neg/transformation/log_10.pdf, id=314, 715.62228pt x 426
-.59561pt>
-File: ../out/pre_processing/neg/transformation/log_10.pdf Graphic file (type pd
-f)
-<use ../out/pre_processing/neg/transformation/log_10.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/transformation/log_10.pdf  u
-sed on input line 536.
-(pdftex.def)             Requested size: 247.6778pt x 147.64432pt.
+<../out/pre_processing/pos/normalization/no_norm_page1.pdf, id=309, 859.89316pt
+ x 281.81664pt>
+File: ../out/pre_processing/pos/normalization/no_norm_page1.pdf Graphic file (t
+ype pdf)
+<use ../out/pre_processing/pos/normalization/no_norm_page1.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/normalization/no_norm_page1.
+pdf  used on input line 503.
+(pdftex.def)             Requested size: 361.19843pt x 118.37936pt.
+<../out/pre_processing/pos/normalization/tic_page1.pdf, id=310, 859.86993pt x 2
+81.8298pt>
+File: ../out/pre_processing/pos/normalization/tic_page1.pdf Graphic file (type 
+pdf)
+<use ../out/pre_processing/pos/normalization/tic_page1.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/normalization/tic_page1.pdf 
+ used on input line 508.
+(pdftex.def)             Requested size: 361.19843pt x 118.3892pt.
+<../out/pre_processing/pos/normalization/quantile_page1.pdf, id=311, 859.90009p
+t x 281.8298pt>
+File: ../out/pre_processing/pos/normalization/quantile_page1.pdf Graphic file (
+type pdf)
+<use ../out/pre_processing/pos/normalization/quantile_page1.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/normalization/quantile_page1
+.pdf  used on input line 513.
+(pdftex.def)             Requested size: 361.19843pt x 118.3849pt.
+<../out/pre_processing/pos/normalization/pqn_page1.pdf, id=312, 859.86993pt x 2
+81.8298pt>
+File: ../out/pre_processing/pos/normalization/pqn_page1.pdf Graphic file (type 
+pdf)
+<use ../out/pre_processing/pos/normalization/pqn_page1.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/normalization/pqn_page1.pdf 
+ used on input line 518.
+(pdftex.def)             Requested size: 361.19843pt x 118.3892pt.
 
 
 [8 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/pr
@@ -650,13 +639,29 @@ ic_page1.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/repor
 t/../out/pre_processing/pos/normalization/quantile_page1.pdf> <C:/Users/utente/
 Documents/GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/nor
 malization/pqn_page1.pdf>]
+<../out/pre_processing/neg/transformation/no_transf.pdf, id=355, 715.56898pt x 
+426.59561pt>
+File: ../out/pre_processing/neg/transformation/no_transf.pdf Graphic file (type
+ pdf)
+<use ../out/pre_processing/neg/transformation/no_transf.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/transformation/no_transf.pdf
+  used on input line 545.
+(pdftex.def)             Requested size: 247.6778pt x 147.65082pt.
+<../out/pre_processing/neg/transformation/log_10.pdf, id=356, 715.62228pt x 426
+.59561pt>
+File: ../out/pre_processing/neg/transformation/log_10.pdf Graphic file (type pd
+f)
+<use ../out/pre_processing/neg/transformation/log_10.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/transformation/log_10.pdf  u
+sed on input line 546.
+(pdftex.def)             Requested size: 247.6778pt x 147.64432pt.
 <../out/pre_processing/pos/transformation/no_transf.pdf, id=357, 715.62228pt x 
 426.59561pt>
 File: ../out/pre_processing/pos/transformation/no_transf.pdf Graphic file (type
  pdf)
 <use ../out/pre_processing/pos/transformation/no_transf.pdf>
 Package pdftex.def Info: ../out/pre_processing/pos/transformation/no_transf.pdf
-  used on input line 550.
+  used on input line 560.
 (pdftex.def)             Requested size: 247.6778pt x 147.64432pt.
 <../out/pre_processing/pos/transformation/log_10.pdf, id=358, 715.62228pt x 426
 .59561pt>
@@ -664,7 +669,7 @@ File: ../out/pre_processing/pos/transformation/log_10.pdf Graphic file (type pd
 f)
 <use ../out/pre_processing/pos/transformation/log_10.pdf>
 Package pdftex.def Info: ../out/pre_processing/pos/transformation/log_10.pdf  u
-sed on input line 551.
+sed on input line 561.
 (pdftex.def)             Requested size: 247.6778pt x 147.64432pt.
 <../out/pre_processing/neg/scaling/no_autoscaling_page1.pdf, id=359, 859.9233pt
  x 281.81664pt>
@@ -672,7 +677,7 @@ File: ../out/pre_processing/neg/scaling/no_autoscaling_page1.pdf Graphic file (
 type pdf)
 <use ../out/pre_processing/neg/scaling/no_autoscaling_page1.pdf>
 Package pdftex.def Info: ../out/pre_processing/neg/scaling/no_autoscaling_page1
-.pdf  used on input line 575.
+.pdf  used on input line 585.
 (pdftex.def)             Requested size: 464.39685pt x 152.1959pt.
 <../out/pre_processing/neg/scaling/with_autoscaling_page1.pdf, id=360, 859.9126
 4pt x 281.82477pt>
@@ -680,23 +685,7 @@ File: ../out/pre_processing/neg/scaling/with_autoscaling_page1.pdf Graphic file
  (type pdf)
 <use ../out/pre_processing/neg/scaling/with_autoscaling_page1.pdf>
 Package pdftex.def Info: ../out/pre_processing/neg/scaling/with_autoscaling_pag
-e1.pdf  used on input line 580.
-(pdftex.def)             Requested size: 464.39685pt x 152.2003pt.
-<../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf, id=361, 859.86993p
-t x 281.81664pt>
-File: ../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf Graphic file (
-type pdf)
-<use ../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/scaling/no_autoscaling_page1
-.pdf  used on input line 597.
-(pdftex.def)             Requested size: 464.39685pt x 152.2045pt.
-<../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf, id=362, 859.9126
-4pt x 281.82477pt>
-File: ../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf Graphic file
- (type pdf)
-<use ../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/scaling/with_autoscaling_pag
-e1.pdf  used on input line 602.
+e1.pdf  used on input line 590.
 (pdftex.def)             Requested size: 464.39685pt x 152.2003pt.
 
 
@@ -707,121 +696,139 @@ _10.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../
 out/pre_processing/pos/transformation/no_transf.pdf> <C:/Users/utente/Documents
 /GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/transformati
 on/log_10.pdf>]
-<../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf, id=427
-, 766.51996pt x 515.69035pt>
-File: ../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf Gr
-aphic file (type pdf)
-<use ../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/pca/without_preprocessing/pc
-a_scree_plot.pdf  used on input line 627.
-(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsPC2.pd
-f, id=428, 859.91264pt x 570.89659pt>
-File: ../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsP
-C2.pdf Graphic file (type pdf)
-<use ../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsPC
-2.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/pca/without_preprocessing/pc
-a_score_plot_PC1vsPC2.pdf  used on input line 628.
-(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1vsPC2.
-pdf, id=429, 859.01378pt x 571.00638pt>
-File: ../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1v
-sPC2.pdf Graphic file (type pdf)
-<use ../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1vs
-PC2.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/pca/without_preprocessing/pc
-a_loading_plot_PC1vsPC2.pdf  used on input line 629.
-(pdftex.def)             Requested size: 165.12378pt x 109.75569pt.
-<../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf, id=430, 7
-66.51996pt x 515.69035pt>
-File: ../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf Graph
-ic file (type pdf)
-<use ../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/pca/with_preprocessing/pca_s
-cree_plot.pdf  used on input line 634.
-(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.pdf, 
-id=431, 859.88249pt x 570.89659pt>
-File: ../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.
-pdf Graphic file (type pdf)
-<use ../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.p
-df>
-Package pdftex.def Info: ../out/pre_processing/neg/pca/with_preprocessing/pca_s
-core_plot_PC1vsPC2.pdf  used on input line 635.
-(pdftex.def)             Requested size: 165.12378pt x 109.63007pt.
-<../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf
-, id=432, 855.90094pt x 571.00638pt>
-File: ../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC
-2.pdf Graphic file (type pdf)
-<use ../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2
-.pdf>
-Package pdftex.def Info: ../out/pre_processing/neg/pca/with_preprocessing/pca_l
-oading_plot_PC1vsPC2.pdf  used on input line 636.
-(pdftex.def)             Requested size: 165.12378pt x 110.15648pt.
-<../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf, id=433
-, 766.51996pt x 515.69035pt>
-File: ../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf Gr
-aphic file (type pdf)
-<use ../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/pca/without_preprocessing/pc
-a_scree_plot.pdf  used on input line 655.
-(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsPC2.pd
-f, id=434, 859.93585pt x 570.89659pt>
-File: ../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsP
-C2.pdf Graphic file (type pdf)
-<use ../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsPC
-2.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/pca/without_preprocessing/pc
-a_score_plot_PC1vsPC2.pdf  used on input line 656.
-(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1vsPC2.
-pdf, id=435, 860.04564pt x 571.00638pt>
-File: ../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1v
-sPC2.pdf Graphic file (type pdf)
-<use ../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1vs
-PC2.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/pca/without_preprocessing/pc
-a_loading_plot_PC1vsPC2.pdf  used on input line 657.
-(pdftex.def)             Requested size: 165.12378pt x 109.625pt.
-<../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf, id=436, 7
-66.51996pt x 515.69035pt>
-File: ../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf Graph
-ic file (type pdf)
-<use ../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/pca/with_preprocessing/pca_s
-cree_plot.pdf  used on input line 662.
-(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.pdf, 
-id=437, 859.90572pt x 570.89659pt>
-File: ../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.
-pdf Graphic file (type pdf)
-<use ../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.p
-df>
-Package pdftex.def Info: ../out/pre_processing/pos/pca/with_preprocessing/pca_s
-core_plot_PC1vsPC2.pdf  used on input line 663.
-(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf
-, id=438, 860.04564pt x 571.00638pt>
-File: ../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC
-2.pdf Graphic file (type pdf)
-<use ../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2
-.pdf>
-Package pdftex.def Info: ../out/pre_processing/pos/pca/with_preprocessing/pca_l
-oading_plot_PC1vsPC2.pdf  used on input line 664.
-(pdftex.def)             Requested size: 165.12378pt x 109.625pt.
+<../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf, id=425, 859.86993p
+t x 281.81664pt>
+File: ../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf Graphic file (
+type pdf)
+<use ../out/pre_processing/pos/scaling/no_autoscaling_page1.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/scaling/no_autoscaling_page1
+.pdf  used on input line 607.
+(pdftex.def)             Requested size: 464.39685pt x 152.2045pt.
+<../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf, id=426, 859.9126
+4pt x 281.82477pt>
+File: ../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf Graphic file
+ (type pdf)
+<use ../out/pre_processing/pos/scaling/with_autoscaling_page1.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/scaling/with_autoscaling_pag
+e1.pdf  used on input line 612.
+(pdftex.def)             Requested size: 464.39685pt x 152.2003pt.
 
 
 [10 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/p
 re_processing/neg/scaling/no_autoscaling_page1.pdf> <C:/Users/utente/Documents/
 GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/neg/scaling/with_
 autoscaling_page1.pdf>]
+<../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf, id=453
+, 766.51996pt x 515.69035pt>
+File: ../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf Gr
+aphic file (type pdf)
+<use ../out/pre_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/pca/without_preprocessing/pc
+a_scree_plot.pdf  used on input line 642.
+(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
+<../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsPC2.pd
+f, id=454, 859.91264pt x 570.89659pt>
+File: ../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsP
+C2.pdf Graphic file (type pdf)
+<use ../out/pre_processing/neg/pca/without_preprocessing/pca_score_plot_PC1vsPC
+2.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/pca/without_preprocessing/pc
+a_score_plot_PC1vsPC2.pdf  used on input line 643.
+(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
+<../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1vsPC2.
+pdf, id=455, 859.01378pt x 571.00638pt>
+File: ../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1v
+sPC2.pdf Graphic file (type pdf)
+<use ../out/pre_processing/neg/pca/without_preprocessing/pca_loading_plot_PC1vs
+PC2.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/pca/without_preprocessing/pc
+a_loading_plot_PC1vsPC2.pdf  used on input line 644.
+(pdftex.def)             Requested size: 165.12378pt x 109.75569pt.
+<../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf, id=456, 7
+66.51996pt x 515.69035pt>
+File: ../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf Graph
+ic file (type pdf)
+<use ../out/pre_processing/neg/pca/with_preprocessing/pca_scree_plot.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/pca/with_preprocessing/pca_s
+cree_plot.pdf  used on input line 649.
+(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
+<../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.pdf, 
+id=457, 859.88249pt x 570.89659pt>
+File: ../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.
+pdf Graphic file (type pdf)
+<use ../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1vsPC2.p
+df>
+Package pdftex.def Info: ../out/pre_processing/neg/pca/with_preprocessing/pca_s
+core_plot_PC1vsPC2.pdf  used on input line 650.
+(pdftex.def)             Requested size: 165.12378pt x 109.63007pt.
+<../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf
+, id=458, 855.90094pt x 571.00638pt>
+File: ../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC
+2.pdf Graphic file (type pdf)
+<use ../out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2
+.pdf>
+Package pdftex.def Info: ../out/pre_processing/neg/pca/with_preprocessing/pca_l
+oading_plot_PC1vsPC2.pdf  used on input line 651.
+(pdftex.def)             Requested size: 165.12378pt x 110.15648pt.
+
 
 [11 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/p
 re_processing/pos/scaling/no_autoscaling_page1.pdf> <C:/Users/utente/Documents/
 GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/scaling/with_
 autoscaling_page1.pdf>]
+<../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf, id=485
+, 766.51996pt x 515.69035pt>
+File: ../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf Gr
+aphic file (type pdf)
+<use ../out/pre_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/pca/without_preprocessing/pc
+a_scree_plot.pdf  used on input line 670.
+(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
+<../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsPC2.pd
+f, id=486, 859.93585pt x 570.89659pt>
+File: ../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsP
+C2.pdf Graphic file (type pdf)
+<use ../out/pre_processing/pos/pca/without_preprocessing/pca_score_plot_PC1vsPC
+2.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/pca/without_preprocessing/pc
+a_score_plot_PC1vsPC2.pdf  used on input line 671.
+(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
+<../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1vsPC2.
+pdf, id=487, 860.04564pt x 571.00638pt>
+File: ../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1v
+sPC2.pdf Graphic file (type pdf)
+<use ../out/pre_processing/pos/pca/without_preprocessing/pca_loading_plot_PC1vs
+PC2.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/pca/without_preprocessing/pc
+a_loading_plot_PC1vsPC2.pdf  used on input line 672.
+(pdftex.def)             Requested size: 165.12378pt x 109.625pt.
+<../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf, id=488, 7
+66.51996pt x 515.69035pt>
+File: ../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf Graph
+ic file (type pdf)
+<use ../out/pre_processing/pos/pca/with_preprocessing/pca_scree_plot.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/pca/with_preprocessing/pca_s
+cree_plot.pdf  used on input line 677.
+(pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
+<../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.pdf, 
+id=489, 859.90572pt x 570.89659pt>
+File: ../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.
+pdf Graphic file (type pdf)
+<use ../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC2.p
+df>
+Package pdftex.def Info: ../out/pre_processing/pos/pca/with_preprocessing/pca_s
+core_plot_PC1vsPC2.pdf  used on input line 678.
+(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
+<../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf
+, id=490, 860.04564pt x 571.00638pt>
+File: ../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC
+2.pdf Graphic file (type pdf)
+<use ../out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2
+.pdf>
+Package pdftex.def Info: ../out/pre_processing/pos/pca/with_preprocessing/pca_l
+oading_plot_PC1vsPC2.pdf  used on input line 679.
+(pdftex.def)             Requested size: 165.12378pt x 109.625pt.
+
 
 [12 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/p
 re_processing/neg/pca/without_preprocessing/pca_scree_plot.pdf> <C:/Users/utent
@@ -833,77 +840,79 @@ _preprocessing/pca_loading_plot_PC1vsPC2.pdf> <C:/Users/utente/Documents/GitHub
 ing/pca_scree_plot.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_pro
 ject/report/../out/pre_processing/neg/pca/with_preprocessing/pca_score_plot_PC1
 vsPC2.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/.
-./out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf> 
-<C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/pre_p
-rocessing/pos/pca/without_preprocessing/pca_scree_plot.pdf> <C:/Users/utente/Do
-cuments/GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/pca/w
-ithout_preprocessing/pca_score_plot_PC1vsPC2.pdf> <C:/Users/utente/Documents/Gi
-tHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/pca/without_pre
-processing/pca_loading_plot_PC1vsPC2.pdf> <C:/Users/utente/Documents/GitHub/AIO
-D_project/AIOD_project/report/../out/pre_processing/pos/pca/with_preprocessing/
-pca_scree_plot.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project
-/report/../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1vsPC
-2.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../ou
-t/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf>]
-<../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2.pdf, id=693, 859.92642p
+./out/pre_processing/neg/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf>]
+<../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2.pdf, id=597, 859.92642p
 t x 570.89659pt>
 File: ../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2.pdf Graphic file (
 type pdf)
 <use ../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2
-.pdf  used on input line 710.
+.pdf  used on input line 725.
 (pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC3.pdf, id=694, 859.92642p
+<../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC3.pdf, id=598, 859.92642p
 t x 570.89659pt>
 File: ../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC3.pdf Graphic file (
 type pdf)
 <use ../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC3.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_score_plot_PC1vsPC3
-.pdf  used on input line 711.
+.pdf  used on input line 726.
 (pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/data_fusion/sum_pca/sum_pca_score_plot_PC2vsPC3.pdf, id=695, 859.92642p
+<../out/data_fusion/sum_pca/sum_pca_score_plot_PC2vsPC3.pdf, id=599, 859.92642p
 t x 570.89659pt>
 File: ../out/data_fusion/sum_pca/sum_pca_score_plot_PC2vsPC3.pdf Graphic file (
 type pdf)
 <use ../out/data_fusion/sum_pca/sum_pca_score_plot_PC2vsPC3.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_score_plot_PC2vsPC3
-.pdf  used on input line 712.
+.pdf  used on input line 727.
 (pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC2.pdf, id=696, 703.0
+<../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC2.pdf, id=600, 703.0
 1347pt x 571.00638pt>
 File: ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC2.pdf Graphic f
 ile (type pdf)
 <use ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1
-vsPC2.pdf  used on input line 717.
+vsPC2.pdf  used on input line 732.
 (pdftex.def)             Requested size: 165.12378pt x 134.1168pt.
-<../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC3.pdf, id=697, 715.5
+<../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC3.pdf, id=601, 715.5
 0565pt x 571.00638pt>
 File: ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC3.pdf Graphic f
 ile (type pdf)
 <use ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1vsPC3.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC1
-vsPC3.pdf  used on input line 718.
+vsPC3.pdf  used on input line 733.
 (pdftex.def)             Requested size: 165.12378pt x 131.77306pt.
-<../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2vsPC3.pdf, id=698, 711.2
+<../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2vsPC3.pdf, id=602, 711.2
 1808pt x 571.00638pt>
 File: ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2vsPC3.pdf Graphic f
 ile (type pdf)
 <use ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2vsPC3.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2
-vsPC3.pdf  used on input line 719.
+vsPC3.pdf  used on input line 734.
 (pdftex.def)             Requested size: 165.12378pt x 132.56592pt.
-<../out/data_fusion/sum_pca/sum_pca_scree_blocks.pdf, id=699, 859.84929pt x 498
+<../out/data_fusion/sum_pca/sum_pca_scree_blocks.pdf, id=603, 859.84929pt x 498
 .62663pt>
 File: ../out/data_fusion/sum_pca/sum_pca_scree_blocks.pdf Graphic file (type pd
 f)
 <use ../out/data_fusion/sum_pca/sum_pca_scree_blocks.pdf>
 Package pdftex.def Info: ../out/data_fusion/sum_pca/sum_pca_scree_blocks.pdf  u
-sed on input line 724.
+sed on input line 739.
 (pdftex.def)             Requested size: 232.19843pt x 134.6462pt.
 
 
-[13 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/d
+[13 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/p
+re_processing/pos/pca/without_preprocessing/pca_scree_plot.pdf> <C:/Users/utent
+e/Documents/GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/p
+ca/without_preprocessing/pca_score_plot_PC1vsPC2.pdf> <C:/Users/utente/Document
+s/GitHub/AIOD_project/AIOD_project/report/../out/pre_processing/pos/pca/without
+_preprocessing/pca_loading_plot_PC1vsPC2.pdf> <C:/Users/utente/Documents/GitHub
+/AIOD_project/AIOD_project/report/../out/pre_processing/pos/pca/with_preprocess
+ing/pca_scree_plot.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_pro
+ject/report/../out/pre_processing/pos/pca/with_preprocessing/pca_score_plot_PC1
+vsPC2.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/.
+./out/pre_processing/pos/pca/with_preprocessing/pca_loading_plot_PC1vsPC2.pdf>]
+
+
+[14 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/d
 ata_fusion/sum_pca/sum_pca_score_plot_PC1vsPC2.pdf> <C:/Users/utente/Documents/
 GitHub/AIOD_project/AIOD_project/report/../out/data_fusion/sum_pca/sum_pca_scor
 e_plot_PC1vsPC3.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_projec
@@ -915,119 +924,224 @@ ks_PC1vsPC3.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/re
 port/../out/data_fusion/sum_pca/sum_pca_loadings_blocks_PC2vsPC3.pdf> <C:/Users
 /utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/data_fusion/su
 m_pca/sum_pca_scree_blocks.pdf>]
-<../out/anomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf, id=810, 1
+<../out/anomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf, id=813, 1
 381.63994pt x 411.6981pt>
 File: ../out/anomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf Graph
 ic file (type pdf)
 <use ../out/anomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/ml_outliers/Comparison_Grid_C
-TRL_Group.pdf  used on input line 764.
+TRL_Group.pdf  used on input line 779.
 (pdftex.def)             Requested size: 516.0pt x 153.75192pt.
-<../out/anomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf, id=811, 13
+<../out/anomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf, id=814, 13
 78.11726pt x 411.6981pt>
 File: ../out/anomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf Graphi
 c file (type pdf)
 <use ../out/anomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/ml_outliers/Comparison_Grid_C
-HD_Group.pdf  used on input line 773.
+HD_Group.pdf  used on input line 788.
 (pdftex.def)             Requested size: 516.0pt x 154.15396pt.
 
 
-[14 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
-nomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf>]
-<../out/anomaly_detection/distance_plots/CTRL.pdf, id=836, 722.7pt x 578.16pt>
+[15 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
+nomaly_detection/ml_outliers/Comparison_Grid_CTRL_Group.pdf> <C:/Users/utente/D
+ocuments/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection/ml_ou
+tliers/Comparison_Grid_CHD_Group.pdf>]
+<../out/anomaly_detection/distance_plots/CTRL.pdf, id=860, 722.7pt x 578.16pt>
 File: ../out/anomaly_detection/distance_plots/CTRL.pdf Graphic file (type pdf)
 <use ../out/anomaly_detection/distance_plots/CTRL.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/distance_plots/CTRL.pdf  used
- on input line 797.
+ on input line 812.
 (pdftex.def)             Requested size: 247.6778pt x 198.1421pt.
-<../out/anomaly_detection/distance_plots/CHD.pdf, id=837, 722.7pt x 578.16pt>
+<../out/anomaly_detection/distance_plots/CHD.pdf, id=861, 722.7pt x 578.16pt>
 File: ../out/anomaly_detection/distance_plots/CHD.pdf Graphic file (type pdf)
 <use ../out/anomaly_detection/distance_plots/CHD.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/distance_plots/CHD.pdf  used 
-on input line 798.
+on input line 813.
 (pdftex.def)             Requested size: 247.6778pt x 198.1421pt.
-<../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf, id=838, 
+<../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf, id=862, 
 859.95656pt x 339.37915pt>
 File: ../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf Grap
 hic file (type pdf)
 <use ../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/box_plots/ctrl_samples_qc_box
-plot_page1.pdf  used on input line 814.
+plot_page1.pdf  used on input line 829.
 (pdftex.def)             Requested size: 464.39685pt x 183.27237pt.
-<../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page2.pdf, id=839, 
+<../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page2.pdf, id=863, 
 859.92642pt x 339.43312pt>
 File: ../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page2.pdf Grap
 hic file (type pdf)
 <use ../out/anomaly_detection/box_plots/ctrl_samples_qc_boxplot_page2.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/box_plots/ctrl_samples_qc_box
-plot_page2.pdf  used on input line 817.
+plot_page2.pdf  used on input line 832.
 (pdftex.def)             Requested size: 464.39685pt x 183.31186pt.
 
 
-[15 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
-nomaly_detection/ml_outliers/Comparison_Grid_CHD_Group.pdf> <C:/Users/utente/Do
-cuments/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection/distan
-ce_plots/CTRL.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/
-report/../out/anomaly_detection/distance_plots/CHD.pdf>]
-<../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page1.pdf, id=898, 8
+[16 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
+nomaly_detection/distance_plots/CTRL.pdf> <C:/Users/utente/Documents/GitHub/AIO
+D_project/AIOD_project/report/../out/anomaly_detection/distance_plots/CHD.pdf>]
+<../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page1.pdf, id=901, 8
 59.92642pt x 339.39735pt>
 File: ../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page1.pdf Graph
 ic file (type pdf)
 <use ../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page1.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/box_plots/chd_samples_qc_boxp
-lot_page1.pdf  used on input line 831.
+lot_page1.pdf  used on input line 846.
 (pdftex.def)             Requested size: 464.39685pt x 183.29254pt.
-<../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page2.pdf, id=899, 8
+<../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page2.pdf, id=902, 8
 59.92642pt x 339.42746pt>
 File: ../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page2.pdf Graph
 ic file (type pdf)
 <use ../out/anomaly_detection/box_plots/chd_samples_qc_boxplot_page2.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/box_plots/chd_samples_qc_boxp
-lot_page2.pdf  used on input line 834.
+lot_page2.pdf  used on input line 849.
 (pdftex.def)             Requested size: 464.39685pt x 183.3088pt.
-<../out/anomaly_detection/pca_without_out/pca_scree_plot.pdf, id=900, 766.51996
-pt x 515.69035pt>
+
+
+[17 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
+nomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf> <C:/Users/utente/
+Documents/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection/box_
+plots/ctrl_samples_qc_boxplot_page2.pdf>]
+<../out/anomaly_detection/pca_without_out/pca_scree_plot.pdf, id=1009, 766.5199
+6pt x 515.69035pt>
 File: ../out/anomaly_detection/pca_without_out/pca_scree_plot.pdf Graphic file 
 (type pdf)
 <use ../out/anomaly_detection/pca_without_out/pca_scree_plot.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/pca_without_out/pca_scree_plo
-t.pdf  used on input line 853.
+t.pdf  used on input line 868.
 (pdftex.def)             Requested size: 165.12378pt x 111.08371pt.
-<../out/anomaly_detection/pca_without_out/pca_score_plot_PC1vsPC2.pdf, id=901, 
-859.92642pt x 570.89659pt>
+<../out/anomaly_detection/pca_without_out/pca_score_plot_PC1vsPC2.pdf, id=1010,
+ 859.92642pt x 570.89659pt>
 File: ../out/anomaly_detection/pca_without_out/pca_score_plot_PC1vsPC2.pdf Grap
 hic file (type pdf)
 <use ../out/anomaly_detection/pca_without_out/pca_score_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/pca_without_out/pca_score_plo
-t_PC1vsPC2.pdf  used on input line 854.
+t_PC1vsPC2.pdf  used on input line 869.
 (pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
-<../out/anomaly_detection/pca_without_out/pca_loading_plot_PC1vsPC2.pdf, id=902
-, 857.56255pt x 571.00638pt>
+<../out/anomaly_detection/pca_without_out/pca_loading_plot_PC1vsPC2.pdf, id=101
+1, 857.56255pt x 571.00638pt>
 File: ../out/anomaly_detection/pca_without_out/pca_loading_plot_PC1vsPC2.pdf Gr
 aphic file (type pdf)
 <use ../out/anomaly_detection/pca_without_out/pca_loading_plot_PC1vsPC2.pdf>
 Package pdftex.def Info: ../out/anomaly_detection/pca_without_out/pca_loading_p
-lot_PC1vsPC2.pdf  used on input line 855.
+lot_PC1vsPC2.pdf  used on input line 870.
 (pdftex.def)             Requested size: 165.12378pt x 109.94737pt.
 
 
-[16 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
-nomaly_detection/box_plots/ctrl_samples_qc_boxplot_page1.pdf> <C:/Users/utente/
-Documents/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection/box_
-plots/ctrl_samples_qc_boxplot_page2.pdf>]
-
-[17 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
+[18 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
 nomaly_detection/box_plots/chd_samples_qc_boxplot_page1.pdf> <C:/Users/utente/D
 ocuments/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection/box_p
-lots/chd_samples_qc_boxplot_page2.pdf> <C:/Users/utente/Documents/GitHub/AIOD_p
-roject/AIOD_project/report/../out/anomaly_detection/pca_without_out/pca_scree_p
-lot.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../
-out/anomaly_detection/pca_without_out/pca_score_plot_PC1vsPC2.pdf> <C:/Users/ut
-ente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection
-/pca_without_out/pca_loading_plot_PC1vsPC2.pdf>]
+lots/chd_samples_qc_boxplot_page2.pdf>]
 
-[18]
+[19 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/a
+nomaly_detection/pca_without_out/pca_scree_plot.pdf> <C:/Users/utente/Documents
+/GitHub/AIOD_project/AIOD_project/report/../out/anomaly_detection/pca_without_o
+ut/pca_score_plot_PC1vsPC2.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/
+AIOD_project/report/../out/anomaly_detection/pca_without_out/pca_loading_plot_P
+C1vsPC2.pdf>]
+<../out/split_and_training/training/last/PLS-DA/pls_scores_Fold_1_LV1vsLV2.pdf,
+ id=1169, 715.38643pt x 570.89659pt>
+File: ../out/split_and_training/training/last/PLS-DA/pls_scores_Fold_1_LV1vsLV2
+.pdf Graphic file (type pdf)
+<use ../out/split_and_training/training/last/PLS-DA/pls_scores_Fold_1_LV1vsLV2.
+pdf>
+Package pdftex.def Info: ../out/split_and_training/training/last/PLS-DA/pls_sco
+res_Fold_1_LV1vsLV2.pdf  used on input line 954.
+(pdftex.def)             Requested size: 247.6778pt x 197.64772pt.
+<../out/split_and_training/training/last/PLS-DA/pls_loadings_Fold_1_LV1vsLV2.pd
+f, id=1170, 714.07237pt x 571.00638pt>
+File: ../out/split_and_training/training/last/PLS-DA/pls_loadings_Fold_1_LV1vsL
+V2.pdf Graphic file (type pdf)
+<use ../out/split_and_training/training/last/PLS-DA/pls_loadings_Fold_1_LV1vsLV
+2.pdf>
+Package pdftex.def Info: ../out/split_and_training/training/last/PLS-DA/pls_loa
+dings_Fold_1_LV1vsLV2.pdf  used on input line 954.
+(pdftex.def)             Requested size: 247.6778pt x 198.05167pt.
+<../out/split_and_training/training/last/PLS-DA/pls_opt_Fold_1.pdf, id=1171, 58
+1.19852pt x 426.35663pt>
+File: ../out/split_and_training/training/last/PLS-DA/pls_opt_Fold_1.pdf Graphic
+ file (type pdf)
+<use ../out/split_and_training/training/last/PLS-DA/pls_opt_Fold_1.pdf>
+Package pdftex.def Info: ../out/split_and_training/training/last/PLS-DA/pls_opt
+_Fold_1.pdf  used on input line 959.
+(pdftex.def)             Requested size: 165.12378pt x 121.12906pt.
+<../out/split_and_training/training/last/PLS-DA/pls_perm_Fold_1.pdf, id=1172, 5
+70.84079pt x 426.35663pt>
+File: ../out/split_and_training/training/last/PLS-DA/pls_perm_Fold_1.pdf Graphi
+c file (type pdf)
+<use ../out/split_and_training/training/last/PLS-DA/pls_perm_Fold_1.pdf>
+Package pdftex.def Info: ../out/split_and_training/training/last/PLS-DA/pls_per
+m_Fold_1.pdf  used on input line 960.
+(pdftex.def)             Requested size: 165.12378pt x 123.32797pt.
+<../out/split_and_training/training/last/PLS-DA/pls_pred_vs_obs_Fold_1.pdf, id=
+1173, 715.35315pt x 426.35663pt>
+File: ../out/split_and_training/training/last/PLS-DA/pls_pred_vs_obs_Fold_1.pdf
+ Graphic file (type pdf)
+<use ../out/split_and_training/training/last/PLS-DA/pls_pred_vs_obs_Fold_1.pdf>
+
+Package pdftex.def Info: ../out/split_and_training/training/last/PLS-DA/pls_pre
+d_vs_obs_Fold_1.pdf  used on input line 961.
+(pdftex.def)             Requested size: 165.12378pt x 98.41125pt.
+
+
+[20]
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 9
+93.
+ (c:/texlive/2025/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `pcr' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+
+[21 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/s
+plit_and_training/training/last/PLS-DA/pls_scores_Fold_1_LV1vsLV2.pdf> <C:/User
+s/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/split_and_tra
+ining/training/last/PLS-DA/pls_loadings_Fold_1_LV1vsLV2.pdf> <C:/Users/utente/D
+ocuments/GitHub/AIOD_project/AIOD_project/report/../out/split_and_training/trai
+ning/last/PLS-DA/pls_opt_Fold_1.pdf> <C:/Users/utente/Documents/GitHub/AIOD_pro
+ject/AIOD_project/report/../out/split_and_training/training/last/PLS-DA/pls_per
+m_Fold_1.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/repor
+t/../out/split_and_training/training/last/PLS-DA/pls_pred_vs_obs_Fold_1.pdf>]
+<../out/final/pca_scree_plot.pdf, id=1262, 774.18924pt x 515.69035pt>
+File: ../out/final/pca_scree_plot.pdf Graphic file (type pdf)
+<use ../out/final/pca_scree_plot.pdf>
+Package pdftex.def Info: ../out/final/pca_scree_plot.pdf  used on input line 10
+21.
+(pdftex.def)             Requested size: 165.12378pt x 109.98996pt.
+<../out/final/pca_scores_final_PC1vsPC2.pdf, id=1263, 859.91264pt x 570.89659pt
+>
+File: ../out/final/pca_scores_final_PC1vsPC2.pdf Graphic file (type pdf)
+<use ../out/final/pca_scores_final_PC1vsPC2.pdf>
+Package pdftex.def Info: ../out/final/pca_scores_final_PC1vsPC2.pdf  used on in
+put line 1022.
+(pdftex.def)             Requested size: 165.12378pt x 109.62135pt.
+<../out/final/pca_loading_plot_PC1vsPC2.pdf, id=1264, 859.20663pt x 571.00638pt
+>
+File: ../out/final/pca_loading_plot_PC1vsPC2.pdf Graphic file (type pdf)
+<use ../out/final/pca_loading_plot_PC1vsPC2.pdf>
+Package pdftex.def Info: ../out/final/pca_loading_plot_PC1vsPC2.pdf  used on in
+put line 1023.
+(pdftex.def)             Requested size: 165.12378pt x 109.72955pt.
+<../out/final/boxplots_final_page1.pdf, id=1265, 1130.70747pt x 1414.05475pt>
+File: ../out/final/boxplots_final_page1.pdf Graphic file (type pdf)
+<use ../out/final/boxplots_final_page1.pdf>
+Package pdftex.def Info: ../out/final/boxplots_final_page1.pdf  used on input l
+ine 1039.
+(pdftex.def)             Requested size: 309.60315pt x 387.17249pt.
+
+
+[22 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/f
+inal/pca_scree_plot.pdf> <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_pr
+oject/report/../out/final/pca_scores_final_PC1vsPC2.pdf> <C:/Users/utente/Docum
+ents/GitHub/AIOD_project/AIOD_project/report/../out/final/pca_loading_plot_PC1v
+sPC2.pdf>]
+
+[23 <C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/../out/f
+inal/boxplots_final_page1.pdf>]
+
+[24]
 (C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/report/AIOD_report.
 aux)
  ***********
@@ -1036,30 +1150,30 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 7959 strings out of 473190
- 155982 string characters out of 5719980
- 572872 words of memory out of 5000000
- 30917 multiletter control sequences out of 15000+600000
- 606540 words of font info for 254 fonts, out of 8000000 for 9000
+ 8129 strings out of 473190
+ 161463 string characters out of 5719980
+ 574093 words of memory out of 5000000
+ 31024 multiletter control sequences out of 15000+600000
+ 609249 words of font info for 295 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,13n,65p,1008b,391s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,13n,65p,1009b,404s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/tex
 live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2025/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmmi8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
-><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2025/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2025/texmf-dist/f
-onts/type1/urw/times/utmb8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/tim
-es/utmr8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/texlive/2025/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texl
+ive/2025/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb><c:/texlive/2025/texmf-d
+ist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/ur
+w/times/utmr8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a.pf
+b>
 Output written on C:/Users/utente/Documents/GitHub/AIOD_project/AIOD_project/re
-port/AIOD_report.pdf (19 pages, 1909334 bytes).
+port/AIOD_report.pdf (25 pages, 2152337 bytes).
 PDF statistics:
- 1230 PDF objects out of 1440 (max. 8388607)
- 595 compressed objects within 6 object streams
+ 1412 PDF objects out of 1440 (max. 8388607)
+ 686 compressed objects within 7 object streams
  0 named destinations out of 1000 (max. 500000)
- 54061 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 54618 words of extra memory for PDF output out of 61914 (max. 10000000)
 

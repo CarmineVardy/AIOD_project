@@ -1,85 +1,106 @@
 \relax 
 \citation{CHD}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Background Clinico}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}La Metabolomica Untargeted}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Problematiche Aperte}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Scopo del Lavoro}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Clinical background}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Untargeted metabolomic}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Open problematics}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Project goal}{2}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}Materials and Methods}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Descrizione del Dataset}{2}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces ESI- Dataset Distribution and Characteristics}}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Dataset description}{2}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces ESI- Dataset Distribution and Characteristics}}{3}{}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:esi-dataset_details}{{I}{2}{Descrizione del Dataset}{table.1}{}}
+\newlabel{tab:esi-dataset_details}{{I}{3}{Dataset description}{table.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces ESI+ Dataset Distribution and Characteristics}}{3}{}\protected@file@percent }
-\newlabel{tab:esi+dataset_details}{{II}{3}{Descrizione del Dataset}{table.2}{}}
+\newlabel{tab:esi+dataset_details}{{II}{3}{Dataset description}{table.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Quality Assessment and Data Cleaning}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0a}Variance and Model Structure}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0b}Instrumental Stability (QC Analysis)}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0c}Technical Reproducibility (Replicates Analysis)}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0d}Removal of Quality Control Samples}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0e}Removal of Technical Duplicates}{3}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Quality Assessment for ESI- Dataset.} (a) Global PCA Score plot showing the distribution of all classes (CHD, CTRL, QC). (b) Loading plot showing feature contributions. (c-e) Variance analysis and loading profiles. (f) Zoom on QC samples: the tight cluster confirms high stability. (g) Zoom on technical replicates: paired samples show high overlap, confirming reproducibility.}}{4}{}\protected@file@percent }
 \newlabel{fig:qa_neg}{{1}{4}{Technical Reproducibility (Replicates Analysis)}{figure.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Data Pre-Processing}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}Data Normalization}{4}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Quality Assessment for ESI+ Dataset.} (a-b) Global PCA model overview. (c-e) Variance and Loadings. (f) Stability check: QCs show a wider dispersion compared to negative mode, consistent with HILIC sensitivity, but remain distinct from biological variance. (g) Reproducibility check showing paired replicates.}}{5}{}\protected@file@percent }
 \newlabel{fig:qa_pos}{{2}{5}{Technical Reproducibility (Replicates Analysis)}{figure.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0d}Removal of Quality Control Samples}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.2.0e}Removal of Technical Duplicates}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Data Pre-Processing}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}Data Normalization}{6}{}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Comparison of Normalization Methods by Coefficient of Variation (CV\%) - ESI Negative Dataset.}}{6}{}\protected@file@percent }
 \newlabel{tab:cv_neg}{{III}{6}{Data Normalization}{table.3}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Comparison of Normalization Methods by Coefficient of Variation (CV\%) - ESI Positive Dataset.}}{6}{}\protected@file@percent }
 \newlabel{tab:cv_pos}{{IV}{6}{Data Normalization}{table.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Comparison of Normalization Strategies for ESI- Dataset.} Boxplots representing the global intensity distribution of all samples. (a) Raw data showing significant systematic variation (e.g., dilution effects). (b) TIC normalization, acting on the total sum. (c) Quantile normalization, forcing identical distributions potentially suppressing biological signal. (d) PQN, the selected method, which effectively reduces technical variance while preserving biological information.}}{7}{}\protected@file@percent }
 \newlabel{fig:norm_neg}{{3}{7}{Data Normalization}{figure.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}Data Transformation}{7}{}\protected@file@percent }
+\citation{LCMS_skewed}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Comparison of Normalization Strategies for ESI+ Dataset.} (a) Raw data distribution. (b) TIC normalization results. (c) Quantile normalization results showing aggressive distribution alignment. (d) PQN results, selected as the optimal compromise for downstream analysis.}}{8}{}\protected@file@percent }
 \newlabel{fig:norm_pos}{{4}{8}{Data Normalization}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}Data Transformation}{8}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Effect of Log10 Transformation on ESI- Dataset.} Global density plots pooling all feature intensities. (a) The original data distribution is highly right-skewed, deviating significantly from the theoretical normal distribution (dashed line). (b) Log10 transformation successfully centers the distribution, achieving a Gaussian-like shape suitable for multivariate analysis.}}{9}{}\protected@file@percent }
 \newlabel{fig:transf_neg}{{5}{9}{Data Transformation}{figure.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {Effect of Log10 Transformation on ESI+ Dataset.} (a) The raw positive mode data exhibits a pronounced right-skewness. (b) Log10 transformation corrects the skewness, aligning the empirical density (solid line) with the theoretical Gaussian curve (dashed line).}}{9}{}\protected@file@percent }
 \newlabel{fig:transf_pos}{{6}{9}{Data Transformation}{figure.6}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3}Data Scaling}{9}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.4}Global Assessment}{9}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Effect of Autoscaling on ESI- Features.} Boxplots representing the distribution of individual metabolites (features). (a) Original features show highly variable ranges and variances. (b) After autoscaling, all features are mean-centered with unit variance, ensuring equal weight in multivariate analysis.}}{10}{}\protected@file@percent }
 \newlabel{fig:scale_neg}{{7}{10}{Data Scaling}{figure.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Effect of Autoscaling on ESI+ Features.} (a) The disparate scales of metabolite intensities in the positive mode. (b) The homogenized feature space achieved through autoscaling.}}{11}{}\protected@file@percent }
 \newlabel{fig:scale_pos}{{8}{11}{Data Scaling}{figure.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Low-Level Data Fusion}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}Fusion Strategy and Block Scaling}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}SUM-PCA: Exploratory Analysis of Fused Data}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.4}Global Assessment}{11}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Impact of Pre-processing on ESI- Data Structure.} \textbf  {Top Row (a-c):} PCA on raw data. The model is dominated by high-abundance features (fatty acids) explaining a large portion of variance (26\% on PC1), masking subtle biological signals. \textbf  {Bottom Row (d-f):} PCA on pre-processed data (PQN + Log10 + Autoscaling). The variance is democratized, and the influence of dominant metabolites is rescaled, revealing a more complex biological structure suitable for biomarker discovery.}}{12}{}\protected@file@percent }
 \newlabel{fig:pca_assess_neg}{{9}{12}{Global Assessment}{figure.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \textbf  {Impact of Pre-processing on ESI+ Data Structure.} \textbf  {Top Row (a-c):} PCA on raw data. The model is biased by high-intensity acylcarnitines. \textbf  {Bottom Row (d-f):} PCA on pre-processed data. The influence of dominant lipids is rescaled, allowing for a more comprehensive representation of the metabolome, including amino acid derivatives and indoles.}}{12}{}\protected@file@percent }
-\newlabel{fig:pca_assess_pos}{{10}{12}{Global Assessment}{figure.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces \textbf  {SUM-PCA Results on Low-Level Fused Data.} (a-c) Super Score plots showing sample distribution in the integrated space. (d-f) Super Loading plots. Notably, despite the high global variance of the Positive block, the top ranking contributors (labeled features) are primarily from the \textbf  {ESI- Block} (e.g., Palmitic Acid, Uric Acid), highlighting their specific relevance. (g) Scree plot highlighting the variance contribution: PC1 is dominated by Block 2 (Pos), while subsequent components show increased contribution from Block 1 (Neg).}}{13}{}\protected@file@percent }
-\newlabel{fig:sum_pca}{{11}{13}{SUM-PCA: Exploratory Analysis of Fused Data}{figure.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Low-Level Data Fusion}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.4.0a}Fusion Strategy and Block Scaling}{12}{}\protected@file@percent }
+\citation{acid}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \textbf  {Impact of Pre-processing on ESI+ Data Structure.} \textbf  {Top Row (a-c):} PCA on raw data. The model is biased by high-intensity acylcarnitines. \textbf  {Bottom Row (d-f):} PCA on pre-processed data. The influence of dominant lipids is rescaled, allowing for a more comprehensive representation of the metabolome, including amino acid derivatives and indoles.}}{13}{}\protected@file@percent }
+\newlabel{fig:pca_assess_pos}{{10}{13}{Global Assessment}{figure.10}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.4.0b}SUM-PCA: Exploratory Analysis of Fused Data}{13}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Anomaly Detection}{13}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces \textbf  {SUM-PCA Results on Low-Level Fused Data.} (a-c) Super Score plots showing sample distribution in the integrated space. (d-f) Super Loading plots. Notably, despite the high global variance of the Positive block, the top ranking contributors (labeled features) are primarily from the \textbf  {ESI- Block} (e.g., Palmitic Acid, Uric Acid), highlighting their specific relevance. (g) Scree plot highlighting the variance contribution: PC1 is dominated by Block 2 (Pos), while subsequent components show increased contribution from Block 1 (Neg).}}{14}{}\protected@file@percent }
+\newlabel{fig:sum_pca}{{11}{14}{SUM-PCA: Exploratory Analysis of Fused Data}{figure.11}{}}
 \@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0a}Multivariate Statistical Profiling}{14}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0b}Machine Learning-Based Detection}{14}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0c}Visualization of Decision Boundaries}{14}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces \textbf  {Algorithmic Decision Boundaries for Control Group (CTRL).} 2D projection of the decision boundaries generated by One-Class SVM, Isolation Forest, and Local Outlier Factor on the Control dataset. The colored regions and contours illustrate the area considered "normal" by each algorithm. Samples falling outside these boundaries (marked with 'X') are flagged as potential outliers. Note that actual detection was performed in the high-dimensional space (or raw space for iForest) to preserve information; this 2D representation is for visualization of the topological approach only.}}{14}{}\protected@file@percent }
-\newlabel{fig:outlier_ctrl}{{12}{14}{Visualization of Decision Boundaries}{figure.12}{}}
-\@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0d}Consensus Evaluation and Sample Filtering}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0c}Visualization of Decision Boundaries}{15}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces \textbf  {Algorithmic Decision Boundaries for Control Group (CTRL).} 2D projection of the decision boundaries generated by One-Class SVM, Isolation Forest, and Local Outlier Factor on the Control dataset. The colored regions and contours illustrate the area considered "normal" by each algorithm. Samples falling outside these boundaries (marked with 'X') are flagged as potential outliers. Note that actual detection was performed in the high-dimensional space (or raw space for iForest) to preserve information; this 2D representation is for visualization of the topological approach only.}}{15}{}\protected@file@percent }
+\newlabel{fig:outlier_ctrl}{{12}{15}{Visualization of Decision Boundaries}{figure.12}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces \textbf  {Algorithmic Decision Boundaries for Disease Group (CHD).} Visualization of anomaly detection results for the CHD class. The algorithms successfully identify samples that deviate from the main distribution cluster. The consensus among these methods, combined with the statistical metrics ($T^2$ and $Q$), forms the basis for the final exclusion criteria.}}{15}{}\protected@file@percent }
 \newlabel{fig:outlier_chd}{{13}{15}{Visualization of Decision Boundaries}{figure.13}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces \textbf  {Distance Plots ($T^2$ vs $Q$-Residuals).} Gold standard visualization for outlier diagnosis. Samples flagged by at least two Machine Learning algorithms are highlighted in red. (a) Controls show anomalies primarily in the Q-residual space (vertical axis), indicating technical mismatch. (b) CHD samples show a more complex pattern, with sample P93 appearing as a distinct outlier consistent with ML detection.}}{15}{}\protected@file@percent }
-\newlabel{fig:dist_plots}{{14}{15}{Consensus Evaluation and Sample Filtering}{figure.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces \textbf  {Intensity Distributions of Control Samples.} Visual inspection used to validate statistical outliers. Deviant distributions confirmed the exclusion of samples like CTRL02\_00.}}{16}{}\protected@file@percent }
-\newlabel{fig:box_ctrl}{{15}{16}{Consensus Evaluation and Sample Filtering}{figure.15}{}}
-\@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0e}Final Dataset Re-Processing and Validation}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Dataset Splitting}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Analisi Statistica e Machine Learning}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}Stack Tecnologico}{16}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces \textbf  {Intensity Distributions of CHD Samples.} Used to verify the consistency of pathological samples before removal.}}{17}{}\protected@file@percent }
-\newlabel{fig:box_chd}{{16}{17}{Consensus Evaluation and Sample Filtering}{figure.16}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces \textbf  {PCA of the Curated Fused Dataset (Post-Outlier Removal).} (a) Variance is well-distributed. (b) Samples are homogeneously distributed in the score space, with no extreme outliers distorting the axes. (c) Loadings confirm the contribution of relevant biological markers (e.g., Acylcarnitines, Indoles) to the data variance.}}{17}{}\protected@file@percent }
-\newlabel{fig:pca_clean}{{17}{17}{Final Dataset Re-Processing and Validation}{figure.17}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Results and Discussion}{17}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Performance dei Modelli su Singoli Dataset (ESI+ / ESI-)}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0d}Consensus Evaluation and Sample Filtering}{15}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces \textbf  {Distance Plots ($T^2$ vs $Q$-Residuals).} Gold standard visualization for outlier diagnosis. Samples flagged by at least two Machine Learning algorithms are highlighted in red. (a) Controls show anomalies primarily in the Q-residual space (vertical axis), indicating technical mismatch. (b) CHD samples show a more complex pattern, with sample P93 appearing as a distinct outlier consistent with ML detection.}}{16}{}\protected@file@percent }
+\newlabel{fig:dist_plots}{{14}{16}{Consensus Evaluation and Sample Filtering}{figure.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces \textbf  {Intensity Distributions of Control Samples.} Visual inspection used to validate statistical outliers. Deviant distributions confirmed the exclusion of samples like CTRL02\_00.}}{17}{}\protected@file@percent }
+\newlabel{fig:box_ctrl}{{15}{17}{Consensus Evaluation and Sample Filtering}{figure.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces \textbf  {Intensity Distributions of CHD Samples.} Used to verify the consistency of pathological samples before removal.}}{18}{}\protected@file@percent }
+\newlabel{fig:box_chd}{{16}{18}{Consensus Evaluation and Sample Filtering}{figure.16}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.5.0e}Final Dataset Re-Processing and Validation}{18}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces \textbf  {PCA of the Curated Fused Dataset (Post-Outlier Removal).} (a) Variance is well-distributed. (b) Samples are homogeneously distributed in the score space, with no extreme outliers distorting the axes. (c) Loadings confirm the contribution of relevant biological markers (e.g., Acylcarnitines, Indoles) to the data variance.}}{19}{}\protected@file@percent }
+\newlabel{fig:pca_clean}{{17}{19}{Final Dataset Re-Processing and Validation}{figure.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Dataset Splitting and Prevention of Data Leakage}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.6.0a}Anti-Leakage Workflow}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.6.0b}Splitting Methodologies}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.6.0c}Evaluation of Splits}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Statistical and Machine Learning analysis}{19}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Comparison of Dataset Splitting Strategies. Values for K-Fold methods are reported as the average across the 5 folds.}}{20}{}\protected@file@percent }
+\newlabel{tab:split_metrics}{{V}{20}{Evaluation of Splits}{table.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.7.0a}Algorithmic Implementation}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.7.0b}Model Validation}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.7.0c}Performance Visualization (Fold 1)}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.7.0d}Consensus Variable Selection}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}Software and Technological Stack}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.8.0a}Data Management and Computation}{20}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces \textbf  {PLS-DA Model Performance and Validation (Representative Fold 1).} (a) Clear clustering of CHD vs CTRL in the latent space. (b) Top 20 features driving the separation, highlighting contributions from both blocks (e.g., Myristamide, Palmitic Acid). (c) Selection of optimal Latent Variables minimizing error. (d) Permutation test confirming the model is not overfitting (Real accuracy > Random distribution). (e) High classification accuracy on the test set.}}{21}{}\protected@file@percent }
+\newlabel{fig:pls_fold1}{{18}{21}{Performance Visualization (Fold 1)}{figure.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.8.0b}Machine Learning and Statistical Analysis}{21}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {2.8.0c}Scientific Visualization}{21}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Results and Discussion}{21}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Univariate Statistical Validation}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Multivariate Confirmation of the Reduced Panel}{22}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces \textbf  {PCA Validation of the 8-Biomarker Panel.} (a) The scree plot shows that the reduced dataset retains significant variance. (b) The clear separation between CHD and CTRL groups confirms that the 8 selected features are sufficient to capture the biological distinction. (c) Loadings indicate the strong contribution of markers like Acetyl-L-carnitine and L-Cystine to the model.}}{22}{}\protected@file@percent }
+\newlabel{fig:final_pca}{{19}{22}{Multivariate Confirmation of the Reduced Panel}{figure.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Distributional Analysis}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Predictive Power Assessment}{22}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces \textbf  {Intensity Distributions of the Selected Potential Biomarkers.} Boxplots comparing the normalized intensities of the 8 potential biomarkers in Control (CTRL) vs Disease (CHD) groups. Clear shifts in median values are observable, corroborating the univariate statistical significance.}}{23}{}\protected@file@percent }
+\newlabel{fig:final_boxplots}{{20}{23}{Distributional Analysis}{figure.20}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Conclusions}{23}{}\protected@file@percent }
 \bibcite{CHD}{1}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Interpretabilità e Potenziali Biomarcatori}{18}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Univariate analysis sui biomarcatori}{18}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Conclusions}{18}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{References}{18}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Simulation Parameters}}{18}{}\protected@file@percent }
-\newlabel{tab:simParameters}{{V}{18}{Conclusions}{table.5}{}}
-\gdef \@abspage@last{19}
+\bibcite{LCMS_skewed}{2}
+\bibcite{acid}{3}
+\@writefile{toc}{\contentsline {section}{References}{24}{}\protected@file@percent }
+\gdef \@abspage@last{25}

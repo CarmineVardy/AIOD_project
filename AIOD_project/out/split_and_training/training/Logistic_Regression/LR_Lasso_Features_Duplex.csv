@@ -1,0 +1,151 @@
+Feature,Selected_In_At_Least_One_Fold,Excluded_In_All_Folds,Times_Selected,Mean_Coefficient_Importance
+Myristamide_Block2,YES,NO,1/1,-235.48004457983194
+Glycyl-4-hydroxyproline_Block2,YES,NO,1/1,-29.676057754286955
+Linoleamide_Block1,YES,NO,1/1,-12.889263056908074
+Palmitic Acid_Block1,YES,NO,1/1,-7.972659297163419
+"1,7-Dimethyluric acid_Block1",NO,YES,0/1,0.0
+16alpha-hydroxydehydroepiandrosterone 3-sulfate_Block1,NO,YES,0/1,0.0
+3-oxopalmitic acid_Block1,NO,YES,0/1,0.0
+4-Hydroxybutyric acid (GHB)_Block1,NO,YES,0/1,0.0
+5a-Dihydrotestosterone sulfate_Block1,NO,YES,0/1,0.0
+5-Hydroxy-DL-tryptophan_Block1,NO,YES,0/1,0.0
+5-hydroxyisouric acid_Block1,NO,YES,0/1,0.0
+Ac-Ala-OH_Block1,NO,YES,0/1,0.0
+Aminoadipic acid_Block1,NO,YES,0/1,0.0
+Androsterone sulfate_Block1,NO,YES,0/1,0.0
+Arachidonic acid_Block1,NO,YES,0/1,0.0
+Aspartylglucosamine_Block1,NO,YES,0/1,0.0
+Bilirubin_Block1,NO,YES,0/1,0.0
+Caproylglycine_Block1,NO,YES,0/1,0.0
+"3a,7a-Dihydroxycholanoic acid_Block1",NO,YES,0/1,0.0
+"3beta,7alpha-Dihydroxy-5-cholestenoate_Block1",NO,YES,0/1,0.0
+3-Hydroxyvaleric acid_Block1,NO,YES,0/1,0.0
+3-Indoxyl sulphate_Block1,NO,YES,0/1,0.0
+Deoxycholic Acid_Block1,NO,YES,0/1,0.0
+D(+)-Phenyllactic acid_Block1,NO,YES,0/1,0.0
+D-(+)-Glucose_Block1,NO,YES,0/1,0.0
+Cortisone_Block1,NO,YES,0/1,0.0
+D-Tyrosine_Block1,NO,YES,0/1,0.0
+Glycochenodeoxycholic acid_Block1,NO,YES,0/1,0.0
+DL-Lactic Acid_Block1,NO,YES,0/1,0.0
+Deoxyguanosine diphosphate (dGDP)_Block1,NO,YES,0/1,0.0
+Gly-His_Block1,NO,YES,0/1,0.0
+Hypoxanthin_Block1,NO,YES,0/1,0.0
+L-(-)-Threonine_Block1,NO,YES,0/1,0.0
+Isocitric acid_Block1,NO,YES,0/1,0.0
+L-(+)-Alanine_Block1,NO,YES,0/1,0.0
+L-Phenylalanine_Block1,NO,YES,0/1,0.0
+Glycocholic acid_Block1,NO,YES,0/1,0.0
+dl-3-Indolelactic acid_Block1,NO,YES,0/1,0.0
+Myristoleic acid_Block1,NO,YES,0/1,0.0
+N-2-Acetyl-L-ornithine_Block1,NO,YES,0/1,0.0
+N-Phenylacetylglutamine_Block1,NO,YES,0/1,0.0
+Oleic Acid_Block1,NO,YES,0/1,0.0
+Palmitoleic acid_Block1,NO,YES,0/1,0.0
+palmitoleoyl ethanolamide_Block1,NO,YES,0/1,0.0
+Pseudouridine_Block1,NO,YES,0/1,0.0
+Taurochenodeoxycholic Acid_Block1,NO,YES,0/1,0.0
+Taurohyocholic acid_Block1,NO,YES,0/1,0.0
+Testosterone sulfate_Block1,NO,YES,0/1,0.0
+tyr-thr_Block1,NO,YES,0/1,0.0
+Uric Acid_Block1,NO,YES,0/1,0.0
+Urocanic acid_Block1,NO,YES,0/1,0.0
+β-Estradiol_Block1,NO,YES,0/1,0.0
+Malondialdehyde_Block1,NO,YES,0/1,0.0
+DL-Tryptophan_Block1,NO,YES,0/1,0.0
+1-Methylhistidine_Block2,NO,YES,0/1,0.0
+2-methylbutyrylcarnitine_Block2,NO,YES,0/1,0.0
+3-Hydroxydodecanoic acid_Block2,NO,YES,0/1,0.0
+3-hydroxyoctanoylcarnitine_Block2,NO,YES,0/1,0.0
+3-Methylglutarylcarnitine_Block2,NO,YES,0/1,0.0
+4-Pyridoxic acid_Block2,NO,YES,0/1,0.0
+"5beta-Cholestane-3alpha,7alpha,12alpha,23,25-pentol_Block2",NO,YES,0/1,0.0
+5-Hydroxyindole-3-acetic acid_Block2,NO,YES,0/1,0.0
+7-Methylguanine_Block2,NO,YES,0/1,0.0
+"9,10-Dihydroxystearic acid_Block2",NO,YES,0/1,0.0
+9-Decenoylcarnitine_Block2,NO,YES,0/1,0.0
+Aceglutamide_Block2,NO,YES,0/1,0.0
+Acetylarginine_Block2,NO,YES,0/1,0.0
+Acetylcholine_Block2,NO,YES,0/1,0.0
+Acetyl-L-carnitine_Block2,NO,YES,0/1,0.0
+Adenosine 5'-monophosphate_Block2,NO,YES,0/1,0.0
+Ala-Leu_Block2,NO,YES,0/1,0.0
+b-Ala-Lys_Block2,NO,YES,0/1,0.0
+Betaine_Block2,NO,YES,0/1,0.0
+C12-Carnitine_Block2,NO,YES,0/1,0.0
+C8-Carnitine_Block2,NO,YES,0/1,0.0
+cis-5-Tetradecenoylcarnitine_Block2,NO,YES,0/1,0.0
+Cortisol_Block2,NO,YES,0/1,0.0
+Creatine_Block2,NO,YES,0/1,0.0
+Creatinine_Block2,NO,YES,0/1,0.0
+Cysteine-glutathione disulfide_Block2,NO,YES,0/1,0.0
+D-(+)-Proline_Block2,NO,YES,0/1,0.0
+Decanoylcarnitine_Block2,NO,YES,0/1,0.0
+Dihydrothymine_Block2,NO,YES,0/1,0.0
+DL-Arginine_Block2,NO,YES,0/1,0.0
+(R)-3-hydroxybutyrylcarnitine_Block2,NO,YES,0/1,0.0
+"1-(beta-D-Ribofuranosyl)-1,4-dihydronicotinamide_Block2",NO,YES,0/1,0.0
+DL-Homoserine_Block2,NO,YES,0/1,0.0
+DL-Glutamine_Block2,NO,YES,0/1,0.0
+epsilon-(gamma-Glutamyl)-lysine_Block2,NO,YES,0/1,0.0
+DL-Lysine_Block2,NO,YES,0/1,0.0
+gamma-Glu-gln_Block2,NO,YES,0/1,0.0
+g-Guanidinobutyrate_Block2,NO,YES,0/1,0.0
+Glucosylgalactosyl hydroxylysine_Block2,NO,YES,0/1,0.0
+D-Sphingosine 1-phosphate_Block2,NO,YES,0/1,0.0
+Glu-Gly_Block2,NO,YES,0/1,0.0
+glu-ser_Block2,NO,YES,0/1,0.0
+Glutarylcarnitine_Block2,NO,YES,0/1,0.0
+Glutamylalanine_Block2,NO,YES,0/1,0.0
+glu-thr_Block2,NO,YES,0/1,0.0
+Glycodeoxycholic acid_Block2,NO,YES,0/1,0.0
+Hexanoylcarnitine_Block2,NO,YES,0/1,0.0
+ethyl argininate_Block2,NO,YES,0/1,0.0
+Homo-L-arginine_Block2,NO,YES,0/1,0.0
+Hydroxyhexanoycarnitine_Block2,NO,YES,0/1,0.0
+L(-)-Carnitine_Block2,NO,YES,0/1,0.0
+L-(-)-methionine_Block2,NO,YES,0/1,0.0
+L-(+)-Citrulline_Block2,NO,YES,0/1,0.0
+L-Aspartic acid_Block2,NO,YES,0/1,0.0
+L-Cysteinylglycine disulfide_Block2,NO,YES,0/1,0.0
+L-Cystine_Block2,NO,YES,0/1,0.0
+Leucylproline_Block2,NO,YES,0/1,0.0
+L-gamma-Glutamyl-L-leucine_Block2,NO,YES,0/1,0.0
+L-gamma-Glutamyl-L-valine_Block2,NO,YES,0/1,0.0
+L-Glutamic acid_Block2,NO,YES,0/1,0.0
+L-Histidine_Block2,NO,YES,0/1,0.0
+L-Isoleucine_Block2,NO,YES,0/1,0.0
+L-Methionine sulfoxide_Block2,NO,YES,0/1,0.0
+Homocitrulline_Block2,NO,YES,0/1,0.0
+L-Pyroglutamic Acid_Block2,NO,YES,0/1,0.0
+L-Serine_Block2,NO,YES,0/1,0.0
+L-Valine_Block2,NO,YES,0/1,0.0
+Myrmicacin_Block2,NO,YES,0/1,0.0
+"N1,N12-Diacetylspermine_Block2",NO,YES,0/1,0.0
+"N3,N4-Dimethyl-L-arginine_Block2",NO,YES,0/1,0.0
+"N6,N6-Dimethyllysine_Block2",NO,YES,0/1,0.0
+N6-METHYLLYSINE_Block2,NO,YES,0/1,0.0
+N-Acetylleucylleucine_Block2,NO,YES,0/1,0.0
+N-Acetylneuraminic acid_Block2,NO,YES,0/1,0.0
+neuraminic acid_Block2,NO,YES,0/1,0.0
+N-Glycosyl-L-asparagine_Block2,NO,YES,0/1,0.0
+N-Tridecanoylglycine_Block2,NO,YES,0/1,0.0
+Oleoylcarnitine_Block2,NO,YES,0/1,0.0
+Palmitoylcarnitine_Block2,NO,YES,0/1,0.0
+Panthenol_Block2,NO,YES,0/1,0.0
+Pentahomoserine_Block2,NO,YES,0/1,0.0
+Pipecolic acid_Block2,NO,YES,0/1,0.0
+Platelet-activating factor_Block2,NO,YES,0/1,0.0
+Propionylcarnitine_Block2,NO,YES,0/1,0.0
+Sphingosine (d18:1)_Block2,NO,YES,0/1,0.0
+Stachydrine_Block2,NO,YES,0/1,0.0
+Taurine_Block2,NO,YES,0/1,0.0
+Taurodeoxycholic acid_Block2,NO,YES,0/1,0.0
+Tetramethylurea_Block2,NO,YES,0/1,0.0
+trans-2-Dodecenoylcarnitine_Block2,NO,YES,0/1,0.0
+trans-3-Indoleacrylic acid_Block2,NO,YES,0/1,0.0
+trans-4-Hydroxy-L-proline_Block2,NO,YES,0/1,0.0
+Trihydroxycoprostanoic acid_Block2,NO,YES,0/1,0.0
+Val-lys_Block2,NO,YES,0/1,0.0
+Valylvaline_Block2,NO,YES,0/1,0.0
+Υ-L-Glutamyl-L-glutamic acid_Block2,NO,YES,0/1,0.0
